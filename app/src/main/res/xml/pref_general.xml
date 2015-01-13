@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    android:key="button_voicemail_category_key"
+    android:title="@string/voicemail"
+    android:persistent="false">
+    <PreferenceCategory
+        android:title="알림설정"
+        android:key="pref_general_settings">
+        <CheckBoxPreference
+            android:key="pref_notification_on"
+            android:summary="어플리케이션의 알림 on/off 설정"
+            android:title="알림 띄우기"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="로그인설정"
+        android:key="pref_login_settings">
+        <CheckBoxPreference
+            android:key="pref_auto_login_on"
+            android:summary="어플리케이션의 자동 로그인 on/off 설정"
+            android:title="자동 로그인"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+</PreferenceScreen>
