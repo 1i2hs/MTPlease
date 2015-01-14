@@ -46,7 +46,7 @@ import java.util.Calendar;
 import notboringactionbar.AlphaForegroundColorSpan;
 
 
-public class MainActivity extends ActionBarActivity implements ScrollTabHolder,TimelineFragment.OnFragmentInteractionListener, ResultFragment.OnFragmentInteractionListener, CalendarDialogFragment.OnDateConfirmedListener {
+public class MainActivity extends ActionBarActivity implements ScrollTabHolder,TimelineFragment.OnFragmentInteractionListener, ResultFragment.OnFragmentInteractionListener, CalendarDialogFragment.OnDateConfirmedListener, SpecificInfoFragment.OnFragmentInteractionListener {
 
     // Fragments
     FragmentManager mFragmentManager;
@@ -314,7 +314,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,T
         conditionDataForRequest.people = Integer.parseInt(numberOfPeopleSelectEditText.getText().toString());
         Log.i(TAG, conditionDataForRequest.people + "");
 
-        String[] tmp = (modifiedDate).split(" ");
+        String[] tmp = modifiedDate.split(" ");
         conditionDataForRequest.date = tmp[0].substring(0, 4) + "-"
                 + tmp[1].split("월")[0] + "-" + tmp[2].split("일")[0];
         Log.i(TAG, conditionDataForRequest.date);
@@ -322,6 +322,11 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,T
         conditionDataForRequest.flag = CONDITION_SEARCH_MODE;
 
         return conditionDataForRequest;
+    }
+
+    @Override
+    public void onSpecificInfoFragmentInteraction(Uri uri) {
+
     }
 
     private class ConditionDataForRequest {
@@ -347,8 +352,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,T
 
         public String makeHttpGetURL() {
             if(isVariableSet()) {
-                String httpGetURL = "http://mtplease.herokuapp.com/" + "pensions"+ "?region=" + region + "&date='"
-                        + date + "'&people=" + people +"&flag=1";
+                String httpGetURL = "http://mtplease.herokuapp.com/" + "pensions"+ "?region=" + region + "&date="
+                        + date + "&people=" + people +"&flag=1";
 
                 return httpGetURL;
             }
@@ -384,6 +389,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,T
         @Override
         protected String doInBackground(String... urls) {
             try {
+                Log.i(TAG, "URL: " + urls[0]);
                 HttpClient mHttpClient = new DefaultHttpClient();
                 HttpGet mHttpGet = new HttpGet(urls[0]);
                 HttpConnectionParams.setConnectionTimeout(mHttpClient.getParams(), 5000);
@@ -414,6 +420,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,T
                         numberOfPeopleQuerySubTabText.setVisibility(View.INVISIBLE);
 
                         JSONObject mJSONObject = new JSONObject(jsonString);
+                        Log.i(TAG, jsonString);
                         // redundant to code. needs to be refactored
                         mJSONObject = mJSONObject.getJSONObject("main");
 
@@ -437,12 +444,13 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,T
                     regionQuerySubTabText.setVisibility(View.VISIBLE);
                     numberOfPeopleQuerySubTabText.setVisibility(View.VISIBLE);
 
-                    // create the mTimelineFragment with the Interface ScrollTabHolder
-                    mResultFragment = ResultFragment.newInstance(jsonString);
+                    // create the mResultFragment with the Interface ScrollTabHolder
+                    mResultFragment = ResultFragment.newInstance(jsonString, modifiedDate);
                     mResultFragment.setScrollTabHolder(mScrollTabHolder);
+                    mResultFragment.setFragmentManager(mFragmentManager);
                     // end of creation of the mTimelineFragment
 
-                    // commit the mTimelineFragment to the current view
+                    // commit the mResultFragment to the current view
                     mFragmentTransaction = mFragmentManager.beginTransaction();
                     mFragmentTransaction.replace(R.id.body, mResultFragment);
                     mFragmentTransaction.addToBackStack(null);

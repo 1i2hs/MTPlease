@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -40,16 +43,21 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
-    private static final int REAL_PICTURE_EXISTS = 1;
+
     private static final int REAL_PICTURE_DOESNT_EXISTS = 0;
+    private static final int REAL_PICTURE_EXISTS = 1;
 
-    private JSONArray roomArray;
     private Context mContext;
+    private FragmentManager mFragmentManager;
+    private JSONArray roomArray;
+    private String dateMT;
 
-    public RoomListRecyclerViewAdapter(Context context, JSONArray jsonArray) {
+    public RoomListRecyclerViewAdapter(Context context, FragmentManager fragmentManager, JSONArray jsonArray, String date) {
         Log.d(TAG, "RoomListRecyclerViewAdapter");
         this.mContext = context;
+        this.mFragmentManager = fragmentManager;
         this.roomArray = jsonArray;
+        this.dateMT = date;
     }
 
     @Override
@@ -79,6 +87,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             try {
                 JSONObject roomData = roomArray.getJSONObject(position - 1);
                 ((RoomCard) holder).setRoomData(roomData);
+                ((RoomCard) holder).getLayout().setOnClickListener((RoomCard) holder);
             } catch(UnsupportedEncodingException e) {
                 e.printStackTrace();
             } catch(JSONException e) {
@@ -131,6 +140,11 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         private TextView pensionName;
         private TextView rangeNumberOfPeople;
         private TextView roomPrice;
+
+        private int pen_id;
+        private String room_name;
+        private String pen_name;
+
         // each data item is just a string in this case
         public RoomCard(View cardView) {
             super(cardView);
@@ -145,6 +159,9 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         }
 
         public void setRoomData(JSONObject roomData) throws UnsupportedEncodingException, JSONException {
+
+            pen_id = roomData.getInt("pen_id");
+
             String imageURL;
             if(Integer.parseInt(roomData.getString("pen_picture_flag")) == REAL_PICTURE_EXISTS)
                 imageURL = MTPLEASE_URL + "img/pensions/" + roomData.getString("pen_id") + "/" + URLEncoder.encode(roomData.getString("room_name"), "utf-8").replaceAll("\\+","%20") + "/real/thumbnail.png";
@@ -154,8 +171,12 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             Log.i(TAG, imageURL);
             new ImageLoadingTask(roomImage, loadingProgressBar).execute(imageURL);
 
-            roomName.setText(roomData.getString("room_name"));
-            pensionName.setText(roomData.getString("pen_name"));
+            this.room_name = roomData.getString("room_name");
+            roomName.setText(this.room_name);
+
+            this.pen_name = roomData.getString("pen_name");
+            pensionName.setText(this.pen_name);
+
             rangeNumberOfPeople.setText(roomData.getString("room_std_people") + " / " + roomData.getString("room_max_people"));
             int roomPriceInt = Integer.parseInt(roomData.getString("room_cost"));
             if (roomPriceInt == 0) {
@@ -173,6 +194,14 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
         @Override
         public void onClick(View v) {
+            SpecificInfoFragment mSpecificInfoFragment = SpecificInfoFragment.newInstance(this.pen_id, dateMT, this.room_name, this.pen_name);
+
+            // commit the SpecificInfoFragment to the current view
+            FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
+            mFragmentTransaction.replace(R.id.background_loading, mSpecificInfoFragment);
+            mFragmentTransaction.addToBackStack(null);
+            mFragmentTransaction.commit();
+            // end of commission
         }
     }
 

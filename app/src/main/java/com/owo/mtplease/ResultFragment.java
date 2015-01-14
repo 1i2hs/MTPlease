@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,7 +32,8 @@ public class ResultFragment extends Fragment {
     private static final String TAG = "ResultFragment";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
+    private static final String JSONSTRING_OF_ROOMS = "jsonStringRoomList";
+    private static final String DATE_OF_MT = "dateMT";
 
     // View: User Interface Views
     private RecyclerView mRecyclerView;
@@ -40,12 +42,14 @@ public class ResultFragment extends Fragment {
 
     // Controller: Adapters for User Interface Views
     private RecyclerView.Adapter mAdapter;
-    // End of User Interface Views;
+    // End of Controller;
 
     // Model: Data variables for User Interface Views
     private String jsonStringRoomList;
     private JSONObject roomObject;
     private JSONArray roomArray;
+    private String dateMT;
+    // End of the Model
 
     // Flags
 
@@ -53,18 +57,23 @@ public class ResultFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     protected ScrollTabHolder mScrollTabHolder;
 
+    // Others
+    private FragmentManager mFragmentManager;
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
      * @param jsonString Parameter 1.
+     * @param dateMT Parameter 1.
      * @return A new instance of fragment MainFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ResultFragment newInstance(String jsonString) {
+    public static ResultFragment newInstance(String jsonString, String dateMT) {
         ResultFragment fragment = new ResultFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, jsonString);
+        args.putString(JSONSTRING_OF_ROOMS, jsonString);
+        args.putString(DATE_OF_MT, dateMT);
         fragment.setArguments(args);
         return fragment;
     }
@@ -80,7 +89,7 @@ public class ResultFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mAdapter = new RoomListRecyclerViewAdapter(getActivity(), roomArray);
+        mAdapter = new RoomListRecyclerViewAdapter(getActivity(), mFragmentManager, roomArray, dateMT);
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -105,7 +114,8 @@ public class ResultFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            jsonStringRoomList = getArguments().getString(ARG_PARAM1);
+            jsonStringRoomList = getArguments().getString(JSONSTRING_OF_ROOMS);
+            dateMT = getArguments().getString(DATE_OF_MT);
             Log.i(TAG, jsonStringRoomList);
 
             try {
@@ -167,6 +177,10 @@ public class ResultFragment extends Fragment {
     }
 
     public void setScrollTabHolder(ScrollTabHolder scrollTabHolder) {
-        mScrollTabHolder = scrollTabHolder;
+       this.mScrollTabHolder = scrollTabHolder;
+    }
+
+    public void setFragmentManager(FragmentManager fragmentManager) {
+        this.mFragmentManager = fragmentManager;
     }
 }
