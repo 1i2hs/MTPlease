@@ -38,8 +38,14 @@
     <string name="notify_not_found">해당 조건에 만족하는 방이 없습니다.</string>
     <string name="notify_fail_loading_room_results">네트워크 문제로 인해 검색 결과 읽어오기를 실패하였습니다.</string>
     <string name="notify_image_loading_failed">방 이미지를 읽어오는데 실패하였습니다.</string>
+    <string name="results">검색 결과</string>
+    <string name="no_results">0개의 방</string>
+    <string name="no_results_found">조건에 해당되는 방이 존재하지 않습니다.</string>
 
     <!-- For timeline postings -->
     <string name="notify_fail_loading_timeline">네트워크 문제로 인해 타임라인 읽어오기를 실패하였습니다.</string>
 
+    <!-- For specific information page -->
+    <string name="call_phone">전화 걸기</string>
+    <string name="website">홈페이지</string>
 </resources>

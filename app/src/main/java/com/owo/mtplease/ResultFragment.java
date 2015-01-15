@@ -1,11 +1,14 @@
 package com.owo.mtplease;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,6 +41,8 @@ public class ResultFragment extends Fragment {
     // View: User Interface Views
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
+    private ActionBar mActionBar;
+    private ColorDrawable actionbarBackgroundColor;
     // End of User Interface Views
 
     // Controller: Adapters for User Interface Views
@@ -59,6 +64,7 @@ public class ResultFragment extends Fragment {
 
     // Others
     private FragmentManager mFragmentManager;
+    private boolean noResults;
 
     /**
      * Use this factory method to create a new instance of
@@ -89,7 +95,7 @@ public class ResultFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mAdapter = new RoomListRecyclerViewAdapter(getActivity(), mFragmentManager, roomArray, dateMT);
+        mAdapter = new RoomListRecyclerViewAdapter(getActivity(), mFragmentManager, roomArray, dateMT, mActionBar, mScrollTabHolder);
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -103,7 +109,7 @@ public class ResultFragment extends Fragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (mScrollTabHolder != null)
-                    mScrollTabHolder.onScroll(recyclerView, mLayoutManager.findFirstVisibleItemPosition(), 0);
+                    mScrollTabHolder.onScroll(recyclerView, mLayoutManager.findFirstVisibleItemPosition(), 0, MainActivity.RESULT_FRAGMENT_VISIBLE);
             }
         });
 
@@ -121,11 +127,24 @@ public class ResultFragment extends Fragment {
             try {
                 roomObject = new JSONObject(jsonStringRoomList);
                 roomArray = new JSONArray(roomObject.getString("results"));
+                noResults = false;
             } catch(Exception e) {
+                noResults = true;
                 Toast.makeText(getActivity(), R.string.notify_fail_loading_room_results, Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         }
+
+        // configure actionbar for result page
+        actionbarBackgroundColor = new ColorDrawable(Color.BLACK);
+        mActionBar.setBackgroundDrawable(actionbarBackgroundColor);
+
+        mActionBar.setTitle(R.string.results);
+        if(noResults)
+            mActionBar.setSubtitle(R.string.no_results);
+        else
+            mActionBar.setSubtitle(roomArray.length() + "개의 방");
+        // end of the configuration
     }
 
     @Override
@@ -177,10 +196,14 @@ public class ResultFragment extends Fragment {
     }
 
     public void setScrollTabHolder(ScrollTabHolder scrollTabHolder) {
-       this.mScrollTabHolder = scrollTabHolder;
+        this.mScrollTabHolder = scrollTabHolder;
     }
 
     public void setFragmentManager(FragmentManager fragmentManager) {
         this.mFragmentManager = fragmentManager;
+    }
+
+    public void setActionBar(ActionBar actionBar) {
+        this.mActionBar = actionBar;
     }
 }

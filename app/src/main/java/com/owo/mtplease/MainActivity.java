@@ -62,11 +62,15 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,T
     private static final int TIMELINE = 1;
     private static final int RESULT = 2;
     private static final String MTPLEASE_URL = "http://mtplease.herokuapp.com/";
+    public static final int TIMELINE_FRAGMENT_VISIBLE = 1;
+    public static final int RESULT_FRAGMENT_VISIBLE = 2;
+    public static final int SPECIFIC_INFO_FRAGMENT_VISIBLE = 3;
     // End of Strings
 
     // Graphical transitions
     private AlphaForegroundColorSpan mAlphaForegroundColorSpan;
-    private SpannableString mSpannableString;
+    private SpannableString mSpannableStringAppTitle;
+    private SpannableString mSpannableStringVariable;
     private ColorDrawable actionbarBackgroundColor;
     private int mMinHeaderHeightForTimelineFragment;
     private int mMinHeaderHeightForResultFragment;
@@ -75,7 +79,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,T
     // End of the Graphical transitions
 
     // User Interface Views
-    private ActionBar mActionbar;
+    private ActionBar mActionBar;
     private Button dateSelectButton;
     private Spinner regionSelectSpinner;
     private EditText numberOfPeopleSelectEditText;
@@ -111,7 +115,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,T
         setContentView(R.layout.activity_main);
 
         // configure the Actionbar
-        mActionbar = getSupportActionBar();
+        mActionBar = getSupportActionBar();
 
         actionbarBackgroundColor = new ColorDrawable(Color.BLACK);
         // end of the configuration
@@ -137,7 +141,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,T
         mMinHeaderHeightForResultFragment = getResources().getDimensionPixelOffset(R.dimen.header_height);
         mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.header_height);
         mHeader = findViewById(R.id.header);
-        mSpannableString = new SpannableString(getString(R.string.actionbar_title));
+        mSpannableStringAppTitle = new SpannableString(getString(R.string.actionbar_title));
         mAlphaForegroundColorSpan = new AlphaForegroundColorSpan(0xffffffff);
         // end of configuration of NotBoringActionbar
 
@@ -249,22 +253,41 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,T
     }
 
     @Override
-    public void onScroll(RecyclerView recyclerView, int firstVisibleItem, int pagePosition) {
+    public void onScroll(RecyclerView recyclerView, int firstVisibleItem, int pagePosition, int visibleFragment) {
         int scrollY = getScrollY(recyclerView, firstVisibleItem);
-        if(mTimelineFragment.isVisible()) {
-            mMinHeaderTranslation = -mMinHeaderHeightForTimelineFragment + getSupportActionBar().getHeight();
-            mHeader.setTranslationY(Math.max(-scrollY, mMinHeaderTranslation));
-
-        } else if(mResultFragment.isVisible()) {
-            mMinHeaderTranslation = -mMinHeaderHeightForResultFragment + getSupportActionBar().getHeight();
-            mHeader.setTranslationY(Math.max(-scrollY, mMinHeaderTranslation));
+        float ratio;
+        switch(visibleFragment) {
+            case TIMELINE_FRAGMENT_VISIBLE:
+                clampValue = changeHeaderTranslation(scrollY, mMinHeaderHeightForTimelineFragment);
+                break;
+            case RESULT_FRAGMENT_VISIBLE:
+                changeHeaderTranslation(scrollY, mMinHeaderHeightForResultFragment);
+                return;
+            case SPECIFIC_INFO_FRAGMENT_VISIBLE:
+                ratio = (float)getSupportActionBar().getHeight() / (float)(scrollY + 1);
+                clampValue = clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F);
+                Log.i(TAG, clampValue + "");
+                break;
+            default:
+                return;
         }
-        float ratio = clamp(mHeader.getTranslationY() / mMinHeaderTranslation, 0.0f, 1.0f);
-        clampValue = clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F);
-        setTitleAlpha(clampValue);
+
+        setTitleAlpha(clampValue, visibleFragment);
 
         actionbarBackgroundColor.setAlpha((int)(clampValue * 255));
-        getSupportActionBar().setBackgroundDrawable(actionbarBackgroundColor);
+        mActionBar.setBackgroundDrawable(actionbarBackgroundColor);
+    }
+
+    private float changeHeaderTranslation(int scrollY, int minHeaderHeight) {
+        mMinHeaderTranslation = -minHeaderHeight + getSupportActionBar().getHeight();
+
+        //Log.i(TAG, -scrollY + "dp / " + mMinHeaderTranslation + "dp");
+
+        mHeader.setTranslationY(Math.max(-scrollY, mMinHeaderTranslation));
+
+        float ratio = clamp(mHeader.getTranslationY() / mMinHeaderTranslation, 0.0F, 1.0F);
+
+        return clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F);
     }
 
     public int getScrollY(RecyclerView view, int firstVisibleItem) {
@@ -284,10 +307,28 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,T
         return -top + firstVisiblePosition * c.getHeight() + headerHeight;
     }
 
-    private void setTitleAlpha(float alpha) {
+    private void setTitleAlpha(float alpha, int visibleFragment) {
         mAlphaForegroundColorSpan.setAlpha(alpha);
-        mSpannableString.setSpan(mAlphaForegroundColorSpan, 0, mSpannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        getSupportActionBar().setTitle(mSpannableString);
+        
+        switch(visibleFragment) {
+            case TIMELINE_FRAGMENT_VISIBLE:
+                mSpannableStringAppTitle.setSpan(mAlphaForegroundColorSpan, 0, mSpannableStringAppTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                mActionBar.setTitle(mSpannableStringAppTitle);
+                break;
+            case RESULT_FRAGMENT_VISIBLE:
+                break;
+            case SPECIFIC_INFO_FRAGMENT_VISIBLE:
+                mSpannableStringVariable = new SpannableString(getSupportActionBar().getTitle());
+                mSpannableStringVariable.setSpan(mAlphaForegroundColorSpan, 0, mSpannableStringVariable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                mActionBar.setTitle(mSpannableStringVariable);
+                mSpannableStringVariable = null;
+                mSpannableStringVariable = new SpannableString(getSupportActionBar().getSubtitle());
+                mSpannableStringVariable.setSpan(mAlphaForegroundColorSpan, 0, mSpannableStringVariable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                mActionBar.setSubtitle(mSpannableStringVariable);
+                break;
+            default:
+                return;
+        }
     }
 
     @Override
@@ -448,6 +489,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,T
                     mResultFragment = ResultFragment.newInstance(jsonString, modifiedDate);
                     mResultFragment.setScrollTabHolder(mScrollTabHolder);
                     mResultFragment.setFragmentManager(mFragmentManager);
+                    mResultFragment.setActionBar(mActionBar);
                     // end of creation of the mTimelineFragment
 
                     // commit the mResultFragment to the current view

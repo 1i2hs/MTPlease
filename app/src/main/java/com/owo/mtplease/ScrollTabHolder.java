@@ -8,5 +8,5 @@ import android.support.v7.widget.RecyclerView;
 public interface ScrollTabHolder {
     void adjustScroll(int scrollHeight);
 
-    void onScroll(RecyclerView recyclerView, int firstVisibleItem, int pagePosition);
+    void onScroll(RecyclerView recyclerView, int firstVisibleItem, int pagePosition, int visibleFragment);
 }

@@ -1,16 +1,24 @@
 package com.owo.mtplease;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import notboringactionbar.AlphaForegroundColorSpan;
 
 
 /**
@@ -39,11 +47,13 @@ public class SpecificInfoFragment extends Fragment {
 
     // View: User Interface Views
     private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLayoutMangaer;
+    private LinearLayoutManager mLayoutManager;
+    private ActionBar mActionBar;
+    private ColorDrawable actionbarBackgroundColor;
     // End of User Interface Views
 
     // Controller: Adapters for User Interface Views
-    private RecyclerView.Adapter mAdpater;
+    private RecyclerView.Adapter mAdapter;
     // End of the Controller
 
     // Model: Data variables for User Interface Views
@@ -51,6 +61,7 @@ public class SpecificInfoFragment extends Fragment {
 
     //Listeners
     private OnFragmentInteractionListener mListener;
+    protected ScrollTabHolder mScrollTabHolder;
 
     public SpecificInfoFragment() {
         // Required empty public constructor
@@ -81,23 +92,35 @@ public class SpecificInfoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "onCreate()");
         if (getArguments() != null) {
             this.pen_id = getArguments().getInt(PENSION_ID);
             this.dateMT = getArguments().getString(DATE_OF_MT);
             this.room_name = getArguments().getString(NAME_OF_ROOM);
             this.pen_name = getArguments().getString(NAME_OF_PENSION);
         }
+
+        // configure actionbar for result page
+        actionbarBackgroundColor = new ColorDrawable(Color.BLACK);
+        mActionBar.setBackgroundDrawable(actionbarBackgroundColor);
+
+        mActionBar.setTitle(room_name);
+        mActionBar.setSubtitle(pen_name);
+        // end of the configuration
+        // **********************actionbar button issue...........
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mLayoutMangaer = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutMangaer);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mAdpater = new SpecificInfoRoomRecyclerViewAdapter(this.pen_id, this.dateMT, this.room_name);
-        // Fading out Actionbar???
+        mAdapter = new SpecificInfoRoomRecyclerViewAdapter(getActivity(), this.pen_id, this.dateMT, this.room_name);
+        Log.d(TAG, "before setting adapter");
+        mRecyclerView.setAdapter(mAdapter);
+
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -106,7 +129,8 @@ public class SpecificInfoFragment extends Fragment {
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
+                if (mScrollTabHolder != null)
+                    mScrollTabHolder.onScroll(recyclerView, mLayoutManager.findFirstVisibleItemPosition(), 0, MainActivity.SPECIFIC_INFO_FRAGMENT_VISIBLE);
             }
         });
         super.onViewCreated(view, savedInstanceState);
@@ -115,12 +139,10 @@ public class SpecificInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
         // Inflate the layout for this fragment
         View specificInfoView = inflater.inflate(R.layout.fragment_specific_info, container, false);
         mRecyclerView = (RecyclerView) specificInfoView.findViewById(R.id.list_room_info);
-        getActivity().getActionBar().setTitle(room_name);
-        getActivity().getActionBar().setSubtitle(pen_name);
-        // **********************actionbar button issue...........
 
         return specificInfoView;
     }
@@ -147,6 +169,8 @@ public class SpecificInfoFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mActionBar.setTitle(null);
+        mActionBar.setSubtitle(null);
     }
 
     /**
@@ -164,4 +188,10 @@ public class SpecificInfoFragment extends Fragment {
         public void onSpecificInfoFragmentInteraction(Uri uri);
     }
 
+    public void setActionBar(ActionBar actionBar) {
+        this.mActionBar = actionBar;
+    }
+    public void setScrollTabHolder(ScrollTabHolder scrollTabHolder) {
+        this.mScrollTabHolder = scrollTabHolder;
+    }
 }

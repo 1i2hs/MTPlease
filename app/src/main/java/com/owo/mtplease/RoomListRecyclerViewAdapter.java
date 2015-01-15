@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -51,13 +52,17 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     private FragmentManager mFragmentManager;
     private JSONArray roomArray;
     private String dateMT;
+    private ActionBar mActionBar;
+    private ScrollTabHolder mScrollTabHolder;
 
-    public RoomListRecyclerViewAdapter(Context context, FragmentManager fragmentManager, JSONArray jsonArray, String date) {
+    public RoomListRecyclerViewAdapter(Context context, FragmentManager fragmentManager, JSONArray jsonArray, String date, ActionBar actionBar, ScrollTabHolder scrollTabHolder) {
         Log.d(TAG, "RoomListRecyclerViewAdapter");
         this.mContext = context;
         this.mFragmentManager = fragmentManager;
         this.roomArray = jsonArray;
         this.dateMT = date;
+        this.mActionBar = actionBar;
+        this.mScrollTabHolder = scrollTabHolder;
     }
 
     @Override
@@ -194,6 +199,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
         @Override
         public void onClick(View v) {
+            Log.i(TAG, this.room_name);
             SpecificInfoFragment mSpecificInfoFragment = SpecificInfoFragment.newInstance(this.pen_id, dateMT, this.room_name, this.pen_name);
 
             // commit the SpecificInfoFragment to the current view
@@ -201,6 +207,9 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             mFragmentTransaction.replace(R.id.background_loading, mSpecificInfoFragment);
             mFragmentTransaction.addToBackStack(null);
             mFragmentTransaction.commit();
+
+            mSpecificInfoFragment.setActionBar(mActionBar);
+            mSpecificInfoFragment.setScrollTabHolder(mScrollTabHolder);
             // end of commission
         }
     }
