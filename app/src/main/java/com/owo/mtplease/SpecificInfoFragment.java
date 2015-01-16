@@ -11,14 +11,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import notboringactionbar.AlphaForegroundColorSpan;
 
 
 /**
@@ -38,18 +34,20 @@ public class SpecificInfoFragment extends Fragment {
     private static final String DATE_OF_MT = "date";
     private static final String NAME_OF_ROOM = "room_name";
     private static final String NAME_OF_PENSION = "pen_name";
+	private static final String NUMBER_OF_ROOMS_FOUND = "num_room_found";
 
     // TODO: Rename and change types of parameters
     private int pen_id;
     private String dateMT;
     private String room_name;
     private String pen_name;
+	private int roomCount;
 
     // View: User Interface Views
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private ActionBar mActionBar;
-    private ColorDrawable actionbarBackgroundColor;
+    private ColorDrawable actionBarBackgroundColor;
     // End of User Interface Views
 
     // Controller: Adapters for User Interface Views
@@ -78,16 +76,17 @@ public class SpecificInfoFragment extends Fragment {
      * @return A new instance of fragment SpecificInfoFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SpecificInfoFragment newInstance(int pen_id, String dateMT, String room_name, String pen_name) {
+    public static SpecificInfoFragment newInstance(int pen_id, String dateMT, String room_name, String pen_name, int room_count) {
         SpecificInfoFragment fragment = new SpecificInfoFragment();
         Bundle args = new Bundle();
-        args.putInt(PENSION_ID, pen_id);
-        args.putString(DATE_OF_MT, dateMT);
-        args.putString(NAME_OF_ROOM, room_name);
-        args.putString(NAME_OF_PENSION, pen_name);
-        fragment.setArguments(args);
-        return fragment;
-    }
+		args.putInt(PENSION_ID, pen_id);
+		args.putString(DATE_OF_MT, dateMT);
+		args.putString(NAME_OF_ROOM, room_name);
+		args.putString(NAME_OF_PENSION, pen_name);
+		args.putInt(NUMBER_OF_ROOMS_FOUND, room_count);
+		fragment.setArguments(args);
+		return fragment;
+	}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,11 +97,12 @@ public class SpecificInfoFragment extends Fragment {
             this.dateMT = getArguments().getString(DATE_OF_MT);
             this.room_name = getArguments().getString(NAME_OF_ROOM);
             this.pen_name = getArguments().getString(NAME_OF_PENSION);
+			this.roomCount = getArguments().getInt(NUMBER_OF_ROOMS_FOUND);
         }
 
         // configure actionbar for result page
-        actionbarBackgroundColor = new ColorDrawable(Color.BLACK);
-        mActionBar.setBackgroundDrawable(actionbarBackgroundColor);
+        actionBarBackgroundColor = new ColorDrawable(Color.BLACK);
+        mActionBar.setBackgroundDrawable(actionBarBackgroundColor);
 
         mActionBar.setTitle(room_name);
         mActionBar.setSubtitle(pen_name);
@@ -169,8 +169,13 @@ public class SpecificInfoFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        mActionBar.setTitle(null);
-        mActionBar.setSubtitle(null);
+
+		// configure actionbar for result page
+		actionBarBackgroundColor = new ColorDrawable(Color.BLACK);
+		mActionBar.setBackgroundDrawable(actionBarBackgroundColor);
+
+        mActionBar.setTitle(R.string.results);
+        mActionBar.setSubtitle(this.roomCount + "개의 방");
     }
 
     /**

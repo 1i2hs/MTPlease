@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -108,7 +107,6 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "getItemCount");
         try {
             return roomArray.length() + 1;
         } catch(NullPointerException e) {
@@ -119,7 +117,6 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemViewType(int position) {
-        Log.d(TAG, "getItemViewType");
         if (isPositionHeader(position))
             return TYPE_HEADER;
 
@@ -183,7 +180,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             pensionName.setText(this.pen_name);
 
             rangeNumberOfPeople.setText(roomData.getString("room_std_people") + " / " + roomData.getString("room_max_people"));
-            int roomPriceInt = Integer.parseInt(roomData.getString("room_cost"));
+            int roomPriceInt = roomData.getInt("room_cost");
             if (roomPriceInt == 0) {
                 roomPrice.setText("전화 문의");
             } else {
@@ -200,7 +197,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         @Override
         public void onClick(View v) {
             Log.i(TAG, this.room_name);
-            SpecificInfoFragment mSpecificInfoFragment = SpecificInfoFragment.newInstance(this.pen_id, dateMT, this.room_name, this.pen_name);
+            SpecificInfoFragment mSpecificInfoFragment = SpecificInfoFragment.newInstance(this.pen_id, dateMT, this.room_name, this.pen_name, roomArray.length());
 
             // commit the SpecificInfoFragment to the current view
             FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();

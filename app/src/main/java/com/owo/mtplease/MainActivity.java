@@ -32,6 +32,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -41,6 +42,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Calendar;
 
 import notboringactionbar.AlphaForegroundColorSpan;
@@ -126,7 +128,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,T
         SlidingMenu menu = new SlidingMenu(this);
         menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
         menu.setMode(SlidingMenu.LEFT_RIGHT);
-        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
         menu.setShadowWidthRes(R.dimen.shadow_width);
         menu.setSecondaryShadowDrawable(R.drawable.shadowright);
         menu.setShadowDrawable(R.drawable.shadow);
@@ -441,11 +443,15 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,T
                     Log.i(TAG,"HttpResponseGet Completed!!");
                     return EntityUtils.toString(resEntityGet);
                 }
-            } catch(Exception e) {
-                Log.i(TAG,"HttpResponseGet Failed....");
+            } catch(ClientProtocolException e) {
+				Log.e(TAG, "ClientProtocolException");
+                Log.e(TAG,"HttpResponseGet Failed....");
                 requestLabel = NETWORK_CONNECTION_FAILED;
                 e.printStackTrace();
-            }
+            } catch(IOException e) {
+				Log.e(TAG, "IOException");
+				e.printStackTrace();
+			}
             return null;
         }
 

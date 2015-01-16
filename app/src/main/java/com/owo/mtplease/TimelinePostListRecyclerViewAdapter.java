@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +71,6 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
     @Override
     public int getItemCount() {
-        Log.i(TAG, postArray.length() + "");
         return postArray.length() + 1;
     }
 

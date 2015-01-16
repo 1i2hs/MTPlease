@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- shape꾸며줄때 참고할 사이트 : http://android-dev-tips-and-tricks.blogspot.kr/2012/08/xml-drawables-part-i.html -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <solid android:color="#F2F2F2" />
+
+    <stroke
+        android:width="1dp"
+        android:color="#000000" />
+
+</shape>

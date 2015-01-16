@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -42,7 +43,7 @@ public class ResultFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private ActionBar mActionBar;
-    private ColorDrawable actionbarBackgroundColor;
+    private ColorDrawable actionBarBackgroundColor;
     // End of User Interface Views
 
     // Controller: Adapters for User Interface Views
@@ -51,7 +52,6 @@ public class ResultFragment extends Fragment {
 
     // Model: Data variables for User Interface Views
     private String jsonStringRoomList;
-    private JSONObject roomObject;
     private JSONArray roomArray;
     private String dateMT;
     // End of the Model
@@ -125,10 +125,10 @@ public class ResultFragment extends Fragment {
             Log.i(TAG, jsonStringRoomList);
 
             try {
-                roomObject = new JSONObject(jsonStringRoomList);
+                JSONObject roomObject = new JSONObject(jsonStringRoomList);
                 roomArray = new JSONArray(roomObject.getString("results"));
                 noResults = false;
-            } catch(Exception e) {
+            } catch(JSONException e) {
                 noResults = true;
                 Toast.makeText(getActivity(), R.string.notify_fail_loading_room_results, Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
@@ -136,8 +136,8 @@ public class ResultFragment extends Fragment {
         }
 
         // configure actionbar for result page
-        actionbarBackgroundColor = new ColorDrawable(Color.BLACK);
-        mActionBar.setBackgroundDrawable(actionbarBackgroundColor);
+        actionBarBackgroundColor = new ColorDrawable(Color.BLACK);
+        mActionBar.setBackgroundDrawable(actionBarBackgroundColor);
 
         mActionBar.setTitle(R.string.results);
         if(noResults)
@@ -178,6 +178,13 @@ public class ResultFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+
+		// configure actionbar for timeline page
+		actionBarBackgroundColor = new ColorDrawable(Color.TRANSPARENT);
+		mActionBar.setBackgroundDrawable(actionBarBackgroundColor);
+		
+		mActionBar.setTitle(R.string.app_name);
+		mActionBar.setSubtitle(null);
     }
 
     /**
