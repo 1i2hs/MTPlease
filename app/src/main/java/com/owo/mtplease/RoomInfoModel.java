@@ -1,11 +1,28 @@
 package com.owo.mtplease;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * Created by In-Ho on 2015-01-16.
  */
-public class RoomInfoModel {
+public class RoomInfoModel implements Parcelable {
+
+	public static final Parcelable.Creator CREATOR = new Creator<RoomInfoModel>() {
+		@Override
+		public RoomInfoModel createFromParcel(Parcel in) {
+			return new RoomInfoModel(in);
+		}
+
+		@Override
+		public RoomInfoModel[] newArray(int size) {
+			return new RoomInfoModel[size];
+		}
+	};
+
 	private int pen_id;
 	private String room_name;
 	private String pen_period_division;
@@ -52,6 +69,123 @@ public class RoomInfoModel {
 	private JSONArray cost_table;
 	private JSONArray period_table;
 	private int room_cost;
+
+	public RoomInfoModel() {
+	}
+
+	public RoomInfoModel(Parcel in) {
+		readFromParcel(in);
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(pen_id);
+		dest.writeString(room_name);
+		dest.writeString(pen_period_division);
+		dest.writeString(period_start);
+		dest.writeString(period_end);
+		dest.writeInt(weekdays);
+		dest.writeInt(friday);
+		dest.writeInt(weekends);
+		dest.writeInt(room_std_people);
+		dest.writeInt(room_max_people);
+		dest.writeInt(room_pyeong); // type check required
+		dest.writeInt(num_rooms);
+		dest.writeInt(num_toilets);
+		dest.writeInt(room_aircon); // type check required
+		dest.writeString(room_equipment);
+		dest.writeString(room_description);
+		dest.writeString(pen_region);
+		dest.writeString(pen_name);
+		dest.writeString(pen_homepage);
+		dest.writeString(pen_lot_adr);
+		dest.writeString(pen_road_adr);
+		dest.writeDouble(pen_latitude);
+		dest.writeDouble(pen_longitude);
+		dest.writeString(pen_ceo);
+		dest.writeString(pen_phone1);
+		dest.writeString(pen_phone2);
+		dest.writeString(pen_checkin);
+		dest.writeString(pen_checkout);
+		dest.writeString(pen_check_caution);
+		dest.writeInt(pen_pickup);
+		dest.writeString(pen_pickup_description);
+		dest.writeInt(pen_barbecue);
+		dest.writeString(pen_barbecue_description);
+		dest.writeInt(pen_ground);
+		dest.writeString(pen_ground_description);
+		dest.writeInt(pen_valley);
+		dest.writeString(pen_valley_description);
+		dest.writeString(pen_etc_facility);
+		dest.writeString(pen_caution); // need to be considered how to show later
+		dest.writeString(pen_cost_caution);
+		dest.writeString(pen_walk_station);
+		dest.writeString(pen_walk_terminal);
+		dest.writeInt(pen_picture_flag); // type check required
+		dest.writeString(cost_table.toString());
+		dest.writeString(period_table.toString());
+		dest.writeInt(room_cost);
+	}
+
+	public void readFromParcel(Parcel in) {
+		try {
+			pen_id = in.readInt();
+			room_name = in.readString();
+			pen_period_division = in.readString();
+			period_start = in.readString();
+			period_end = in.readString();
+			weekdays = in.readInt();
+			friday = in.readInt();
+			weekends = in.readInt();
+			room_std_people = in.readInt();
+			room_max_people = in.readInt();
+			room_pyeong = in.readInt(); // type check required
+			num_rooms = in.readInt();
+			num_toilets = in.readInt();
+			room_aircon = in.readInt(); // type check required
+			room_equipment = in.readString();
+			room_description = in.readString();
+			pen_region = in.readString();
+			pen_name = in.readString();
+			pen_homepage = in.readString();
+			pen_lot_adr = in.readString();
+			pen_road_adr = in.readString();
+			pen_latitude = in.readDouble();
+			pen_longitude = in.readDouble();
+			pen_ceo = in.readString();
+			pen_phone1 = in.readString();
+			pen_phone2 = in.readString();
+			pen_checkin = in.readString();
+			pen_checkout = in.readString();
+			pen_check_caution = in.readString();
+			pen_pickup = in.readInt();
+			pen_pickup_description = in.readString();
+			pen_barbecue = in.readInt();
+			pen_barbecue_description= in.readString();
+			pen_ground = in.readInt();
+			pen_ground_description = in.readString();
+			pen_valley = in.readInt();
+			pen_valley_description = in.readString();
+			pen_etc_facility = in.readString();
+			pen_caution = in.readString(); // need to be considered how to show later
+			pen_cost_caution = in.readString();
+			pen_walk_station = in.readString();
+			pen_walk_terminal = in.readString();
+			pen_picture_flag = in.readInt(); // type check required
+			cost_table = null;
+			cost_table = new JSONArray(in.readString());
+			period_table = null;
+			period_table = new JSONArray(in.readString());
+			room_cost = in.readInt();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public int getPen_id() {
 		return pen_id;

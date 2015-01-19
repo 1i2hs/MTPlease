@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 
 /**
@@ -31,10 +33,8 @@ public class SpecificInfoFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PENSION_ID = "pen_id";
-    private static final String DATE_OF_MT = "date";
-    private static final String NAME_OF_ROOM = "room_name";
-    private static final String NAME_OF_PENSION = "pen_name";
 	private static final String NUMBER_OF_ROOMS_FOUND = "num_room_found";
+	private static final String SPECIFIC_ROOM_DATA = "specific_room_data";
 
     // TODO: Rename and change types of parameters
     private int pen_id;
@@ -48,6 +48,9 @@ public class SpecificInfoFragment extends Fragment {
     private LinearLayoutManager mLayoutManager;
     private ActionBar mActionBar;
     private ColorDrawable actionBarBackgroundColor;
+	private Button compareButton;
+	private Button estimateButton;
+	private Button mineButton;
     // End of User Interface Views
 
     // Controller: Adapters for User Interface Views
@@ -55,6 +58,7 @@ public class SpecificInfoFragment extends Fragment {
     // End of the Controller
 
     // Model: Data variables for User Interface Views
+	private RoomInfoModel mRoomInfoModel;
     // End of the Model
 
     //Listeners
@@ -70,20 +74,17 @@ public class SpecificInfoFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param pen_id Parameter 1.
-     * @param dateMT Parameter 2.
-     * @param room_name Parameter 3.
-     * @param pen_name Parameter 4.
+     * @param room_count Parameter 2.
+     * @param roomInfoModel Parameter 3.
      * @return A new instance of fragment SpecificInfoFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SpecificInfoFragment newInstance(int pen_id, String dateMT, String room_name, String pen_name, int room_count) {
+    public static SpecificInfoFragment newInstance(int pen_id, int room_count, RoomInfoModel roomInfoModel) {
         SpecificInfoFragment fragment = new SpecificInfoFragment();
         Bundle args = new Bundle();
 		args.putInt(PENSION_ID, pen_id);
-		args.putString(DATE_OF_MT, dateMT);
-		args.putString(NAME_OF_ROOM, room_name);
-		args.putString(NAME_OF_PENSION, pen_name);
 		args.putInt(NUMBER_OF_ROOMS_FOUND, room_count);
+		args.putParcelable(SPECIFIC_ROOM_DATA, roomInfoModel);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -94,18 +95,19 @@ public class SpecificInfoFragment extends Fragment {
         Log.i(TAG, "onCreate()");
         if (getArguments() != null) {
             this.pen_id = getArguments().getInt(PENSION_ID);
-            this.dateMT = getArguments().getString(DATE_OF_MT);
-            this.room_name = getArguments().getString(NAME_OF_ROOM);
-            this.pen_name = getArguments().getString(NAME_OF_PENSION);
 			this.roomCount = getArguments().getInt(NUMBER_OF_ROOMS_FOUND);
+			this.mRoomInfoModel = getArguments().getParcelable(SPECIFIC_ROOM_DATA);
         }
+
+		Log.d(TAG, mRoomInfoModel.getPen_homepage());
+		Log.d(TAG, mRoomInfoModel.getPen_phone1());
 
         // configure actionbar for result page
         actionBarBackgroundColor = new ColorDrawable(Color.BLACK);
         mActionBar.setBackgroundDrawable(actionBarBackgroundColor);
 
-        mActionBar.setTitle(room_name);
-        mActionBar.setSubtitle(pen_name);
+        mActionBar.setTitle(mRoomInfoModel.getRoom_name());
+        mActionBar.setSubtitle(mRoomInfoModel.getPen_name());
         // end of the configuration
         // **********************actionbar button issue...........
     }
@@ -117,7 +119,7 @@ public class SpecificInfoFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mAdapter = new SpecificInfoRoomRecyclerViewAdapter(getActivity(), this.pen_id, this.dateMT, this.room_name);
+        mAdapter = new SpecificInfoRoomRecyclerViewAdapter(getActivity(), mRoomInfoModel);
         Log.d(TAG, "before setting adapter");
         mRecyclerView.setAdapter(mAdapter);
 
@@ -143,6 +145,29 @@ public class SpecificInfoFragment extends Fragment {
         // Inflate the layout for this fragment
         View specificInfoView = inflater.inflate(R.layout.fragment_specific_info, container, false);
         mRecyclerView = (RecyclerView) specificInfoView.findViewById(R.id.list_room_info);
+		compareButton = (Button) specificInfoView.findViewById(R.id.button_compare);
+		compareButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getActivity(), R.string.add_compare, Toast.LENGTH_LONG).show();
+			}
+		});
+
+		estimateButton = (Button) specificInfoView.findViewById(R.id.button_estimate);
+		estimateButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getActivity(), R.string.add_estimate, Toast.LENGTH_LONG).show();
+			}
+		});
+
+		mineButton = (Button) specificInfoView.findViewById(R.id.button_mine);
+		mineButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getActivity(), R.string.mine, Toast.LENGTH_SHORT).show();
+			}
+		});
 
         return specificInfoView;
     }

@@ -108,9 +108,9 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
         public void setItem(JSONObject postData) throws JSONException {
             postImage.setImageResource(R.drawable.img_sample);
             postImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            postTitle.setText(postData.getString("timeline_title"));
-            postDate.setText(postData.getString("timeline_datetime"));
-            linkURL = postData.getString("timeline_link");
+            postTitle.setText(postData.optString("timeline_title"));
+            postDate.setText(postData.optString("timeline_datetime"));
+            linkURL = postData.optString("timeline_link");
             postCard.setPreventCornerOverlap(false);
         }
 

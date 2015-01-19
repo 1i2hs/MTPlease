@@ -30,6 +30,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Vector;
 
 /**
@@ -52,7 +54,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	private static final int CARD_PRICE_AND_DATE_SELECTION = 8;
 	private static final int CARD_OWNER_INFO = 9;
 	private static final int CARD_OTHERS = 10;
-	private static final int CARD_WARNINGS = 11;
+	private static final int CARD_NOTICE = 11;
 	// End of series of cards
 
 	// Model: Data variables for User Interface Views
@@ -69,22 +71,10 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	private Context mContext;
 
 
-	public SpecificInfoRoomRecyclerViewAdapter(Context context, int pen_id, String dateMT, String room_name) {
+	public SpecificInfoRoomRecyclerViewAdapter(Context context, RoomInfoModel mRoomInfoModel) {
 		Log.d(TAG, TAG);
 		this.mContext = context;
-		this.pen_id = pen_id;
-		this.dateMT = dateMT;
-		this.room_name = room_name;
-		this.mRoomInfoModel = new RoomInfoModel();
-
-		// ***************receive the specific info data of the room from the server;
-		/*try {
-			new RoomInfoDataDownloadingTask().execute(MTPLEASE_URL +
-					"pensions?pen_id="+ pen_id + "&date=" + dateMT + "&room_name=" + URLEncoder.encode(room_name, "utf-8").replaceAll("\\+", "%20"));
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "Wrong URL sent!");
-			e.printStackTrace();
-		}*/
+		this.mRoomInfoModel = mRoomInfoModel;
 	}
 
 	@Override
@@ -127,7 +117,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			case CARD_OTHERS:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_others, parent, false);
 				return new OthersCard(cardView);
-			case CARD_WARNINGS:
+			case CARD_NOTICE:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_notice, parent, false);
 				return new NoticeCard(cardView);
 		}
@@ -142,26 +132,37 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			case CARD_IMAGE_VIEW_PAGER:
 				break;
 			case CARD_PHONE_AND_WEBSITE_BUTTONS:
+				((PhoneAndWebsiteButtonsCard) cardViewHolder).setComponents();
 				break;
 			case CARD_PRICE_AND_RATE:
+				((PriceAndRateCard) cardViewHolder).setComponents();
 				break;
 			case CARD_BASIC_INFO:
+				((BasicInfoCard) cardViewHolder).setComponents();
 				break;
 			case CARD_OPTIONS:
+				((OptionsCard) cardViewHolder).setComponents();
 				break;
 			case CARD_VISITED_SCHOOLS:
+				((VisitedSchoolsCard) cardViewHolder).setComponents();
 				break;
 			case CARD_REVIEWS:
+				((ReviewsCard) cardViewHolder).setComponents();
 				break;
 			case CARD_ADDRESS_AND_ROUTE_AND_MAP:
+				((AddressAndRouteAndMapCard) cardViewHolder).setComponents();
 				break;
 			case CARD_PRICE_AND_DATE_SELECTION:
+				((PriceAndDateSelectionCard) cardViewHolder).setComponents();
 				break;
 			case CARD_OWNER_INFO:
+				((OwnerInfoCard) cardViewHolder).setComponents();
 				break;
 			case CARD_OTHERS:
+				((OthersCard) cardViewHolder).setComponents();
 				break;
-			case CARD_WARNINGS:
+			case CARD_NOTICE:
+				//((NoticeCard) cardViewHolder).setMtpleaseNotice();
 				break;
 		}
 	}
@@ -197,7 +198,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			case 10:
 				return CARD_OTHERS;
 			case 11:
-				return CARD_WARNINGS;
+				return CARD_NOTICE;
 			default:
 				return position;
 		}
@@ -300,7 +301,11 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private TextView roomPrice;
 
 		public void setComponents() {
-			roomPrice.setText(mRoomInfoModel.getRoom_cost());
+			int room_cost = mRoomInfoModel.getRoom_cost();
+			if(room_cost == 0)
+				roomPrice.setText(R.string.telephone_inquiry);
+			else
+				roomPrice.setText(R.string.currency_unit + room_cost);
 		}
 
 		public PriceAndRateCard(View cardView) {
@@ -317,7 +322,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 		public void setComponents() {
 			numberPeopleRoom.setText("기준 인원: " + mRoomInfoModel.getRoom_std_people()
-					+ "명 / 최대 인원" + mRoomInfoModel.getRoom_max_people() + "명");
+					+ "명 / 최대 인원: " + mRoomInfoModel.getRoom_max_people() + "명");
 			roomSize.setText(mRoomInfoModel.getRoom_pyeong() + "평");
 			numberRooms.setText(mRoomInfoModel.getNum_rooms() + "개");
 			numberToilets.setText(mRoomInfoModel.getNum_toilets() + "개");
@@ -340,11 +345,11 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private TextView aircon;
 
 		public void setComponents() {
-			playground.setText(mRoomInfoModel.getPen_ground());
-			pickup.setText(mRoomInfoModel.getPen_pickup());
-			barbecue.setText(mRoomInfoModel.getPen_barbecue());
-			valley.setText(mRoomInfoModel.getPen_valley());
-			aircon.setText(mRoomInfoModel.getRoom_aircon());
+			playground.setText(mRoomInfoModel.getPen_ground() + "");
+			pickup.setText(mRoomInfoModel.getPen_pickup() + "");
+			barbecue.setText(mRoomInfoModel.getPen_barbecue() + "");
+			valley.setText(mRoomInfoModel.getPen_valley() + "");
+			aircon.setText(mRoomInfoModel.getRoom_aircon() + "");
 		}
 
 
@@ -458,109 +463,5 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			super(cardView);
 			mtpleaseNotice = (TextView) cardView.findViewById(R.id.text_notice_mtplease);
 		}
-	}
-
-	/**
-	 * @author In-Ho
-	 * AsyncTask for receiving specific room data from the server
-	 * Used AsyncTask to perform the task in the background.
-	 */
-	private class RoomInfoDataDownloadingTask extends AsyncTask<String, Integer, String> {
-
-		@Override
-		protected void onPreExecute() {
-
-			super.onPreExecute();
-		}
-
-		@Override
-		protected String doInBackground(String... urls) {
-			try {
-				HttpClient mHttpClient = new DefaultHttpClient();
-				HttpGet mHttpGet = new HttpGet(urls[0]);
-				HttpConnectionParams.setConnectionTimeout(mHttpClient.getParams(), 5000);
-				HttpResponse mHttpResponseGet = mHttpClient.execute(mHttpGet);
-				HttpEntity resEntityGet = mHttpResponseGet.getEntity();
-
-				if(resEntityGet != null) {
-					Log.i(TAG,"HttpResponseGet Completed!!");
-					return EntityUtils.toString(resEntityGet);
-				}
-			} catch(ClientProtocolException e) {
-				Log.e(TAG, "ClientProtocolException");
-				e.printStackTrace();
-			} catch(IOException e) {
-				Log.e(TAG, "IOException");
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(String jsonString) {
-			super.onPostExecute(jsonString);
-
-			try {
-				JSONObject roomInfoObject = new JSONObject(jsonString);
-				roomInfoArray = new JSONArray(roomInfoObject.getString("results"));
-
-				JSONObject roomInfoList = roomInfoArray.getJSONObject(0);
-				// set all data of the room into the model instance
-				mRoomInfoModel.setPen_id(roomInfoList.getInt("pen_id"));
-				mRoomInfoModel.setRoom_name(roomInfoList.getString("room_name"));
-				mRoomInfoModel.setPen_period_division(roomInfoList.getString("pen_period_division"));
-				mRoomInfoModel.setPeriod_start(roomInfoList.getString("period_start"));
-				mRoomInfoModel.setPeriod_end(roomInfoList.getString("period_end"));
-				mRoomInfoModel.setWeekdays(roomInfoList.getInt("weekdays"));
-				mRoomInfoModel.setFriday(roomInfoList.getInt("friday"));
-				mRoomInfoModel.setWeekends(roomInfoList.getInt("weekends"));
-				mRoomInfoModel.setRoom_std_people(roomInfoList.getInt("room_std_people"));
-				mRoomInfoModel.setRoom_max_people(roomInfoList.getInt("room_max_people"));
-				mRoomInfoModel.setRoom_pyeong(roomInfoList.getInt("room_pyeong"));
-				mRoomInfoModel.setNum_rooms(roomInfoList.getInt("num_rooms"));
-				mRoomInfoModel.setNum_toilets(roomInfoList.getInt("num_toilets"));
-				mRoomInfoModel.setRoom_aircon(roomInfoList.getInt("room_aircon"));
-				mRoomInfoModel.setRoom_equipment(roomInfoList.getString("room_equipment"));
-				mRoomInfoModel.setRoom_description(roomInfoList.getString("room_description"));
-				mRoomInfoModel.setPen_region(roomInfoList.getString("pen_region"));
-				mRoomInfoModel.setPen_name(roomInfoList.getString("pen_name"));
-				mRoomInfoModel.setPen_homepage(roomInfoList.getString("pen_homepage"));
-				mRoomInfoModel.setPen_lot_adr(roomInfoList.getString("pen_lot_adr"));
-				mRoomInfoModel.setPen_road_adr(roomInfoList.getString("pen_road_adr"));
-				mRoomInfoModel.setPen_latitude(roomInfoList.getDouble("pen_latitude"));
-				mRoomInfoModel.setPen_longitude(roomInfoList.getDouble("pen_longitude"));
-				mRoomInfoModel.setPen_ceo(roomInfoList.getString("pen_ceo"));
-				mRoomInfoModel.setPen_phone1(roomInfoList.getString("pen_phone1"));
-				mRoomInfoModel.setPen_phone2(roomInfoList.getString("pen_phone2"));
-				mRoomInfoModel.setPen_checkin(roomInfoList.getString("pen_checkin"));
-				mRoomInfoModel.setPen_checkout(roomInfoList.getString("pen_checkout"));
-				mRoomInfoModel.setPen_check_caution(roomInfoList.getString("pen_check_caution"));
-				mRoomInfoModel.setPen_pickup(roomInfoList.getInt("pen_pickup"));
-				mRoomInfoModel.setPen_pickup_description(roomInfoList.getString("pen_pickup_description"));
-				mRoomInfoModel.setPen_barbecue(roomInfoList.getInt("pen_barbecue"));
-				mRoomInfoModel.setPen_barbecue_description(roomInfoList.getString("pen_barbecue_description"));
-				mRoomInfoModel.setPen_ground(roomInfoList.getInt("pen_ground"));
-				mRoomInfoModel.setPen_ground_description(roomInfoList.getString("pen_ground_description"));
-				mRoomInfoModel.setPen_valley(roomInfoList.getInt("pen_valley"));
-				mRoomInfoModel.setPen_valley_description(roomInfoList.getString("pen_valley_description"));
-				mRoomInfoModel.setPen_etc_facility(roomInfoList.getString("pen_etc_facility"));
-				mRoomInfoModel.setPen_caution(roomInfoList.getString("pen_caution"));
-				mRoomInfoModel.setPen_cost_caution(roomInfoList.getString("pen_cost_caution"));
-				mRoomInfoModel.setPen_walk_station(roomInfoList.getString("pen_walk_station"));
-				mRoomInfoModel.setPen_walk_terminal(roomInfoList.getString("pen_walk_terminal"));
-				mRoomInfoModel.setPen_picture_flag(roomInfoList.getInt("pen_picture_flag"));
-				mRoomInfoModel.setCost_table(roomInfoList.getJSONArray("cost_table"));
-				mRoomInfoModel.setPeriod_table(roomInfoList.getJSONArray("period_table"));
-				mRoomInfoModel.setRoom_cost(roomInfoList.getInt("room_cost"));
-				// end of the setting
-
-			} catch (JSONException e) {
-				Log.e(TAG, "Error receiving room data");
-				e.printStackTrace();
-			}
-
-
-		}
-
 	}
 }
