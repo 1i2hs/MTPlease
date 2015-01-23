@@ -15,7 +15,6 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 /**
  * Created by In-Ho on 2015-01-07.
  */

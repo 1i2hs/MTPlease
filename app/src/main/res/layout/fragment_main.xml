@@ -7,6 +7,6 @@
         android:id="@+id/list_room"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainFragment"
-        />
+        tools:context=".MainFragment"/>
+
 </RelativeLayout>

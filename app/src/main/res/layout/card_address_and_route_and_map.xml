@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                    android:orientation="horizontal" android:layout_width="match_parent"
-                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                    xmlns:card_view="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
                                     android:layout_margin="8dp"
-                                    card_view:cardCornerRadius="0dp"
-                                    android:layout_height="match_parent">
+                                    android:orientation="horizontal"
+                                    card_view:cardCornerRadius="0dp">
 
-    <LinearLayout
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="주소, 걸어오는 길(역에서/터미널에서), 네이버 지도"/>
+
+    <!--<com.nhn.android.maps.NMapView
+        android:id="@+id/nmapview_pension"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="300dp" />-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="주소, 걸어오는 길(역에서/터미널에서), 네이버 지도"/>
+    <TextView
+        android:id="@+id/text_walk_station"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/text_walk_station"/>
+    <TextView
+        android:id="@+id/text_walk_terminal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/text_walk_terminal"/>
+    <!-- Naver maps View goes here -->
 
-        <!-- Naver maps View goes here -->
-
-    </LinearLayout>
+</LinearLayout>
 
 </android.support.v7.widget.CardView>

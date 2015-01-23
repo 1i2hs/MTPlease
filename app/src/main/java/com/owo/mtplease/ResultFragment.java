@@ -26,191 +26,173 @@ import org.json.JSONObject;
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ResultFragment.OnFragmentInteractionListener} interface
+ * {@link ResultFragment.OnResultFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link ResultFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class ResultFragment extends Fragment {
 
-    private static final String TAG = "ResultFragment";
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String JSONSTRING_OF_ROOMS = "jsonStringRoomList";
-    private static final String DATE_OF_MT = "dateMT";
+	private static final String TAG = "ResultFragment";
+	// TODO: Rename parameter arguments, choose names that match
+	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+	private static final String JSONSTRING_OF_ROOMS = "jsonStringRoomList";
+	private static final String DATE_OF_MT = "dateMT";
 
-    // View: User Interface Views
-    private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLayoutManager;
-    private ActionBar mActionBar;
-    private ColorDrawable actionBarBackgroundColor;
-    // End of User Interface Views
+	// View: User Interface Views
+	private RecyclerView mRecyclerView;
+	private LinearLayoutManager mLayoutManager;
+	// End of User Interface Views
 
-    // Controller: Adapters for User Interface Views
-    private RecyclerView.Adapter mAdapter;
-    // End of Controller;
+	// Controller: Adapters for User Interface Views
+	private RecyclerView.Adapter mAdapter;
+	// End of Controller;
 
-    // Model: Data variables for User Interface Views
-    private String jsonStringRoomList;
-    private JSONArray roomArray;
-    private String dateMT;
-    // End of the Model
+	// Model: Data variables for User Interface Views
+	private String jsonStringRoomList;
+	private JSONArray roomArray;
+	private String dateMT;
+	// End of the Model
 
-    // Flags
+	// Flags
+	// End of the Flags
+	// Counters
 
-    // Listeners
-    private OnFragmentInteractionListener mListener;
-    protected ScrollTabHolder mScrollTabHolder;
+	// Listeners
+	private OnResultFragmentInteractionListener mOnResultFragmentInteractionListener;
+	protected ScrollTabHolder mScrollTabHolder;
+	// End of the Listeners
 
-    // Others
-    private FragmentManager mFragmentManager;
-    private boolean noResults;
+	// Others
+	private FragmentManager mFragmentManager;
+	private boolean noResults;
+	// End of the Others
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param jsonString Parameter 1.
-     * @param dateMT Parameter 1.
-     * @return A new instance of fragment MainFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ResultFragment newInstance(String jsonString, String dateMT) {
-        ResultFragment fragment = new ResultFragment();
-        Bundle args = new Bundle();
-        args.putString(JSONSTRING_OF_ROOMS, jsonString);
-        args.putString(DATE_OF_MT, dateMT);
-        fragment.setArguments(args);
-        return fragment;
-    }
+	/**
+	 * Use this factory method to create a new instance of
+	 * this fragment using the provided parameters.
+	 *
+	 * @param jsonString Parameter 1.
+	 * @param dateMT Parameter 1.
+	 * @return A new instance of fragment MainFragment.
+	 */
+	// TODO: Rename and change types and number of parameters
+	public static ResultFragment newInstance(String jsonString, String dateMT) {
+		ResultFragment fragment = new ResultFragment();
+		Bundle args = new Bundle();
+		args.putString(JSONSTRING_OF_ROOMS, jsonString);
+		args.putString(DATE_OF_MT, dateMT);
+		fragment.setArguments(args);
+		return fragment;
+	}
 
-    public ResultFragment() {
-        // Required empty public constructor
-    }
+	public ResultFragment() {
+		// Required empty public constructor
+	}
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		mLayoutManager = new LinearLayoutManager(getActivity());
+		mRecyclerView.setLayoutManager(mLayoutManager);
+		mRecyclerView.setHasFixedSize(true);
+		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mAdapter = new RoomListRecyclerViewAdapter(getActivity(), mFragmentManager, roomArray, dateMT, mActionBar, mScrollTabHolder);
-        mRecyclerView.setAdapter(mAdapter);
+		mAdapter = new RoomListRecyclerViewAdapter(getActivity(), mFragmentManager, roomArray, dateMT, mScrollTabHolder, mOnResultFragmentInteractionListener);
+		mRecyclerView.setAdapter(mAdapter);
 
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+		mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
+			@Override
+			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+				super.onScrollStateChanged(recyclerView, newState);
+			}
 
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (mScrollTabHolder != null)
-                    mScrollTabHolder.onScroll(recyclerView, mLayoutManager.findFirstVisibleItemPosition(), 0, MainActivity.RESULT_FRAGMENT_VISIBLE);
-            }
-        });
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				super.onScrolled(recyclerView, dx, dy);
+				if (mScrollTabHolder != null)
+					mScrollTabHolder.onScroll(recyclerView, mLayoutManager.findFirstVisibleItemPosition(), 0, MainActivity.RESULT_FRAGMENT_VISIBLE);
+			}
+		});
 
-        super.onViewCreated(view, savedInstanceState);
-    }
+		//mLayoutManager.scrollToPositionWithOffset(2, R.dimen.actionbar_height);
+		mRecyclerView.scrollToPosition(1);
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            jsonStringRoomList = getArguments().getString(JSONSTRING_OF_ROOMS);
-            dateMT = getArguments().getString(DATE_OF_MT);
-            Log.i(TAG, jsonStringRoomList);
+		super.onViewCreated(view, savedInstanceState);
+	}
 
-            try {
-                JSONObject roomObject = new JSONObject(jsonStringRoomList);
-                roomArray = new JSONArray(roomObject.getString("results"));
-                noResults = false;
-            } catch(JSONException e) {
-                noResults = true;
-                Toast.makeText(getActivity(), R.string.notify_fail_loading_room_results, Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
-        }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (getArguments() != null) {
+			jsonStringRoomList = getArguments().getString(JSONSTRING_OF_ROOMS);
+			dateMT = getArguments().getString(DATE_OF_MT);
+			Log.i(TAG, jsonStringRoomList);
 
-        // configure actionbar for result page
-        actionBarBackgroundColor = new ColorDrawable(Color.BLACK);
-        mActionBar.setBackgroundDrawable(actionBarBackgroundColor);
+			try {
+				JSONObject roomObject = new JSONObject(jsonStringRoomList);
+				roomArray = new JSONArray(roomObject.getString("roomResultList"));
+				noResults = false;
+			} catch(JSONException e) {
+				noResults = true;
+				Toast.makeText(getActivity(), R.string.notify_fail_loading_room_results, Toast.LENGTH_SHORT).show();
+				e.printStackTrace();
+			}
+		}
+	}
 
-        mActionBar.setTitle(R.string.results);
-        if(noResults)
-            mActionBar.setSubtitle(R.string.no_results);
-        else
-            mActionBar.setSubtitle(roomArray.length() + "개의 방");
-        // end of the configuration
-    }
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+							 Bundle savedInstanceState) {
+		// Inflate the layout for this fragment
+		View resultView = inflater.inflate(R.layout.fragment_main, container, false);
+		mRecyclerView = (RecyclerView) resultView.findViewById(R.id.list_room);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View resultView = inflater.inflate(R.layout.fragment_main, container, false);
-        mRecyclerView = (RecyclerView) resultView.findViewById(R.id.list_room);
-        return resultView;
-    }
+		if(mOnResultFragmentInteractionListener != null)
+			mOnResultFragmentInteractionListener.onResultFragmentViewResumed(noResults, roomArray.length());
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onResultFragmentInteraction(uri);
-        }
-    }
+		return resultView;
+	}
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			mOnResultFragmentInteractionListener = (OnResultFragmentInteractionListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement OnFragmentInteractionListener");
+		}
+	}
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		mOnResultFragmentInteractionListener = null;
+	}
 
-		// configure actionbar for timeline page
-		actionBarBackgroundColor = new ColorDrawable(Color.TRANSPARENT);
-		mActionBar.setBackgroundDrawable(actionBarBackgroundColor);
-		
-		mActionBar.setTitle(R.string.app_name);
-		mActionBar.setSubtitle(null);
-    }
+	/**
+	 * This interface must be implemented by activities that contain this
+	 * fragment to allow an interaction in this fragment to be communicated
+	 * to the activity and potentially other fragments contained in that
+	 * activity.
+	 * <p/>
+	 * See the Android Training lesson <a href=
+	 * "http://developer.android.com/training/basics/fragments/communicating.html
+	 * >Communicating with Other Fragments</a> for more information.
+	 */
+	public interface OnResultFragmentInteractionListener {
+		// TODO: Update argument type and name
+		public void onResultFragmentViewResumed(boolean noResults, int numRoom);
+		public void onSpecificInfoFragmentLoad();
+		public void onSpecificInfoFragmentLoadDone();
+	}
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onResultFragmentInteraction(Uri uri);
-    }
+	public void setScrollTabHolder(ScrollTabHolder scrollTabHolder) {
+		this.mScrollTabHolder = scrollTabHolder;
+	}
 
-    public void setScrollTabHolder(ScrollTabHolder scrollTabHolder) {
-        this.mScrollTabHolder = scrollTabHolder;
-    }
-
-    public void setFragmentManager(FragmentManager fragmentManager) {
-        this.mFragmentManager = fragmentManager;
-    }
-
-    public void setActionBar(ActionBar actionBar) {
-        this.mActionBar = actionBar;
-    }
+	public void setFragmentManager(FragmentManager fragmentManager) {
+		this.mFragmentManager = fragmentManager;
+	}
 }

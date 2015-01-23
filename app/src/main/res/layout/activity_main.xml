@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
     <FrameLayout
         android:id="@+id/body"
@@ -10,127 +11,127 @@
 
     <LinearLayout
         android:id="@+id/header"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="@dimen/min_header_height"
-        android:gravity="center|bottom"
         android:background="@android:color/darker_gray"
         android:focusable="true"
-        android:focusableInTouchMode="true" >
+        android:focusableInTouchMode="true"
+        android:gravity="center|bottom"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="?android:attr/actionBarSize"
             android:text="@string/we"
-            android:layout_gravity="center_horizontal" />
+            android:layout_marginBottom="4dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:gravity="center">
 
             <Button
+                android:id="@+id/btn_select_date"
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/btn_select_date"
-                android:layout_centerInParent="true" />
+                android:layout_centerInParent="true"/>
 
             <TextView
+                android:id="@+id/textView_postposition"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/postposition_1"
                 android:layout_centerInParent="true"
-                android:layout_toRightOf="@id/btn_select_date"/>
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal">
+                android:layout_toRightOf="@id/btn_select_date"
+                android:text="@string/postposition_1"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <Spinner
+                android:id="@+id/spinner_select_region"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:prompt="@string/where"
-                android:id="@+id/spinner_select_region"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_marginLeft="8dp"
+                android:layout_centerInParent="true"
+                android:layout_toRightOf="@id/textView_postposition"
+                android:prompt="@string/where"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:gravity="center">
 
             <EditText
+                android:id="@+id/editText_input_number_people"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText_select_number_people"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"
                 android:hint="@string/howMany"
                 android:inputType="numberDecimal"
-                android:maxLength="3"
-                android:layout_centerInParent="true"
-                android:gravity="center_horizontal"/>
+                android:maxLength="3"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/postposition_2"
                 android:layout_centerInParent="true"
-                android:layout_toRightOf="@id/editText_select_number_people"/>
+                android:layout_toRightOf="@id/editText_input_number_people"
+                android:text="@string/postposition_2"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         </RelativeLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="4dp"
             android:text="@string/go_MT"
-            android:layout_gravity="center_horizontal" />
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <ImageButton
+            android:id="@+id/btn_search_room"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:id="@+id/btn_search_room"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"/>
 
         <TextView
+            android:id="@+id/text_room_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/text_room_count"
             android:layout_marginBottom="20dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/query_status_bar_height"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
                 android:id="@+id/text_query_date"
-                android:clickable="true"/>
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
-                android:id="@+id/text_query_region"
                 android:clickable="true"/>
 
             <TextView
+                android:id="@+id/text_query_region"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:clickable="true"/>
+
+            <TextView
                 android:id="@+id/text_query_number_people"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:clickable="true"/>
 
         </LinearLayout>
@@ -140,14 +141,14 @@
         android:id="@+id/background_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/black">
+        android:background="@android:color/transparent">
 
         <ProgressBar
+            android:id="@+id/progressBar_condition_search"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/progressBar_condition_search"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"/>
 
     </FrameLayout>
 </FrameLayout>

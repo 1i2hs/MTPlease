@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                    android:orientation="horizontal" android:layout_width="match_parent"
                                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
                                     android:layout_margin="8dp"
-                                    card_view:cardCornerRadius="0dp"
-                                    android:layout_height="match_parent">
+                                    android:orientation="horizontal"
+                                    card_view:cardCornerRadius="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,160 +17,222 @@
             android:layout_height="wrap_content"
             android:text="가격 및 기간, 날짜 선택 창"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/period_table"
+            android:layout_gravity="center_horizontal"/>
+
         <TableLayout
             android:id="@+id/table_price_room"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/table_shape"
-            android:stretchColumns="*" >
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:stretchColumns="*">
 
             <TableRow
-                android:id="@+id/tableRow1"
+                android:id="@+id/tableRow1_price"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/cell11"
+                    android:id="@+id/cell11_price"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/cell_shape"
-                    android:padding="5dp"
-                    android:text="TextView"
-                    android:textAppearance="?android:attr/textAppearanceMedium" >
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_shape_right_bottom_line">
                 </TextView>
 
                 <TextView
-                    android:id="@+id/cell12"
+                    android:id="@+id/cell12_price"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/cell_shape"
-                    android:padding="5dp"
-                    android:text="TextView"
-                    android:textAppearance="?android:attr/textAppearanceMedium" >
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_shape_bottom_line"
+                    android:gravity="center"
+                    android:text="@string/weekdays">
                 </TextView>
 
                 <TextView
-                    android:id="@+id/cell13"
+                    android:id="@+id/cell13_price"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/cell_shape"
-                    android:padding="5dp"
-                    android:text="TextView"
-                    android:textAppearance="?android:attr/textAppearanceMedium" >
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_shape_bottom_line"
+                    android:gravity="center"
+                    android:text="@string/friday">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/cell14_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_shape_bottom_line"
+                    android:gravity="center"
+                    android:text="@string/weekends">
                 </TextView>
             </TableRow>
 
             <TableRow
-                android:id="@+id/tableRow2"
+                android:id="@+id/tableRow2_price"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/cell21"
+                    android:id="@+id/cell21_price"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/cell_shape"
-                    android:padding="5dp"
-                    android:text="TextView"
-                    android:textAppearance="?android:attr/textAppearanceMedium" >
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_shape_right_line"
+                    android:gravity="center"
+                    android:text="@string/off_season">
                 </TextView>
 
                 <TextView
-                    android:id="@+id/cell22"
+                    android:id="@+id/cell22_price"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/cell_shape"
-                    android:padding="5dp"
-                    android:text="TextView"
-                    android:textAppearance="?android:attr/textAppearanceMedium" >
+                    android:layout_height="match_parent"
+                    android:gravity="center">
                 </TextView>
 
                 <TextView
-                    android:id="@+id/cell23"
+                    android:id="@+id/cell23_price"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/cell_shape"
-                    android:padding="5dp"
-                    android:text="TextView"
-                    android:textAppearance="?android:attr/textAppearanceMedium" >
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/cell24_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
                 </TextView>
             </TableRow>
 
             <TableRow
-                android:id="@+id/tableRow3"
+                android:id="@+id/tableRow3_price"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/cell31"
+                    android:id="@+id/cell31_price"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/cell_shape"
-                    android:padding="5dp"
-                    android:text="TextView"
-                    android:textAppearance="?android:attr/textAppearanceMedium" >
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_shape_right_line"
+                    android:gravity="center"
+
+                    android:text="@string/semi_on_season">
                 </TextView>
 
                 <TextView
-                    android:id="@+id/cell32"
+                    android:id="@+id/cell32_price"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/cell_shape"
-                    android:padding="5dp"
-                    android:text="TextView"
-                    android:textAppearance="?android:attr/textAppearanceMedium" >
+                    android:layout_height="match_parent"
+                    android:gravity="center">
                 </TextView>
 
                 <TextView
-                    android:id="@+id/cell33"
+                    android:id="@+id/cell33_price"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/cell_shape"
-                    android:padding="5dp"
-                    android:text="TextView"
-                    android:textAppearance="?android:attr/textAppearanceMedium" >
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/cell34_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
                 </TextView>
             </TableRow>
 
             <TableRow
-                android:id="@+id/tableRow4"
+                android:id="@+id/tableRow4_price"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/cell41"
+                    android:id="@+id/cell41_price"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/cell_shape"
-                    android:padding="5dp"
-                    android:text="TextView"
-                    android:textAppearance="?android:attr/textAppearanceMedium" >
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_shape_right_line"
+                    android:gravity="center"
+                    android:text="@string/on_season">
                 </TextView>
 
                 <TextView
-                    android:id="@+id/cell42"
+                    android:id="@+id/cell42_price"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/cell_shape"
-                    android:padding="5dp"
-                    android:text="TextView"
-                    android:textAppearance="?android:attr/textAppearanceMedium" >
+                    android:layout_height="match_parent"
+                    android:gravity="center">
                 </TextView>
 
                 <TextView
-                    android:id="@+id/cell43"
+                    android:id="@+id/cell43_price"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/cell_shape"
-                    android:padding="5dp"
-                    android:text="TextView"
-                    android:textAppearance="?android:attr/textAppearanceMedium" >
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/cell44_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
                 </TextView>
             </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow5_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/cell51_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_shape_right_line"
+                    android:gravity="center"
+                    android:text="@string/extreme_on_season">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/cell52_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/cell53_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/cell54_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+                </TextView>
+            </TableRow>
+
         </TableLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/period_table"
+            android:layout_gravity="center_horizontal"/>
+
+        <TableLayout
+            android:id="@+id/table_period_room"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:stretchColumns="*">
+        </TableLayout>
 
     </LinearLayout>
-
 
 </android.support.v7.widget.CardView>

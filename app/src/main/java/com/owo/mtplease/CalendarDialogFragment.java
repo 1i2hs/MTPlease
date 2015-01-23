@@ -9,50 +9,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
 
-
-/**
- * A simple {@link android.app.Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CalendarDialogFragment.OnDateConfirmedListener} interface
- * to handle interaction events.
- * Use the {@link CalendarDialogFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CalendarDialogFragment extends DialogFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnDateConfirmedListener mOnDateConfirmedListener;
 
     // string for the selected date
     String modifiedDate = null;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CalendarDialogFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CalendarDialogFragment newInstance(String param1, String param2) {
-        CalendarDialogFragment fragment = new CalendarDialogFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+	// flag that defines which of two callers call this fragment
+	// two callers are distinguished with two int type variable:
+	// CALL_FROM_CONDITIONAL_QUERY = 1; CALL_FROM_PLAN = 2;
+	private int callerFlag;
 
     public CalendarDialogFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -74,10 +43,6 @@ public class CalendarDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -115,7 +80,7 @@ public class CalendarDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                mOnDateConfirmedListener.onDateConfirmButtonClicked(modifiedDate);
+                mOnDateConfirmedListener.onDateConfirmButtonClicked(modifiedDate, callerFlag);
                 dismiss();
             }
 
@@ -123,6 +88,10 @@ public class CalendarDialogFragment extends DialogFragment {
 
         return calendarDialogView;
     }
+
+	public void setCaller(int callerFlag) {
+		this.callerFlag = callerFlag;
+	}
 
     /**
      * This interface must be implemented by activities that contain this
@@ -136,6 +105,6 @@ public class CalendarDialogFragment extends DialogFragment {
      */
     public interface OnDateConfirmedListener {
         // TODO: Update argument type and name
-        public void onDateConfirmButtonClicked(String dateSelected);
+        public void onDateConfirmButtonClicked(String dateSelected, int callerFlag);
     }
 }

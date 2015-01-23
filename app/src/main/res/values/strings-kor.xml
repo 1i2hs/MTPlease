@@ -4,11 +4,6 @@
     <!-- For UI components of MainFragment -->
     <string name="actionbar_title">엠티를 부탁해</string>
     <string name="action_settings">설정</string>
-    <string name="main_page">검색페이지</string>
-    <string name="compare_page">비교</string>
-    <string name="estimate_page">견적서</string>
-    <string name="my_page_page">마이페이지</string>
-    <string name="setting_page">설정</string>
     <string name="title_activity_settings">설정</string>
     <string name="app_name">엠티를 부탁해</string>
     <string name="menu_btn_home">홈</string>
@@ -32,6 +27,7 @@
     <string name="go_MT">엠티를 간다!</string>
     <string name="select_date">엠티 출발 날짜를 선택하세요</string>
     <string name="notify_number_of_people_input">인원 수를 입력해 주세요.</string>
+    <string name="notify_type_of_text_wrong">인원 수에는 숫자만 입력해 주세요.</string>
     <string name="notify_network_error">네트워크 문제로 인해 데이터를 읽어오지 못하였습니다.</string>
 
     <!-- For room search results -->
@@ -48,11 +44,36 @@
 
     <!-- For specific information page -->
     <string name="call_phone">전화 걸기</string>
-    <string name="website">홈페이지</string>
+    <string name="go_website">홈페이지</string>
     <string name="compare">비교하기</string>
-    <string name="estimate">견적내기</string>
-    <string name="add_compare">비교하기 항목에 추가 되었습니다.</string>
-    <string name="add_estimate">견적서에 방이 추가 되었습니다.</string>
+    <string name="add_to_plan">계획표에 추가</string>
+    <string name="added_to_compare">비교하기 항목에 추가 되었습니다.</string>
+    <string name="added_to_plan">계획표에 방이 추가 되었습니다.</string>
     <string name="mine">찜하기 상태로 되었습니다.</string>
     <string name="currency_unit">￦</string>
+    <string name="off_season">비수기</string>
+    <string name="on_season">성수기</string>
+    <string name="extreme_on_season">극성수기</string>
+    <string name="semi_on_season">준성수기</string>
+    <string name="weekdays">평일</string>
+    <string name="friday">금요일</string>
+    <string name="weekends">주말</string>
+    <string name="period_winter">기간</string>
+    <string name="price_table">기간 별 가격표</string>
+    <string name="period_table">기간표</string>
+
+    <!-- For plan page -->
+    <string name="when_question">언제?</string>
+    <string name="where_question">어디로?</string>
+    <string name="how_many_people_question">몇 명?</string>
+    <string name="sex_ratio_question">성비는?</string>
+    <string name="room_question">방은?</string>
+    <string name="item_question">장보기는?</string>
+    <string name="meat_question">고기는?</string>
+    <string name="alcohol_question">술은?</string>
+    <string name="others_question">나머지는?</string>
+    <string name="people_unit">명</string>
+    <string name="recommend">추천받기</string>
+    <string name="print_plan">계획표 뽑기</string>
+
 </resources>

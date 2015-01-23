@@ -22,7 +22,7 @@ import android.widget.Toast;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SpecificInfoFragment.OnFragmentInteractionListener} interface
+ * {@link SpecificInfoFragment.OnSpecificInfoFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link SpecificInfoFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -32,22 +32,12 @@ public class SpecificInfoFragment extends Fragment {
     private static final String TAG = "SpecificInfoFragment";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String PENSION_ID = "pen_id";
-	private static final String NUMBER_OF_ROOMS_FOUND = "num_room_found";
 	private static final String SPECIFIC_ROOM_DATA = "specific_room_data";
-
-    // TODO: Rename and change types of parameters
-    private int pen_id;
-    private String dateMT;
-    private String room_name;
-    private String pen_name;
-	private int roomCount;
+	private static final String NUMBER_OF_ROOMS_FOUND = "number_of_rooms_found";
 
     // View: User Interface Views
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
-    private ActionBar mActionBar;
-    private ColorDrawable actionBarBackgroundColor;
 	private Button compareButton;
 	private Button estimateButton;
 	private Button mineButton;
@@ -59,10 +49,11 @@ public class SpecificInfoFragment extends Fragment {
 
     // Model: Data variables for User Interface Views
 	private RoomInfoModel mRoomInfoModel;
+	private int numRoom;
     // End of the Model
 
     //Listeners
-    private OnFragmentInteractionListener mListener;
+    private OnSpecificInfoFragmentInteractionListener mOnSpecificInfoFragmentInteratcionListener;
     protected ScrollTabHolder mScrollTabHolder;
 
     public SpecificInfoFragment() {
@@ -73,18 +64,16 @@ public class SpecificInfoFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param pen_id Parameter 1.
-     * @param room_count Parameter 2.
-     * @param roomInfoModel Parameter 3.
+     * @param roomInfoModel Parameter 1.
+	 * @param numRoom Parameter 2.
      * @return A new instance of fragment SpecificInfoFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SpecificInfoFragment newInstance(int pen_id, int room_count, RoomInfoModel roomInfoModel) {
+    public static SpecificInfoFragment newInstance(RoomInfoModel roomInfoModel, int numRoom) {
         SpecificInfoFragment fragment = new SpecificInfoFragment();
         Bundle args = new Bundle();
-		args.putInt(PENSION_ID, pen_id);
-		args.putInt(NUMBER_OF_ROOMS_FOUND, room_count);
 		args.putParcelable(SPECIFIC_ROOM_DATA, roomInfoModel);
+		args.putInt(NUMBER_OF_ROOMS_FOUND, numRoom);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -94,22 +83,12 @@ public class SpecificInfoFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate()");
         if (getArguments() != null) {
-            this.pen_id = getArguments().getInt(PENSION_ID);
-			this.roomCount = getArguments().getInt(NUMBER_OF_ROOMS_FOUND);
 			this.mRoomInfoModel = getArguments().getParcelable(SPECIFIC_ROOM_DATA);
+			this.numRoom = getArguments().getInt(NUMBER_OF_ROOMS_FOUND);
         }
 
 		Log.d(TAG, mRoomInfoModel.getPen_homepage());
 		Log.d(TAG, mRoomInfoModel.getPen_phone1());
-
-        // configure actionbar for result page
-        actionBarBackgroundColor = new ColorDrawable(Color.BLACK);
-        mActionBar.setBackgroundDrawable(actionBarBackgroundColor);
-
-        mActionBar.setTitle(mRoomInfoModel.getRoom_name());
-        mActionBar.setSubtitle(mRoomInfoModel.getPen_name());
-        // end of the configuration
-        // **********************actionbar button issue...........
     }
 
     @Override
@@ -149,7 +128,7 @@ public class SpecificInfoFragment extends Fragment {
 		compareButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getActivity(), R.string.add_compare, Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), R.string.added_to_compare, Toast.LENGTH_LONG).show();
 			}
 		});
 
@@ -157,7 +136,7 @@ public class SpecificInfoFragment extends Fragment {
 		estimateButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getActivity(), R.string.add_estimate, Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), R.string.added_to_plan, Toast.LENGTH_LONG).show();
 			}
 		});
 
@@ -169,21 +148,17 @@ public class SpecificInfoFragment extends Fragment {
 			}
 		});
 
-        return specificInfoView;
-    }
+		if(mOnSpecificInfoFragmentInteratcionListener != null)
+			mOnSpecificInfoFragmentInteratcionListener.onSpecificInfoFragmentViewAttach(mRoomInfoModel.getRoom_name(), mRoomInfoModel.getPen_name());
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onSpecificInfoFragmentInteraction(uri);
-        }
+        return specificInfoView;
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mOnSpecificInfoFragmentInteratcionListener = (OnSpecificInfoFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -193,14 +168,8 @@ public class SpecificInfoFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
-
-		// configure actionbar for result page
-		actionBarBackgroundColor = new ColorDrawable(Color.BLACK);
-		mActionBar.setBackgroundDrawable(actionBarBackgroundColor);
-
-        mActionBar.setTitle(R.string.results);
-        mActionBar.setSubtitle(this.roomCount + "개의 방");
+		mOnSpecificInfoFragmentInteratcionListener.onSpecificInfoFragmentViewDetach(this.numRoom);
+        mOnSpecificInfoFragmentInteratcionListener = null;
     }
 
     /**
@@ -213,14 +182,12 @@ public class SpecificInfoFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnSpecificInfoFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onSpecificInfoFragmentInteraction(Uri uri);
+        public void onSpecificInfoFragmentViewAttach(String roomName, String pensionName);
+		public void onSpecificInfoFragmentViewDetach(int numRoom);
     }
 
-    public void setActionBar(ActionBar actionBar) {
-        this.mActionBar = actionBar;
-    }
     public void setScrollTabHolder(ScrollTabHolder scrollTabHolder) {
         this.mScrollTabHolder = scrollTabHolder;
     }

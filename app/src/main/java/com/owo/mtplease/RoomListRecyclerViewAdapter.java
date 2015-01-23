@@ -55,26 +55,26 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
 	// Model: Data variables for User Interface Views
 	private JSONArray roomArray;
-	private JSONArray roomSpecificInfoArray;
 	// End of the Model
 
 	// Listeners
 	private ScrollTabHolder mScrollTabHolder;
+	private ResultFragment.OnResultFragmentInteractionListener mOnResultFragmentInteractionListener;
 	// End of the listeners
 
 	// others
 	private String dateMT;
-	private ActionBar mActionBar;
 	// End of the others
 
-	public RoomListRecyclerViewAdapter(Context context, FragmentManager fragmentManager, JSONArray jsonArray, String date, ActionBar actionBar, ScrollTabHolder scrollTabHolder) {
+	public RoomListRecyclerViewAdapter(Context context, FragmentManager fragmentManager, JSONArray jsonArray, String date,
+									   ScrollTabHolder scrollTabHolder, ResultFragment.OnResultFragmentInteractionListener onResultFragmentInteractionListener) {
 		Log.d(TAG, "RoomListRecyclerViewAdapter");
 		this.mContext = context;
 		this.mFragmentManager = fragmentManager;
 		this.roomArray = jsonArray;
 		this.dateMT = date;
-		this.mActionBar = actionBar;
 		this.mScrollTabHolder = scrollTabHolder;
+		this.mOnResultFragmentInteractionListener = onResultFragmentInteractionListener;
 	}
 
 	@Override
@@ -167,10 +167,10 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			roomLayout = (LinearLayout) cardView.findViewById(R.id.LinearLayout_card_room);
 			roomImage = (ImageView) cardView.findViewById(R.id.image_room);
 			loadingProgressBar = (ProgressBar) cardView.findViewById(R.id.progressBar_image_room);
-			roomName = (TextView) cardView.findViewById(R.id.text_room_name);
-			pensionName = (TextView) cardView.findViewById(R.id.text_pension_name);
-			rangeNumberOfPeople = (TextView) cardView.findViewById(R.id.text_number_range_of_people);
-			roomPrice = (TextView) cardView.findViewById(R.id.text_price);
+			roomName = (TextView) cardView.findViewById(R.id.textView_name_room_card);
+			pensionName = (TextView) cardView.findViewById(R.id.textView_name_pension_card);
+			rangeNumberOfPeople = (TextView) cardView.findViewById(R.id.textView_number_range_of_people_card);
+			roomPrice = (TextView) cardView.findViewById(R.id.textView_price_room_card);
 		}
 
 		public void setRoomData(JSONObject roomData) throws UnsupportedEncodingException, JSONException {
@@ -228,7 +228,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			// ***************receive the specific info data of the room from the server;
 			try {
 				new RoomInfoDataDownloadingTask(this.pen_id).execute(MTPLEASE_URL +
-						"pension?pen_id="+ this.pen_id + "&date=" + dateMT + "&room_name='" + URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20") + "'");
+						"pension?pen_id="+ this.pen_id + "&date=" + dateMT + "&room_name=" + URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20"));
 			} catch (UnsupportedEncodingException e) {
 				Log.e(TAG, "Wrong URL sent!");
 				e.printStackTrace();
@@ -358,12 +358,9 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			super.onPostExecute(jsonString);
 
 			try {
-				JSONObject roomInfoObject = new JSONObject(jsonString);
-				Log.d(TAG, roomInfoObject.toString());
-				roomSpecificInfoArray = new JSONArray(roomInfoObject.getString("results"));
-
-				Log.d(TAG, roomSpecificInfoArray.toString());
-				JSONObject roomInfoList = roomSpecificInfoArray.getJSONObject(0);
+				JSONObject roomInfoList = new JSONObject(jsonString);
+				Log.d(TAG, roomInfoList.toString());
+				roomInfoList = new JSONObject(roomInfoList.getString("roomInfo"));
 				// set all data of the room into the model instance
 				mRoomInfoModel = new RoomInfoModel();
 				mRoomInfoModel.setPen_id(roomInfoList.optInt("pen_id"));
@@ -414,17 +411,19 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 				mRoomInfoModel.setRoom_cost(roomInfoList.optInt("room_cost"));
 				// end of the setting
 
-				SpecificInfoFragment mSpecificInfoFragment = SpecificInfoFragment.newInstance(this.pen_id, roomArray.length(), mRoomInfoModel);
+				mOnResultFragmentInteractionListener.onSpecificInfoFragmentLoad();
+
+				SpecificInfoFragment mSpecificInfoFragment = SpecificInfoFragment.newInstance(mRoomInfoModel, roomArray.length());
+				mSpecificInfoFragment.setScrollTabHolder(mScrollTabHolder);
 
 				// commit the SpecificInfoFragment to the current view
 				FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
 				mFragmentTransaction.replace(R.id.background_loading, mSpecificInfoFragment);
 				mFragmentTransaction.addToBackStack(null);
 				mFragmentTransaction.commit();
-
-				mSpecificInfoFragment.setActionBar(mActionBar);
-				mSpecificInfoFragment.setScrollTabHolder(mScrollTabHolder);
 				// end of commission
+
+				mOnResultFragmentInteractionListener.onSpecificInfoFragmentLoadDone();
 
 			} catch (JSONException e) {
 				Log.e(TAG, "Error receiving room data");

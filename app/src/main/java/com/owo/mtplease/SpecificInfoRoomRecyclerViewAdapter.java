@@ -3,35 +3,39 @@ package com.owo.mtplease;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.util.EntityUtils;
+import com.nhn.android.maps.NMapController;
+import com.nhn.android.maps.NMapOverlay;
+import com.nhn.android.maps.NMapOverlayItem;
+import com.nhn.android.maps.NMapView;
+import com.nhn.android.maps.maplib.NGeoPoint;
+import com.nhn.android.maps.nmapmodel.NMapError;
+import com.nhn.android.maps.overlay.NMapPOIitem;
+import com.nhn.android.mapviewer.overlay.NMapCalloutOverlay;
+import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
+import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Vector;
 
 /**
@@ -58,18 +62,19 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	// End of series of cards
 
 	// Model: Data variables for User Interface Views
-	private JSONArray roomInfoArray;
 	private RoomInfoModel mRoomInfoModel;
 	// End of the Model
-
-	// variables required for server request for specific information of selected room
-	private int pen_id;
-	private String dateMT;
-	private String room_name;
 
 	// others
 	private Context mContext;
 
+	// Naver Map API Key
+	private static final String NAVER_MAP_API_KEY = "d95aa436e270994d04d2fcc5bffdb1cb";
+	// Naver related instances
+	private NMapView mMapView;
+	private NMapController mMapController;
+		/*NMapViewerResourceProvider mMapViewerResourceProvider = null;
+		NMapOverlayManager mOverlayManager;*/
 
 	public SpecificInfoRoomRecyclerViewAdapter(Context context, RoomInfoModel mRoomInfoModel) {
 		Log.d(TAG, TAG);
@@ -150,7 +155,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 				((ReviewsCard) cardViewHolder).setComponents();
 				break;
 			case CARD_ADDRESS_AND_ROUTE_AND_MAP:
-				((AddressAndRouteAndMapCard) cardViewHolder).setComponents();
+				//((AddressAndRouteAndMapCard) cardViewHolder).setComponents();
 				break;
 			case CARD_PRICE_AND_DATE_SELECTION:
 				((PriceAndDateSelectionCard) cardViewHolder).setComponents();
@@ -385,37 +390,245 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		}
 	}
 
-	private class AddressAndRouteAndMapCard extends RecyclerView.ViewHolder {
-		TextView walkFromStationTime;
-		TextView walkFromTerminalTime;
-		// NMap instance;
+	private class AddressAndRouteAndMapCard extends RecyclerView.ViewHolder implements NMapView.OnMapStateChangeListener, NMapView.OnMapViewTouchEventListener,
+			NMapOverlayManager.OnCalloutOverlayListener, NMapPOIdataOverlay.OnStateChangeListener {
+
+		private TextView walkFromStationTime;
+		private TextView walkFromTerminalTime;
+
 
 		public void setComponents() {
 			walkFromStationTime.setText(mRoomInfoModel.getPen_walk_station());
 			walkFromTerminalTime.setText(mRoomInfoModel.getPen_walk_terminal());
+
+			// set a registered API key for Open MapViewer Library
+			mMapView.setApiKey(NAVER_MAP_API_KEY);
+
+			mMapView.setClickable(true);
+			// register listener for map state changes
+
+			mMapView.setOnMapStateChangeListener(new OnMapStateChangeListener());
+			mMapView.setOnMapViewTouchEventListener(this);
+
+			// use map controller to zoom in/out, pan and set map center, zoom
+			// level etc.
+			mMapController = mMapView.getMapController();
+
+			// use built in zoom controls
+			mMapView.setBuiltInZoomControls(true, null);
 		}
 
 		public AddressAndRouteAndMapCard(View cardView) {
 			super(cardView);
+			//mMapView = (NMapView) cardView.findViewById(R.id.nmapview_pension);
 			walkFromStationTime = (TextView) cardView.findViewById(R.id.text_walk_station);
 			walkFromTerminalTime = (TextView) cardView.findViewById(R.id.text_walk_terminal);
+		}
+
+		@Override
+		public NMapCalloutOverlay onCreateCalloutOverlay(NMapOverlay nMapOverlay, NMapOverlayItem nMapOverlayItem, Rect rect) {
+			return null;
+		}
+
+		@Override
+		public void onLongPress(NMapView nMapView, MotionEvent motionEvent) {
+
+		}
+
+		@Override
+		public void onLongPressCanceled(NMapView nMapView) {
+
+		}
+
+		@Override
+		public void onTouchDown(NMapView nMapView, MotionEvent motionEvent) {
+
+		}
+
+		@Override
+		public void onTouchUp(NMapView nMapView, MotionEvent motionEvent) {
+
+		}
+
+		@Override
+		public void onScroll(NMapView nMapView, MotionEvent motionEvent, MotionEvent motionEvent2) {
+
+		}
+
+		@Override
+		public void onSingleTapUp(NMapView nMapView, MotionEvent motionEvent) {
+
+		}
+
+		@Override
+		public void onFocusChanged(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
+
+		}
+
+		@Override
+		public void onCalloutClick(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
+
+		}
+
+		@Override
+		public void onMapInitHandler(NMapView nMapView, NMapError nMapError) {
+
+		}
+
+		@Override
+		public void onMapCenterChange(NMapView nMapView, NGeoPoint nGeoPoint) {
+
+		}
+
+		@Override
+		public void onMapCenterChangeFine(NMapView nMapView) {
+
+		}
+
+		@Override
+		public void onZoomLevelChange(NMapView nMapView, int i) {
+
+		}
+
+		@Override
+		public void onAnimationStateChange(NMapView nMapView, int i, int i2) {
+
 		}
 	}
 
 	private class PriceAndDateSelectionCard extends RecyclerView.ViewHolder {
 
-		public void setComponents() {
+		private TableLayout periodTable;
 
+		private TextView priceCell22;
+		private TextView priceCell23;
+		private TextView priceCell24;
+		private TextView priceCell32;
+		private TextView priceCell33;
+		private TextView priceCell34;
+		private TextView priceCell42;
+		private TextView priceCell43;
+		private TextView priceCell44;
+		private TextView priceCell52;
+		private TextView priceCell53;
+		private TextView priceCell54;
+
+		private boolean isPeriodTableVisible = false;
+
+		public void setComponents() {
+			try {
+				for (int i = 0; i < mRoomInfoModel.getCost_table().length(); i++) {
+					JSONObject costObject = mRoomInfoModel.getCost_table().getJSONObject(i);
+					String pen_period_division = costObject.optString("pen_period_division");
+					Log.d(TAG, pen_period_division);
+					if (pen_period_division.equals(mContext.getResources().getString(R.string.off_season))) {
+						Log.d(TAG, "비수기");
+						priceCell22.setText(castRoomPrice(costObject.optInt("weekdays")));
+						priceCell23.setText(castRoomPrice(costObject.optInt("friday")));
+						priceCell24.setText(castRoomPrice(costObject.optInt("weekends")));
+					} else if (pen_period_division.equals(mContext.getResources().getString(R.string.semi_on_season))) {
+						priceCell32.setText(castRoomPrice(costObject.optInt("weekdays")));
+						priceCell33.setText(castRoomPrice(costObject.optInt("friday")));
+						priceCell34.setText(castRoomPrice(costObject.optInt("weekends")));
+					} else if (pen_period_division.equals(mContext.getResources().getString(R.string.on_season))) {
+						Log.d(TAG, "성수기");
+						priceCell42.setText(castRoomPrice(costObject.optInt("weekdays")));
+						priceCell43.setText(castRoomPrice(costObject.optInt("friday")));
+						priceCell44.setText(castRoomPrice(costObject.optInt("weekends")));
+					} else {
+						Log.d(TAG, "극성수기");
+						priceCell52.setText(castRoomPrice(costObject.optInt("weekdays")));
+						priceCell53.setText(castRoomPrice(costObject.optInt("friday")));
+						priceCell54.setText(castRoomPrice(costObject.optInt("weekends")));
+					}
+				}
+
+				if(!isPeriodTableVisible) {
+					for (int i = 0; i < mRoomInfoModel.getPeriod_table().length(); i++) {
+						int rowNum = i + 1;
+
+						TableRow periodTableRow = new TableRow(mContext);
+						periodTableRow.setId(rowNum); // id is set by the level of the row
+						periodTableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT));
+
+
+						JSONObject periodObject = mRoomInfoModel.getPeriod_table().getJSONObject(i);
+						String pen_period_division = periodObject.optString("pen_period_division");
+						String period = periodObject.optString("period_start") + " ~ " + periodObject.optString("period_end");
+
+						for (int j = 0; j < 2; j++) {
+							int colNum = j + 1;
+							int cellNum = rowNum * 10 + colNum;
+							TextView periodCell = new TextView(mContext);
+							periodCell.setId(cellNum);
+							periodCell.setGravity(Gravity.CENTER);
+							periodCell.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT));
+
+							if (pen_period_division.equals(mContext.getResources().getString(R.string.off_season))) {
+								Log.d(TAG, "비수기");
+								setPeriodCell(periodCell, R.string.off_season, period);
+							} else if (pen_period_division.equals(mContext.getResources().getString(R.string.semi_on_season))) {
+								Log.d(TAG, "준성수기");
+								setPeriodCell(periodCell, R.string.semi_on_season, period);
+							} else if (pen_period_division.equals(mContext.getResources().getString(R.string.on_season))) {
+								Log.d(TAG, "성수기");
+								setPeriodCell(periodCell, R.string.on_season, period);
+							} else {
+								Log.d(TAG, "극성수기");
+								setPeriodCell(periodCell, R.string.extreme_on_season, period);
+							}
+
+							periodTableRow.addView(periodCell);
+						}
+						periodTable.addView(periodTableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+					}
+					isPeriodTableVisible = true;
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+		}
+
+		private void setPeriodCell(TextView periodCell, int periodResId, String period) {
+			if(periodCell.getId() % 10 == 1) {
+				periodCell.setText(periodResId);
+				periodCell.setBackgroundResource(R.drawable.cell_shape_right_line);
+			} else
+				periodCell.setText(period);
+		}
+
+
+		private String castRoomPrice(int roomPrice) {
+			if(roomPrice == 0) {
+				return mContext.getResources().getString(R.string.telephone_inquiry);
+			} else {
+				return mContext.getResources().getString(R.string.currency_unit) + roomPrice;
+			}
 		}
 
 		public PriceAndDateSelectionCard(View cardView) {
 			super(cardView);
+
+			priceCell22 = (TextView) cardView.findViewById(R.id.cell22_price);
+			priceCell23 = (TextView) cardView.findViewById(R.id.cell23_price);
+			priceCell24 = (TextView) cardView.findViewById(R.id.cell24_price);
+			priceCell32 = (TextView) cardView.findViewById(R.id.cell32_price);
+			priceCell33 = (TextView) cardView.findViewById(R.id.cell33_price);
+			priceCell34 = (TextView) cardView.findViewById(R.id.cell34_price);
+			priceCell42 = (TextView) cardView.findViewById(R.id.cell42_price);
+			priceCell43 = (TextView) cardView.findViewById(R.id.cell43_price);
+			priceCell44 = (TextView) cardView.findViewById(R.id.cell44_price);
+			priceCell52 = (TextView) cardView.findViewById(R.id.cell52_price);
+			priceCell53 = (TextView) cardView.findViewById(R.id.cell53_price);
+			priceCell54 = (TextView) cardView.findViewById(R.id.cell54_price);
+			periodTable = (TableLayout) cardView.findViewById(R.id.table_period_room);
 		}
 	}
 
 	private class OwnerInfoCard extends RecyclerView.ViewHolder {
-		TextView ceoName;
-		TextView ceoAccount;
+		private TextView ceoName;
+		private TextView ceoAccount;
 
 		public void setComponents() {
 			ceoName.setText(mRoomInfoModel.getPen_ceo());
@@ -430,10 +643,10 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	}
 
 	private class OthersCard extends RecyclerView.ViewHolder {
-		TextView otherFacilities;
-		TextView checkInOutTime;
-		TextView checkInOutNotice;
-		TextView pensionNotice;
+		private TextView otherFacilities;
+		private TextView checkInOutTime;
+		private TextView checkInOutNotice;
+		private TextView pensionNotice;
 
 		public void setComponents() {
 			otherFacilities.setText(mRoomInfoModel.getPen_etc_facility());
@@ -453,7 +666,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	}
 
 	private class NoticeCard extends RecyclerView.ViewHolder {
-		TextView mtpleaseNotice;
+		private TextView mtpleaseNotice;
 
 		public void setMtpleaseNotice(TextView mtpleaseNotice) {
 			this.mtpleaseNotice = mtpleaseNotice;
@@ -462,6 +675,41 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		public NoticeCard(View cardView) {
 			super(cardView);
 			mtpleaseNotice = (TextView) cardView.findViewById(R.id.text_notice_mtplease);
+		}
+	}
+
+	private class OnMapStateChangeListener implements NMapView.OnMapStateChangeListener {
+
+		@Override
+		public void onMapInitHandler(NMapView nMapView, NMapError nMapError) {
+			// if initialization of the map succeeds
+			if (nMapError == null) {
+				mMapController.setMapCenter(new NGeoPoint(mRoomInfoModel.getPen_longitude(),
+						mRoomInfoModel.getPen_latitude()), 11);
+			} else {
+				Log.e("ERROR",
+						"onMapInitHandler: error=" + nMapError.toString());
+			}
+		}
+
+		@Override
+		public void onMapCenterChange(NMapView nMapView, NGeoPoint nGeoPoint) {
+
+		}
+
+		@Override
+		public void onMapCenterChangeFine(NMapView nMapView) {
+
+		}
+
+		@Override
+		public void onZoomLevelChange(NMapView nMapView, int i) {
+
+		}
+
+		@Override
+		public void onAnimationStateChange(NMapView nMapView, int i, int i2) {
+
 		}
 	}
 }

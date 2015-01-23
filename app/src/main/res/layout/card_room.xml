@@ -23,7 +23,7 @@
             <ImageView
                 android:id="@+id/image_room"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="200dp"
                 android:layout_centerInParent="true"
                 android:adjustViewBounds="true"/>
 
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Large Text"
-                android:id="@+id/text_room_name"
+                android:id="@+id/textView_name_room_card"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
@@ -58,10 +58,10 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Small Text"
-                android:id="@+id/text_pension_name"
-                android:layout_alignBottom="@+id/text_room_name"
-                android:layout_toRightOf="@+id/text_room_name"
-                android:layout_toEndOf="@+id/text_room_name"
+                android:id="@+id/textView_name_pension_card"
+                android:layout_alignBottom="@+id/textView_name_room_card"
+                android:layout_toRightOf="@+id/textView_name_room_card"
+                android:layout_toEndOf="@+id/textView_name_room_card"
                 android:layout_marginLeft="8dp" />
 
             <TextView
@@ -69,8 +69,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Medium Text"
-                android:id="@+id/text_number_range_of_people"
-                android:layout_alignBottom="@+id/text_pension_name"
+                android:id="@+id/textView_number_range_of_people_card"
+                android:layout_alignBottom="@+id/textView_name_room_card"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginRight="16dp" />
@@ -80,12 +80,58 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Large Text"
-                android:id="@+id/text_price"
+                android:id="@+id/textView_price_room_card"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="16dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true">
+
+                <ImageView
+                    android:id="@+id/imageView_option_playground_card"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_launcher"/>
+
+                <ImageView
+                    android:id="@+id/imageView_option_pickup_card"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_launcher"/>
+
+                <ImageView
+                    android:id="@+id/imageView_option_barbecue_card"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_launcher"/>
+
+                <ImageView
+                    android:id="@+id/imageView_option_valley_card"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_launcher"/>
+
+                <ImageView
+                    android:id="@+id/imageView_option_aircon_card"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_launcher"/>
+
+            </LinearLayout>
 
         </RelativeLayout>
 
