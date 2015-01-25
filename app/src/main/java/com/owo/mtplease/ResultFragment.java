@@ -23,21 +23,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-/**
- * A simple {@link android.support.v4.app.Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ResultFragment.OnResultFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ResultFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ResultFragment extends Fragment {
 
 	private static final String TAG = "ResultFragment";
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-	private static final String JSONSTRING_OF_ROOMS = "jsonStringRoomList";
-	private static final String DATE_OF_MT = "dateMT";
+	private static final String JSONSTRING_OF_ROOMS = "param1";
+	private static final String DATE_OF_MT = "param2";
 
 	// View: User Interface Views
 	private RecyclerView mRecyclerView;
@@ -51,7 +43,7 @@ public class ResultFragment extends Fragment {
 	// Model: Data variables for User Interface Views
 	private String jsonStringRoomList;
 	private JSONArray roomArray;
-	private String dateMT;
+	private String dateOfMt;
 	// End of the Model
 
 	// Flags
@@ -73,15 +65,15 @@ public class ResultFragment extends Fragment {
 	 * this fragment using the provided parameters.
 	 *
 	 * @param jsonString Parameter 1.
-	 * @param dateMT Parameter 1.
+	 * @param dateOfMt Parameter 1.
 	 * @return A new instance of fragment MainFragment.
 	 */
 	// TODO: Rename and change types and number of parameters
-	public static ResultFragment newInstance(String jsonString, String dateMT) {
+	public static ResultFragment newInstance(String jsonString, String dateOfMt) {
 		ResultFragment fragment = new ResultFragment();
 		Bundle args = new Bundle();
 		args.putString(JSONSTRING_OF_ROOMS, jsonString);
-		args.putString(DATE_OF_MT, dateMT);
+		args.putString(DATE_OF_MT, dateOfMt);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -97,7 +89,7 @@ public class ResultFragment extends Fragment {
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-		mAdapter = new RoomListRecyclerViewAdapter(getActivity(), mFragmentManager, roomArray, dateMT, mScrollTabHolder, mOnResultFragmentInteractionListener);
+		mAdapter = new RoomListRecyclerViewAdapter(getActivity(), mFragmentManager, roomArray, dateOfMt, mScrollTabHolder, mOnResultFragmentInteractionListener);
 		mRecyclerView.setAdapter(mAdapter);
 
 		mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -126,7 +118,7 @@ public class ResultFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
 			jsonStringRoomList = getArguments().getString(JSONSTRING_OF_ROOMS);
-			dateMT = getArguments().getString(DATE_OF_MT);
+			dateOfMt = getArguments().getString(DATE_OF_MT);
 			Log.i(TAG, jsonStringRoomList);
 
 			try {
@@ -171,16 +163,6 @@ public class ResultFragment extends Fragment {
 		mOnResultFragmentInteractionListener = null;
 	}
 
-	/**
-	 * This interface must be implemented by activities that contain this
-	 * fragment to allow an interaction in this fragment to be communicated
-	 * to the activity and potentially other fragments contained in that
-	 * activity.
-	 * <p/>
-	 * See the Android Training lesson <a href=
-	 * "http://developer.android.com/training/basics/fragments/communicating.html
-	 * >Communicating with Other Fragments</a> for more information.
-	 */
 	public interface OnResultFragmentInteractionListener {
 		// TODO: Update argument type and name
 		public void onResultFragmentViewResumed(boolean noResults, int numRoom);

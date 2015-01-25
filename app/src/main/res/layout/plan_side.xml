@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:fadeScrollbars="true"
-            android:paddingLeft="16dp"
-            android:paddingTop="16dp"
-            android:scrollbars="vertical"
-            tools:context=".MainActivity">
+<ScrollView
+    android:id="@+id/scrollView_plan"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fadeScrollbars="true"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingTop="16dp"
+    android:scrollbars="vertical"
+    tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -138,7 +139,7 @@
                         android:src="@drawable/ic_launcher"/>
 
                     <TextView
-                        android:id="@+id/textView_number_male"
+                        android:id="@+id/textView_number_male_plan"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"/>
@@ -154,7 +155,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/textView_number_female"
+                        android:id="@+id/textView_number_female_plan"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"/>
@@ -190,21 +191,30 @@
                 android:layout_height="48dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
+                    android:gravity="center_vertical"
                     android:text="@string/room_question"/>
 
-                <Button
+                <TextView
+                    android:id="@+id/btn_clear_room"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:text="clear"/>
+                <!--                <Button
                     android:id="@+id/btn_recommend_room"
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
+
                     android:padding="4dp"
-                    android:text="@string/recommend"/>
+                    android:text="@string/recommend"/>-->
 
             </RelativeLayout>
 
@@ -212,118 +222,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
                 android:background="@drawable/divider_shape_linearlayout_bold"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="top"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/img_sample"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingLeft="8dp">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:gravity="top">
-
-                        <TextView
-                            android:id="@+id/textView_name_room_plan"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:text="방이름"/>
-
-                        <TextView
-                            android:id="@+id/textView_name_pension_and_region_plan"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:text="펜션이름/지역"/>
-
-                    </RelativeLayout>
-
-                    <TextView
-                        android:id="@+id/textView_number_people_std_max_plan"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:layout_marginBottom="8dp"
-                        android:text="기준: 10 / 최대: 15"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/imageView_option_playground_plan"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:src="@drawable/ic_launcher"/>
-
-                        <ImageView
-                            android:id="@+id/imageView_option_pickup_plan"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:src="@drawable/ic_launcher"/>
-
-                        <ImageView
-                            android:id="@+id/imageView_option_barbecue_plan"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:src="@drawable/ic_launcher"/>
-
-                        <ImageView
-                            android:id="@+id/imageView_option_valley_plan"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:src="@drawable/ic_launcher"/>
-
-                        <ImageView
-                            android:id="@+id/imageView_option_aircon_plan"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:src="@drawable/ic_launcher"/>
-
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/divider_shape_linearlayout_bold"/>
-
-                    <TextView
-                        android:id="@+id/textView_price_room_plan"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:text="000,000원"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
 
         </LinearLayout>
 
@@ -340,10 +239,11 @@
                 android:layout_height="48dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="64dp"
+                    android:layout_height="48dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
+                    android:gravity="center_vertical"
                     android:text="@string/item_question"/>
 
                 <Button
@@ -362,11 +262,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
                 android:background="@drawable/divider_shape_linearlayout_bold"/>
 
             <!-- meat selection -->
             <LinearLayout
+                android:id="@+id/layout_meat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -377,10 +277,11 @@
                     android:layout_height="48dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentLeft="true"
+                        android:gravity="center_vertical"
                         android:text="@string/meat_question"/>
 
                     <Button
@@ -399,15 +300,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="0dp"
                     android:background="@drawable/divider_shape_linearlayout_bold"/>
 
-                <!--<android.support.v7.widget.RecyclerView
-                    android:id="@+id/list_meat"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="8dp"
-                    tools:context=".MainFragment"/>-->
+                <!-- index 2 position -->
+                <!-- position where items are added -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -448,6 +345,7 @@
 
             <!-- alcohol selection -->
             <LinearLayout
+                android:id="@+id/layout_alcohol"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -458,10 +356,11 @@
                     android:layout_height="48dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentLeft="true"
+                        android:gravity="center_vertical"
                         android:text="@string/alcohol_question"/>
 
                     <Button
@@ -480,15 +379,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
                     android:background="@drawable/divider_shape_linearlayout_bold"/>
-
-                <!--<android.support.v7.widget.RecyclerView
-                    android:id="@+id/list_alcohol"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="8dp"
-                    tools:context=".MainFragment"/>-->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -529,6 +420,7 @@
 
             <!-- others selection -->
             <LinearLayout
+                android:id="@+id/layout_others"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -539,10 +431,11 @@
                     android:layout_height="48dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="64dp"
+                        android:layout_height="48dp"
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentLeft="true"
+                        android:gravity="center_vertical"
                         android:text="@string/others_question"/>
 
                     <Button
@@ -561,15 +454,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
                     android:background="@drawable/divider_shape_linearlayout_bold"/>
 
-                <!--<android.support.v7.widget.RecyclerView
-                    android:id="@+id/list_others"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="8dp"
-                    tools:context=".MainFragment"/>-->
 
                 <LinearLayout
                     android:layout_width="match_parent"

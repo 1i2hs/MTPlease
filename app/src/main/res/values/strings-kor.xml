@@ -29,6 +29,9 @@
     <string name="notify_number_of_people_input">인원 수를 입력해 주세요.</string>
     <string name="notify_type_of_text_wrong">인원 수에는 숫자만 입력해 주세요.</string>
     <string name="notify_network_error">네트워크 문제로 인해 데이터를 읽어오지 못하였습니다.</string>
+    <string name="daesungri">대성리</string>
+    <string name="cheongpyung">청평</string>
+    <string name="gapyung">가평</string>
 
     <!-- For room search results -->
     <string name="notify_not_found">해당 조건에 만족하는 방이 없습니다.</string>
@@ -61,6 +64,9 @@
     <string name="period_winter">기간</string>
     <string name="price_table">기간 별 가격표</string>
     <string name="period_table">기간표</string>
+    <string name="input_basic_data">MT 계획 기본 정보를 입력해주세요</string>
+    <string name="confirm">확인</string>
+    <string name="cancel">취소</string>
 
     <!-- For plan page -->
     <string name="when_question">언제?</string>
@@ -75,5 +81,8 @@
     <string name="people_unit">명</string>
     <string name="recommend">추천받기</string>
     <string name="print_plan">계획표 뽑기</string>
+    <string name="please_search_for_room">방을 검색해 주세요^^</string>
+    <string name="standard">기준: </string>
+    <string name="max">최대: </string>
 
 </resources>
