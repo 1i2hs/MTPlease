@@ -94,14 +94,14 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private String linkURL = null;
 		private Context mContext;
 
-		public PostCard(View cardView, Context mContext) {
+		public PostCard(View cardView, Context context) {
 			super(cardView);
 			postCard = (CardView) cardView;
 			postLayout = (LinearLayout) cardView.findViewById(R.id.LinearLayout_card_timeline);
 			postImage = (ImageView) cardView.findViewById(R.id.image_post);
 			postTitle = (TextView) cardView.findViewById(R.id.text_post_title);
 			postDate = (TextView) cardView.findViewById(R.id.text_post_date);
-			this.mContext = mContext;
+			mContext = context;
 		}
 
 		public void setItem(JSONObject postData) throws JSONException {

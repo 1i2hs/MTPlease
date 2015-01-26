@@ -29,9 +29,9 @@
     <string name="notify_number_of_people_input">인원 수를 입력해 주세요.</string>
     <string name="notify_type_of_text_wrong">인원 수에는 숫자만 입력해 주세요.</string>
     <string name="notify_network_error">네트워크 문제로 인해 데이터를 읽어오지 못하였습니다.</string>
-    <string name="daesungri">대성리</string>
-    <string name="cheongpyung">청평</string>
-    <string name="gapyung">가평</string>
+    <string name="daesungri">대성리로</string>
+    <string name="cheongpyung">청평으로</string>
+    <string name="gapyung">가평으로</string>
 
     <!-- For room search results -->
     <string name="notify_not_found">해당 조건에 만족하는 방이 없습니다.</string>
@@ -84,5 +84,9 @@
     <string name="please_search_for_room">방을 검색해 주세요^^</string>
     <string name="standard">기준: </string>
     <string name="max">최대: </string>
+    <string name="meat_count_unit">인분</string>
+    <string name="alcohol_count_unit">병</string>
+    <string name="others_count_unit">개</string>
+    <string name="custom_item_input">직접 추가하기</string>
 
 </resources>

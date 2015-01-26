@@ -1,14 +1,11 @@
 package com.owo.mtplease;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -56,7 +53,8 @@ public class ResultFragment extends Fragment {
 	// End of the Listeners
 
 	// Others
-	private FragmentManager mFragmentManager;
+	private ActionBarActivity actionBarActivity;
+	//private FragmentManager mFragmentManager;
 	private boolean noResults;
 	// End of the Others
 
@@ -89,7 +87,8 @@ public class ResultFragment extends Fragment {
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-		mAdapter = new RoomListRecyclerViewAdapter(getActivity(), mFragmentManager, roomArray, dateOfMt, mScrollTabHolder, mOnResultFragmentInteractionListener);
+		mAdapter = new RoomListRecyclerViewAdapter(getActivity(), actionBarActivity.getSupportFragmentManager(),
+				roomArray, dateOfMt, mScrollTabHolder, mOnResultFragmentInteractionListener);
 		mRecyclerView.setAdapter(mAdapter);
 
 		mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -102,7 +101,7 @@ public class ResultFragment extends Fragment {
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
-				if (mScrollTabHolder != null)
+				if(mScrollTabHolder != null)
 					mScrollTabHolder.onScroll(recyclerView, mLayoutManager.findFirstVisibleItemPosition(), 0, MainActivity.RESULT_FRAGMENT_VISIBLE);
 			}
 		});
@@ -124,7 +123,10 @@ public class ResultFragment extends Fragment {
 			try {
 				JSONObject roomObject = new JSONObject(jsonStringRoomList);
 				roomArray = new JSONArray(roomObject.getString("roomResultList"));
-				noResults = false;
+				if(roomArray.length() > 0)
+					noResults = false;
+				else
+					noResults = true;
 			} catch(JSONException e) {
 				noResults = true;
 				Toast.makeText(getActivity(), R.string.notify_fail_loading_room_results, Toast.LENGTH_SHORT).show();
@@ -137,7 +139,7 @@ public class ResultFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		View resultView = inflater.inflate(R.layout.fragment_main, container, false);
+		View resultView = inflater.inflate(R.layout.fragment_result, container, false);
 		mRecyclerView = (RecyclerView) resultView.findViewById(R.id.list_room);
 
 		if(mOnResultFragmentInteractionListener != null)
@@ -150,6 +152,7 @@ public class ResultFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
+			actionBarActivity = (ActionBarActivity) activity;
 			mOnResultFragmentInteractionListener = (OnResultFragmentInteractionListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
@@ -174,7 +177,7 @@ public class ResultFragment extends Fragment {
 		this.mScrollTabHolder = scrollTabHolder;
 	}
 
-	public void setFragmentManager(FragmentManager fragmentManager) {
+	/*public void setFragmentManager(FragmentManager fragmentManager) {
 		this.mFragmentManager = fragmentManager;
-	}
+	}*/
 }

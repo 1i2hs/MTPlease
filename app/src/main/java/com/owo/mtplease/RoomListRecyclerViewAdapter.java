@@ -89,12 +89,14 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			return new RoomCard(itemView);
 		}
 		else if(viewType == TYPE_HEADER) {
-			View headerView = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_header_placeholder, parent, false);
+			View headerView = LayoutInflater.from(parent.getContext()).
+					inflate(R.layout.view_header_placeholder, parent, false);
 
 			return new VHHeader(headerView);
 		}
 
-		throw new RuntimeException("there is no type that matches the type " + viewType + "make sure your using types correctly");
+		throw new RuntimeException("there is no type that matches the type "
+				+ viewType + "make sure your using types correctly");
 	}
 
 	@Override
@@ -418,7 +420,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
 				// commit the SpecificInfoFragment to the current view
 				FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
-				mFragmentTransaction.replace(R.id.background_loading, mSpecificInfoFragment);
+				mFragmentTransaction.replace(R.id.body_foreground, mSpecificInfoFragment);
 				mFragmentTransaction.addToBackStack(null);
 				mFragmentTransaction.commit();
 				// end of commission

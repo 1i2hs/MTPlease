@@ -193,10 +193,10 @@ public class AddToPlanDialogFragment extends DialogFragment {
 		confirmButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mOnAddToPlanDialogFragmentInteractionListener.
+				/*mOnAddToPlanDialogFragmentInteractionListener.
 						onAddToPlanDialogFragmentViewDetached(dateOfMT,
 								regionSelectDialogButton.getSelectedItemPosition(),
-								sexRatioDialogSeekBar.getMax(), sexRatioProgress);
+								sexRatioDialogSeekBar.getMax(), sexRatioProgress);*/
 				dismiss();
 			}
 		});
@@ -237,7 +237,7 @@ public class AddToPlanDialogFragment extends DialogFragment {
 
 	public interface OnAddToPlanDialogFragmentInteractionListener {
 		// TODO: Update argument type and name
-		public void onAddToPlanDialogFragmentViewDetached(String dateOfMT, int regionOfMT, int numberOfPeople, int sexRatioProgress);
+//		public void onAddToPlanDialogFragmentViewDetached(String dateOfMT, int regionOfMT, int numberOfPeople, int sexRatioProgress);
 	}
 
 }

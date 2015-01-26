@@ -63,6 +63,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	private TimelineFragment mTimelineFragment;
 	private ResultFragment mResultFragment;
 	// End of Fragments
+
 	// Strings
 	private static final String TAG = "MainActivity";
 	private static final int CONDITION_SEARCH_MODE = 1;
@@ -74,12 +75,14 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	public static final int TIMELINE_FRAGMENT_VISIBLE = 1;
 	public static final int RESULT_FRAGMENT_VISIBLE = 2;
 	public static final int SPECIFIC_INFO_FRAGMENT_VISIBLE = 3;
+	public static final int SHOPPINGITEMLIST_FRAGMENT_VISIBLE = 4;
 	private static final int CALL_FROM_CONDITIONAL_QUERY = 1;
 	private static final int CALL_FROM_PLAN = 2;
 	private static final int CALL_FROM_ADDTOPLANDIALOG = 3;
 	private static final int INDEX_OF_DAESUNGRI = 0;
 	private static final int INDEX_OF_CHEONGPYUND = 1;
 	private static final int INDEX_OF_GAPYUNG = 2;
+	private static final int FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN = 2;
 	// End of Strings
 
 	// Graphical transitions
@@ -112,7 +115,6 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	private TextView compareButton;
 	private TextView mypageButton;
 	private TextView settingButton;
-	private String modifiedDate;
 	private Button dateSelectPlanButton;
 	private Spinner regionSelectPlanButton;
 	private EditText numberOfPeopleSelectPlanEditText;
@@ -147,7 +149,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		public void afterTextChanged(Editable s) throws NumberFormatException {
 			try {
 				sexRatioPlanSeekBar.setMax(Integer.parseInt(s.toString()));
-			} catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				sexRatioPlanSeekBar.setMax(0);
 				e.printStackTrace();
 			}
@@ -157,7 +159,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	// Others
 	private Calendar calendar = Calendar.getInstance();
-	private ConditionDataForRequest mConditionDataForRequest;
+	private String modifiedDate;
+	private ConditionDataForRequest mConditionDataForRequest = null;
 	private float clampValue;
 	private int searchMode;
 
@@ -210,7 +213,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		setLoadingAnimation();
 		// end of the configuration of the loading animation
 
-		// configure the mode of the search
+		// configure mode of the search
 		searchMode = CONDITION_SEARCH_MODE;
 		// end of the configuration of the mode of the search
 
@@ -291,31 +294,31 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			public void onClick(View v) {
 				Toast.makeText(v.getContext(), R.string.please_search_for_room, Toast.LENGTH_SHORT).show();
 				doubleSideSlidingMenu.toggle();
-				/*roomPlanLinearLayout.removeView(notSelectedRoomPlanRelativeLayout);
-				roomPlanLinearLayout.addView(getLayoutInflater().inflate(R.layout.frame_room_plan,
-						(LinearLayout) findViewById(R.id.layout_room), false), 2);*/
 			}
 		});
 
 		meatPlanLinearLayout = (LinearLayout) findViewById(R.id.layout_meat);
 		meatPlanLinearLayout.addView(getLayoutInflater().
-				inflate(R.layout.space_item_not_selected_plan,
-						(LinearLayout) findViewById(R.id.layout_items), false), 2);
+						inflate(R.layout.space_item_not_selected_plan,
+								(LinearLayout) findViewById(R.id.layout_items), false),
+				FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN);
 
 		alcoholPlanLinearLayout = (LinearLayout) findViewById(R.id.layout_alcohol);
 		alcoholPlanLinearLayout.addView(getLayoutInflater().
-				inflate(R.layout.space_item_not_selected_plan,
-						(LinearLayout) findViewById(R.id.layout_items), false), 2);
+						inflate(R.layout.space_item_not_selected_plan,
+								(LinearLayout) findViewById(R.id.layout_items), false),
+				FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN);
 
 		othersPlanLinearLayout = (LinearLayout) findViewById(R.id.layout_others);
 		othersPlanLinearLayout.addView(getLayoutInflater().
-				inflate(R.layout.space_item_not_selected_plan,
-						(LinearLayout) findViewById(R.id.layout_items), false), 2);
+						inflate(R.layout.space_item_not_selected_plan,
+								(LinearLayout) findViewById(R.id.layout_items), false),
+				FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN);
 	}
 
-	private void setAutoCompleteBasicInfoPlan() {
+	/*private void setAutoCompleteBasicInfoPlan() {
 		mConditionDataForRequest = getUserInputData();
-		dateSelectPlanButton.setText(modifiedDate);
+		dateSelectPlanButton.setText(mConditionDataForRequest.getDateWrittenLang());
 		regionSelectPlanButton.setSelection(mConditionDataForRequest.getRegion() - 1);
 		numberOfPeopleSelectPlanEditText.setText(String.valueOf(mConditionDataForRequest.getPeople()));
 	}
@@ -325,7 +328,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		regionSelectPlanButton.setSelection(regionOfMT);
 		numberOfPeopleSelectPlanEditText.setText(String.valueOf(numberOfPeople));
 		sexRatioPlanSeekBar.setProgress(sexRatioProgress);
-	}
+	}*/
 
 	private void setQueryHeader() {
 		mMinHeaderHeightForTimelineFragment = getResources().getDimensionPixelSize(R.dimen.min_header_height);
@@ -390,11 +393,16 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			@Override
 			public void onClick(View v) {
 				try {
-					if(searchMode == CONDITION_SEARCH_MODE)
+					if (mConditionDataForRequest == null) {
+						mConditionDataForRequest = getUserInputData();
+					}
+
+					/*if (mConditionDataForRequest.getFlag() == CONDITION_SEARCH_MODE) {
 						setAutoCompleteBasicInfoPlan();
+					}*/
 
 					new ServerConnectionTask(mScrollTabHolder,
-							RESULT).execute(getUserInputData().makeHttpGetURL());
+							RESULT).execute(mConditionDataForRequest.makeHttpGetURL());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -454,6 +462,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		regionQuerySubTabText.setVisibility(View.VISIBLE);
 		numberOfPeopleQuerySubTabText.setVisibility(View.VISIBLE);
 
+		Log.d(TAG, noResults + "");
+
 		// configure actionbar for result page
 		if (noResults) {
 			changeActionBarStyle(Color.BLACK, getResources().getString(R.string.results), getResources().getString(R.string.no_results));
@@ -464,7 +474,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 		// configure subtab for result page
 		mConditionDataForRequest = getUserInputData();
-		dateQuerySubTabText.setText(mConditionDataForRequest.getDate());
+		dateQuerySubTabText.setText(mConditionDataForRequest.getDateWrittenLang());
 		int regionCode = mConditionDataForRequest.getRegion();
 		switch (regionCode) {
 			case 1:
@@ -480,7 +490,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		numberOfPeopleQuerySubTabText.setText(mConditionDataForRequest.getPeople() + "명");
 		// end of the configuration
 
-		mHeader.setTranslationY(-mMinHeaderHeightForResultFragment + getSupportActionBar().getHeight());
+		if(!noResults)
+			mHeader.setTranslationY(-mMinHeaderHeightForResultFragment + getSupportActionBar().getHeight());
 	}
 
 	@Override
@@ -512,9 +523,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	}
 
 	@Override
-	public void adjustScroll(int scrollHeight) {
-
-	}
+	public void adjustScroll(int scrollHeight) {}
 
 	@Override
 	public void onScroll(RecyclerView recyclerView, int firstVisibleItem, int pagePosition, int visibleFragment) {
@@ -525,6 +534,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				clampValue = changeHeaderTranslation(scrollY, mMinHeaderHeightForTimelineFragment);
 				break;
 			case RESULT_FRAGMENT_VISIBLE:
+			case SHOPPINGITEMLIST_FRAGMENT_VISIBLE:
 				changeHeaderTranslation(scrollY, mMinHeaderHeightForResultFragment);
 				return;
 			case SPECIFIC_INFO_FRAGMENT_VISIBLE:
@@ -589,6 +599,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				mSpannableStringVariable.setSpan(mAlphaForegroundColorSpan, 0, mSpannableStringVariable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				mActionBar.setSubtitle(mSpannableStringVariable);
 				break;
+			case SHOPPINGITEMLIST_FRAGMENT_VISIBLE:
+				break;
 			default:
 				return;
 		}
@@ -598,21 +610,21 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	public void onDateConfirmButtonClicked(String dateSelected, int callerFlag) {
 		if (dateSelected != null) {
 			modifiedDate = dateSelected;
-			switch(callerFlag) {
+			switch (callerFlag) {
 				case CALL_FROM_CONDITIONAL_QUERY:
 					dateSelectButton.setText(modifiedDate);
 					break;
 				case CALL_FROM_PLAN:
 					dateSelectPlanButton.setText(modifiedDate);
 					break;
-				case CALL_FROM_ADDTOPLANDIALOG:
+				/*case CALL_FROM_ADDTOPLANDIALOG:
 					AddToPlanDialogFragment mAddToPlanDialogFragment =
 							(AddToPlanDialogFragment) getSupportFragmentManager()
 									.findFragmentByTag("addtoplan_dialog_popped");
-					if(mAddToPlanDialogFragment != null) {
+					if (mAddToPlanDialogFragment != null) {
 						mAddToPlanDialogFragment.updateDate(modifiedDate);
 					}
-					break;
+					break;*/
 			}
 		}
 	}
@@ -622,12 +634,12 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 		String region = regionSelectSpinner.getSelectedItem()
 				.toString();
-		if (region.equals("대성리로")) {
-			conditionDataForRequest.setRegion(1);
-		} else if (region.equals("청평으로")) {
-			conditionDataForRequest.setRegion(2);
+		if (region.equals(getResources().getString(R.string.daesungri))) {
+			conditionDataForRequest.setRegion(INDEX_OF_DAESUNGRI + 1);
+		} else if (region.equals(R.string.cheongpyung)) {
+			conditionDataForRequest.setRegion(INDEX_OF_CHEONGPYUND + 1);
 		} else {
-			conditionDataForRequest.setRegion(3);
+			conditionDataForRequest.setRegion(INDEX_OF_GAPYUNG + 1);
 		}
 
 		try {
@@ -635,7 +647,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 					.setPeople(Integer.parseInt(numberOfPeopleSelectEditText.getText().toString()));
 			Log.i(TAG, conditionDataForRequest.getPeople() + "");
 		} catch (NumberFormatException e) {
-			if(numberOfPeopleSelectEditText.getText().toString().equals("")) {
+			if (numberOfPeopleSelectEditText.getText().toString().equals("")) {
 				Toast.makeText(MainActivity.this,
 						R.string.notify_number_of_people_input, Toast.LENGTH_SHORT).show();
 			} else {
@@ -644,12 +656,19 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			}
 			e.printStackTrace();
 		}
+
+		conditionDataForRequest.setDateWrittenLang(modifiedDate);
+
 		String[] tmp = modifiedDate.split(" ");
 		conditionDataForRequest.setDate(tmp[0].substring(0, 4) + "-"
 				+ tmp[1].split("월")[0] + "-" + tmp[2].split("일")[0]);
 		Log.i(TAG, conditionDataForRequest.getDate());
 
-		conditionDataForRequest.flag = CONDITION_SEARCH_MODE;
+		if (searchMode == CONDITION_SEARCH_MODE) {
+			conditionDataForRequest.setFlag(CONDITION_SEARCH_MODE);
+		} else {
+			conditionDataForRequest.setFlag(KEYWORD_SEARCH_MODE);
+		}
 
 		return conditionDataForRequest;
 	}
@@ -671,25 +690,28 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	@Override
 	public void onAddToPlanButtonClicked(RoomInfoModel roomInfoModel) {
 
-		if(searchMode == CONDITION_SEARCH_MODE) {
-			mConditionDataForRequest = getUserInputData();
-			AddToPlanDialogFragment addToPlanDialogFragment =
-					AddToPlanDialogFragment.newInstance(modifiedDate, mConditionDataForRequest.getRegion() - 1, mConditionDataForRequest.getPeople(), CONDITION_SEARCH_MODE);
-			addToPlanDialogFragment.show(getSupportFragmentManager(), "addtoplan_dialog_popped");
-		}
+		mConditionDataForRequest = getUserInputData();
 
-		changeViewAtPlan(roomPlanLinearLayout, roomPlanLinearLayout.getChildAt(2),
-				getLayoutInflater().inflate(R.layout.frame_room_plan,
-						(LinearLayout) findViewById(R.id.layout_room), false), 2);
+		/*if (mConditionDataForRequest.getFlag() == CONDITION_SEARCH_MODE) {
+			AddToPlanDialogFragment addToPlanDialogFragment =
+					AddToPlanDialogFragment.newInstance(mConditionDataForRequest.getDateWrittenLang(),
+							mConditionDataForRequest.getRegion() - 1,
+							mConditionDataForRequest.getPeople(), CONDITION_SEARCH_MODE);
+			addToPlanDialogFragment.show(getSupportFragmentManager(), "addtoplan_dialog_popped");
+		}*/
+
+		changeViewAtPlan(roomPlanLinearLayout, roomPlanLinearLayout.getChildAt(FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN),
+				getLayoutInflater().inflate(R.layout.frame_room_selected_plan,
+						(LinearLayout) findViewById(R.id.layout_room), false), FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN);
 
 		// configure room addition/deletion section
 		clearRoomPlanButton = (TextView) findViewById(R.id.btn_clear_room);
 		clearRoomPlanButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				changeViewAtPlan(roomPlanLinearLayout, roomPlanLinearLayout.getChildAt(2),
+				changeViewAtPlan(roomPlanLinearLayout, roomPlanLinearLayout.getChildAt(FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN),
 						getLayoutInflater().inflate(R.layout.frame_room_not_selected_plan,
-								(LinearLayout) findViewById(R.id.layout_room), false), 2);
+								(LinearLayout) findViewById(R.id.layout_room), false), FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN);
 			}
 		});
 
@@ -711,12 +733,15 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 		roomPricePlanTextView = (TextView) findViewById(R.id.textView_price_room_plan);
 		int roomPrice = roomInfoModel.getRoom_cost();
-		if(roomPrice == 0)
+		if (roomPrice == 0) {
 			roomPricePlanTextView.setText(getResources().getString(R.string.telephone_inquiry));
-		else
+		} else {
 			roomPricePlanTextView.setText(getResources().getString(R.string.currency_unit) + roomPrice);
-
+		}
 		// end of the configuration of room addition/deletion
+
+		Toast.makeText(this, R.string.added_to_plan, Toast.LENGTH_LONG).show();
+		doubleSideSlidingMenu.showSecondaryMenu(true);
 	}
 
 	private void changeViewAtPlan(ViewGroup parentView, View viewToBeDeleted, View viewToBeAdded, int index) {
@@ -732,78 +757,12 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		mActionBar.setSubtitle(subtitleText);
 	}
 
-	@Override
+	/*@Override
 	public void onAddToPlanDialogFragmentViewDetached(String dateOfMT, int regionOfMT, int numberOfPeople, int sexRatioProgress) {
-		setAutoCompleteBasicInfoPlan(dateOfMT, regionOfMT, numberOfPeople, sexRatioProgress);
+		*//*setAutoCompleteBasicInfoPlan(dateOfMT, regionOfMT, numberOfPeople, sexRatioProgress);*//*
 		Toast.makeText(this, R.string.added_to_plan, Toast.LENGTH_LONG).show();
 		doubleSideSlidingMenu.showSecondaryMenu(true);
-	}
-
-	private class ConditionDataForRequest {
-		private int region;
-		private String date;
-		private int people;
-		private int flag;
-
-		public ConditionDataForRequest() {
-			this.region = -1;
-			this.date = null;
-			this.people = -1;
-			this.flag = -1;
-		}
-
-		public int getFlag() {
-			return flag;
-		}
-
-		public void setFlag(int flag) {
-			this.flag = flag;
-		}
-
-		public int getRegion() {
-			return region;
-		}
-
-		public void setRegion(int region) {
-			this.region = region;
-		}
-
-		public String getDate() {
-			return date;
-		}
-
-		public void setDate(String date) {
-			this.date = date;
-		}
-
-		public int getPeople() {
-			return people;
-		}
-
-		public void setPeople(int people) {
-			this.people = people;
-		}
-
-		public boolean isVariableSet() {
-
-			// ************************************************************string compare reminded!!
-			if (this.region != -1 && this.date != null && this.people != -1 && this.flag != -1) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-
-		public String makeHttpGetURL() {
-			if (isVariableSet()) {
-				String httpGetURL = "http://mtplease.herokuapp.com/" + "pensions" + "?region=" + region + "&date="
-						+ date + "&people=" + people + "&flag=1";
-
-				return httpGetURL;
-			}
-			return null;
-		}
-	}
+	}*/
 
 	/**
 	 * @author In-Ho
@@ -823,11 +782,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			// configure progress bar
-			loadingProgressBar.setVisibility(View.VISIBLE);
-			loadingProgressBar.setProgress(0);
-			loadingBackground.setAlpha(100);
-			// end of the configuration of the progress bar
+			startLoadingProgress();
 		}
 
 		@Override
@@ -879,7 +834,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 						// commit the mTimelineFragment to the current view
 						mFragmentTransaction = mFragmentManager.beginTransaction();
-						mFragmentTransaction.replace(R.id.body, mTimelineFragment);
+						mFragmentTransaction.replace(R.id.body_background, mTimelineFragment);
 						mFragmentTransaction.commit();
 						// end of commission
 					} catch (JSONException e) {
@@ -891,12 +846,12 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 					// create the mResultFragment with the Interface ScrollTabHolder
 					mResultFragment = ResultFragment.newInstance(jsonString, mConditionDataForRequest.getDate());
 					mResultFragment.setScrollTabHolder(mScrollTabHolder);
-					mResultFragment.setFragmentManager(mFragmentManager);
+					//mResultFragment.setFragmentManager(mFragmentManager);
 					// end of creation of the mTimelineFragment
 
 					// commit the mResultFragment to the current view
 					mFragmentTransaction = mFragmentManager.beginTransaction();
-					mFragmentTransaction.replace(R.id.body, mResultFragment);
+					mFragmentTransaction.replace(R.id.body_background, mResultFragment);
 					mFragmentTransaction.addToBackStack(null);
 					mFragmentTransaction.commit();
 					// end of commission
@@ -906,11 +861,23 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 					break;
 			}
 
-			// configure progress bar
-			loadingProgressBar.setVisibility(View.GONE);
-			loadingProgressBar.setProgress(100);
-			loadingBackground.setAlpha(0);
-			// end of the configuration of the progress bar
+			endLoadingProgress();
 		}
+	}
+
+	public void startLoadingProgress() {
+		// configure progress bar
+		loadingProgressBar.setVisibility(View.VISIBLE);
+		loadingProgressBar.setProgress(0);
+		loadingBackground.setAlpha(100);
+		// end of the configuration of the progress bar
+	}
+
+	public void endLoadingProgress() {
+		// configure progress bar
+		loadingProgressBar.setVisibility(View.GONE);
+		loadingProgressBar.setProgress(100);
+		loadingBackground.setAlpha(0);
+		// end of the configuration of the progress bar
 	}
 }
