@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/textView_name_item_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="삼겹살"
+            android:textSize="24sp"/>
+
+        <TextView
+            android:id="@+id/textView_unit_item_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/textView_name_item_dialog"
+            android:layout_alignParentBottom="false"
+            android:layout_toRightOf="@id/textView_name_item_dialog"
+            android:text="(200g)"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:textSize="16sp"
+        android:id="@+id/textView_unit_price_item_dialog"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:gravity="center">
+
+        <NumberPicker
+            android:id="@+id/numberPicker_number_item_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/textView_unit_count_item_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="4dp"
+            android:layout_toRightOf="@id/numberPicker_number_item_dialog"
+            android:text="인분"
+            android:textSize="16dp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/textView_text_price_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/total"
+            android:textSize="24sp"/>
+
+        <TextView
+            android:id="@+id/textView_price_total_dialog"
+            android:layout_width="184dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/textView_text_price_total"
+            android:gravity="center"
+            android:textSize="24sp"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancel_item_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:text="@string/cancel_item"/>
+
+        <Button
+            android:id="@+id/btn_add_item_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:text="@string/add_item"/>
+
+    </LinearLayout>
+
+</LinearLayout>

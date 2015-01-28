@@ -26,17 +26,17 @@
     <string name="postposition_2">이서</string>
     <string name="go_MT">엠티를 간다!</string>
     <string name="select_date">엠티 출발 날짜를 선택하세요</string>
-    <string name="notify_number_of_people_input">인원 수를 입력해 주세요.</string>
-    <string name="notify_type_of_text_wrong">인원 수에는 숫자만 입력해 주세요.</string>
-    <string name="notify_network_error">네트워크 문제로 인해 데이터를 읽어오지 못하였습니다.</string>
+    <string name="please_number_of_people_input">인원 수를 입력해 주세요.</string>
+    <string name="please_type_only_number_for_number_of_people">인원 수에는 숫자만 입력해 주세요.</string>
+    <string name="network_error">네트워크 문제로 인해 데이터를 읽어오지 못하였습니다.</string>
     <string name="daesungri">대성리로</string>
     <string name="cheongpyung">청평으로</string>
     <string name="gapyung">가평으로</string>
 
     <!-- For room search results -->
-    <string name="notify_not_found">해당 조건에 만족하는 방이 없습니다.</string>
-    <string name="notify_fail_loading_room_results">네트워크 문제로 인해 검색 결과 읽어오기를 실패하였습니다.</string>
-    <string name="notify_image_loading_failed">방 이미지를 읽어오는데 실패하였습니다.</string>
+    <string name="rooms_not_found">해당 조건에 만족하는 방이 없습니다.</string>
+    <string name="fail_loading_room_results">네트워크 문제로 인해 검색 결과 읽어오기를 실패하였습니다.</string>
+    <string name="image_loading_failed">방 이미지를 읽어오는데 실패하였습니다.</string>
     <string name="results">검색 결과</string>
     <string name="no_results">0개의 방</string>
     <string name="no_results_found">조건에 해당되는 방이 존재하지 않습니다.</string>
@@ -64,7 +64,7 @@
     <string name="period_winter">기간</string>
     <string name="price_table">기간 별 가격표</string>
     <string name="period_table">기간표</string>
-    <string name="input_basic_data">MT 계획 기본 정보를 입력해주세요</string>
+    <string name="input_basic_data">MT 계획 기본 정보를 입력 해주세요</string>
     <string name="confirm">확인</string>
     <string name="cancel">취소</string>
 
@@ -81,12 +81,41 @@
     <string name="people_unit">명</string>
     <string name="recommend">추천받기</string>
     <string name="print_plan">계획표 뽑기</string>
-    <string name="please_search_for_room">방을 검색해 주세요^^</string>
+    <string name="room_already_added_before">이미 등록된 방입니다.</string>
+    <string name="item_already_added_before">이미 등록된 품목입니다.</string>
+    <string name="please_search_for_room">방을 검색해 주세요.</string>
+    <string name="please_select_meat">원하시는 고기를 선택 해주세요.</string>
+    <string name="please_select_alcohol">원하시는 술을 선택 해주세요.</string>
+    <string name="please_select_others">원하시는 품목을 선택 해주세요.</string>
     <string name="standard">기준: </string>
     <string name="max">최대: </string>
     <string name="meat_count_unit">인분</string>
     <string name="alcohol_count_unit">병</string>
     <string name="others_count_unit">개</string>
     <string name="custom_item_input">직접 추가하기</string>
+    <string name="meat">고기류</string>
+    <string name="alcohol">주류</string>
+    <string name="others">기타</string>
+    <string name="n_results">개의 결과</string>
+    <string name="add_item">추가</string>
+    <string name="cancel_item">취소</string>
+    <string name="please_configure_number_of_item">갯수 설정을 해주세요</string>
+    <string name="please_type_by_yourself">원하시는 품목을 직접 입력 해주세요.</string>
+    <string name="please_type_only_number_for_price">가격은 숫자만 입력 해주세요.</string>
+    <string name="please_type_price_first">가격을 먼저 입력 해주세요.</string>
+    <string name="please_type_every_blanks">모든 항목을 입력 해주세요.</string>
+    <string name="meat_name_hint">삼겹살</string>
+    <string name="meat_unit_hint">200g</string>
+    <string name="meat_unit_count_hint">인분</string>
+    <string name="meat_price_hint">2500</string>
+    <string name="alcohol_name_hint">참이슬</string>
+    <string name="alcohol_unit_hint">360ml</string>
+    <string name="alcohol_unit_count_hint">병</string>
+    <string name="alcohol_price_hint">1000</string>
+    <string name="others_name_hint">종이컵</string>
+    <string name="others_unit_hint">50개 set</string>
+    <string name="others_unit_count_hint">세트</string>
+    <string name="others_price_hint">2000</string>
+    <string name="total">총:</string>
 
 </resources>

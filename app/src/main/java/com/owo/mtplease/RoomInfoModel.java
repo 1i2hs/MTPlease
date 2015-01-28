@@ -6,6 +6,10 @@ import android.os.Parcelable;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.LinkedList;
+
 /**
  * Created by In-Ho on 2015-01-16.
  */
@@ -22,6 +26,15 @@ public class RoomInfoModel implements Parcelable {
 			return new RoomInfoModel[size];
 		}
 	};
+
+	private static final String MTPLEASE_URL = "http://mtplease.herokuapp.com/";
+
+	private LinkedList<String> roomRealImageURL;
+	private LinkedList<String> roomUnrealImageURL;
+	private String roomRealThumbnailImageURL;
+	private String roomUnrealThumbnailImageURL;
+	private boolean roomRealImageExists;
+	private boolean roomRealThumbnailImageExists;
 
 	private int pen_id;
 	private String room_name;
@@ -185,6 +198,22 @@ public class RoomInfoModel implements Parcelable {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public boolean isRoomRealThumbnailImageExists() {
+		return roomRealThumbnailImageExists;
+	}
+
+	public void setRoomRealThumbnailImageExists(boolean roomRealThumbnailImageExists) {
+		this.roomRealThumbnailImageExists = roomRealThumbnailImageExists;
+	}
+
+	public boolean isRoomRealImageExists() {
+		return roomRealImageExists;
+	}
+
+	public void setRoomRealImageExists(boolean roomRealImageExists) {
+		this.roomRealImageExists = roomRealImageExists;
 	}
 
 	public int getPen_id() {
@@ -553,5 +582,65 @@ public class RoomInfoModel implements Parcelable {
 
 	public void setRoom_cost(int room_cost) {
 		this.room_cost = room_cost;
+	}
+
+	public String getRoomThumbnailImageURL() {
+		String imageURL;
+
+		try {
+			imageURL = MTPLEASE_URL + "img/pensions/" + this.pen_id + "/"
+					+ URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20")
+					+ "/real/thumbnail.png";
+
+			return imageURL;
+			/*if(roomRealThumbnailImageExists) {
+				imageURL = MTPLEASE_URL + "img/pensions/" + this.pen_id + "/"
+						+ URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20")
+						+ "/real/thumbnail.png";
+			}
+			else {
+				imageURL = MTPLEASE_URL + "img/pensions/" + this.pen_id + "/"
+						+ URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20")
+						+ "/unreal/thumbnail.png";
+			}*/
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public String getRealRoomImageURL() {
+		String imageURL;
+
+		try {
+			// have to concatenate image file name to the back of the URL
+			imageURL = MTPLEASE_URL + "img/pensions/" + this.pen_id + "/"
+					+ URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20")
+					+ "/real/";
+
+			return imageURL;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public String getUnRealRoomImageURL() {
+		String imageURL;
+
+		try {
+			// have to concatenate image file name to the back of the URL
+			imageURL = MTPLEASE_URL + "img/pensions/" + this.pen_id + "/"
+					+ URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20")
+					+ "/unreal/";
+
+			return imageURL;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }

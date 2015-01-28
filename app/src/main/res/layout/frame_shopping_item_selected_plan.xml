@@ -5,6 +5,7 @@
               android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/imageView_btn_delete_item_plan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
@@ -18,6 +19,7 @@
         android:paddingRight="16dp">
 
         <TextView
+            android:id="@+id/textView_name_item_plan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
@@ -30,21 +32,21 @@
             android:paddingLeft="32dp">
 
             <Button
-                android:id="@+id/btn_number_picker_item"
+                android:id="@+id/btn_number_picker_item_plan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="12"/>
 
             <TextView
-                android:id="@+id/textView_unit_count"
+                android:id="@+id/textView_unit_count_item_plan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/btn_number_picker_item"
+                android:layout_toRightOf="@id/btn_number_picker_item_plan"
                 android:text="@string/meat_count_unit"/>
 
             <TextView
-                android:id="@+id/textView_price_item"
+                android:id="@+id/textView_price_item_plan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"

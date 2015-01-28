@@ -2,8 +2,8 @@ package com.owo.mtplease;
 
 import android.app.Activity;
 import android.net.Uri;
-import android.os.Bundle;
-import android.app.Fragment;
+import android.os.Bundle;;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,9 +24,6 @@ public class ShoppingItemListFragment extends Fragment {
 	// TODO: Rename and change types of parameters
 	private int shoppingItemType;
 
-	private static final int MEAT_ITEM = 1;
-	private static final int ALCOHOL_ITEM = 2;
-	private static final int OTHERS_ITEM = 3;
 	// View: User Interface Views
 	private RecyclerView mRecyclerView;
 	private LinearLayoutManager mLayoutManager;
@@ -37,10 +34,15 @@ public class ShoppingItemListFragment extends Fragment {
 	// End of Controller;
 
 	// Listeners
-	private ActionBarActivity actionBarActivity;
 	private OnShoppingItemListFragmentInteractionListener mOnShoppingItemListFragmentInteractionListener;
 	protected ScrollTabHolder mScrollTabHolder;
 	// End of the Listeners
+
+	// Flags
+	public static final int MEAT_ITEM = 1;
+	public static final int ALCOHOL_ITEM = 2;
+	public static final int OTHERS_ITEM = 3;
+	// End of flags
 
 	/**
 	 * Use this factory method to create a new instance of
@@ -64,6 +66,7 @@ public class ShoppingItemListFragment extends Fragment {
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
+		Log.d(TAG, "onViewCreated");
 		mLayoutManager = new LinearLayoutManager(getActivity());
 		mRecyclerView.setLayoutManager(mLayoutManager);
 		mRecyclerView.setHasFixedSize(true);
@@ -72,17 +75,18 @@ public class ShoppingItemListFragment extends Fragment {
 		switch(shoppingItemType) {
 			case MEAT_ITEM:
 				mAdapter = new ShoppingItemListRecyclerViewAdapter
-						(MEAT_ITEM, actionBarActivity.getSupportFragmentManager());
+						(MEAT_ITEM, mOnShoppingItemListFragmentInteractionListener, getActivity());
 				break;
 			case ALCOHOL_ITEM:
 				mAdapter = new ShoppingItemListRecyclerViewAdapter
-						(ALCOHOL_ITEM, actionBarActivity.getSupportFragmentManager());
+						(ALCOHOL_ITEM, mOnShoppingItemListFragmentInteractionListener, getActivity());
 				break;
 			case OTHERS_ITEM:
 				mAdapter = new ShoppingItemListRecyclerViewAdapter
-						(OTHERS_ITEM, actionBarActivity.getSupportFragmentManager());
+						(OTHERS_ITEM, mOnShoppingItemListFragmentInteractionListener, getActivity());
 				break;
 		}
+		mRecyclerView.setAdapter(mAdapter);
 
 		mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 			@Override
@@ -105,9 +109,12 @@ public class ShoppingItemListFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d(TAG, "onCreate");
 		if (getArguments() != null) {
 			shoppingItemType = getArguments().getInt(SHOPPING_ITEM_TYPE);
 			Log.d(TAG, shoppingItemType + "");
+
+			mOnShoppingItemListFragmentInteractionListener.onCreateShoppingItemListFragment(shoppingItemType, 9);
 		}
 	}
 
@@ -115,24 +122,18 @@ public class ShoppingItemListFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
+		Log.d(TAG, "onCreateView");
 		View shoppingItemListView = inflater.inflate(R.layout.fragment_shopping_item_list, container, false);
 		mRecyclerView = (RecyclerView) shoppingItemListView.findViewById(R.id.list_item);
 
 		return shoppingItemListView;
 	}
 
-	// TODO: Rename method, update argument and hook method into UI event
-	public void onButtonPressed(Uri uri) {
-		if (mOnShoppingItemListFragmentInteractionListener != null) {
-			mOnShoppingItemListFragmentInteractionListener.onFragmentInteraction(uri);
-		}
-	}
-
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			actionBarActivity = (ActionBarActivity) activity;
+			mScrollTabHolder = (ScrollTabHolder) activity;
 			mOnShoppingItemListFragmentInteractionListener = (OnShoppingItemListFragmentInteractionListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
@@ -148,10 +149,9 @@ public class ShoppingItemListFragment extends Fragment {
 
 	public interface OnShoppingItemListFragmentInteractionListener {
 		// TODO: Update argument type and name
-		public void onFragmentInteraction(Uri uri);
-	}
-
-	public void setScrollTabHolder(ScrollTabHolder scrollTabHolder) {
-		this.mScrollTabHolder = scrollTabHolder;
+		public void onCreateShoppingItemListFragment(int itemType, int numItem);
+		public void onDetachShoppingItemListFragment();
+		public void onClickItem(int itemType, String itemName, String itemUnit, String itemUnitCount, int itemPrice);
+		public void onClickItem(int itemType);
 	}
 }

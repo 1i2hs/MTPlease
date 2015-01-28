@@ -126,7 +126,7 @@ public class SpecificInfoFragment extends Fragment {
 		planButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mOnSpecificInfoFragmentInteratcionListener.onAddToPlanButtonClicked(mRoomInfoModel);
+				mOnSpecificInfoFragmentInteratcionListener.onClickAddRoomToPlanButton(mRoomInfoModel);
 			}
 		});
 
@@ -140,7 +140,7 @@ public class SpecificInfoFragment extends Fragment {
 */
 		if(mOnSpecificInfoFragmentInteratcionListener != null)
 			mOnSpecificInfoFragmentInteratcionListener
-					.onSpecificInfoFragmentViewAttach(mRoomInfoModel.getRoom_name(), mRoomInfoModel.getPen_name());
+					.onCreateSpecificInfoFragmentView(mRoomInfoModel.getRoom_name(), mRoomInfoModel.getPen_name());
 
 		return specificInfoView;
 	}
@@ -149,6 +149,7 @@ public class SpecificInfoFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
+			mScrollTabHolder = (ScrollTabHolder) activity;
 			mOnSpecificInfoFragmentInteratcionListener = (OnSpecificInfoFragmentInteractionListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
@@ -159,18 +160,15 @@ public class SpecificInfoFragment extends Fragment {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		mOnSpecificInfoFragmentInteratcionListener.onSpecificInfoFragmentViewDetach(this.numRoom);
+		mOnSpecificInfoFragmentInteratcionListener.onDetachSpecificInfoFragmentView(this.numRoom);
 		mOnSpecificInfoFragmentInteratcionListener = null;
 	}
 
 	public interface OnSpecificInfoFragmentInteractionListener {
 		// TODO: Update argument type and name
-		public void onSpecificInfoFragmentViewAttach(String roomName, String pensionName);
-		public void onSpecificInfoFragmentViewDetach(int numRoom);
-		public void onAddToPlanButtonClicked(RoomInfoModel roomInfoModel);
+		public void onCreateSpecificInfoFragmentView(String roomName, String pensionName);
+		public void onDetachSpecificInfoFragmentView(int numRoom);
+		public void onClickAddRoomToPlanButton(RoomInfoModel roomInfoModel);
 	}
 
-	public void setScrollTabHolder(ScrollTabHolder scrollTabHolder) {
-		this.mScrollTabHolder = scrollTabHolder;
-	}
 }

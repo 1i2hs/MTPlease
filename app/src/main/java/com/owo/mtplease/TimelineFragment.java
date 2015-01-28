@@ -116,7 +116,7 @@ public class TimelineFragment extends Fragment {
 		mRecyclerView = (RecyclerView) timelineView.findViewById(R.id.list_timeline);
 
 		if(mTimelineFragmentInteractionListener != null)
-			mTimelineFragmentInteractionListener.onTimelineFragmentViewResumed();
+			mTimelineFragmentInteractionListener.onResumeTimelineFragmentView();
 
 		return timelineView;
 	}
@@ -125,6 +125,7 @@ public class TimelineFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
+			mScrollTabHolder = (ScrollTabHolder) activity;
 			mTimelineFragmentInteractionListener = (OnTimelineFragmentInteractionListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
@@ -141,11 +142,6 @@ public class TimelineFragment extends Fragment {
 
 	public interface OnTimelineFragmentInteractionListener {
 		// TODO: Update argument type and name
-		public void onTimelineFragmentViewResumed();
+		public void onResumeTimelineFragmentView();
 	}
-
-	public void setScrollTabHolder(ScrollTabHolder scrollTabHolder) {
-		mScrollTabHolder = scrollTabHolder;
-	}
-
 }

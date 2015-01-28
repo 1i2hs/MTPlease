@@ -29,8 +29,8 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	private JSONArray postArray;
 
 	public TimelinePostListRecyclerViewAdapter(Context context, JSONArray jsonArray) {
-		this.mContext = context;
-		this.postArray = jsonArray;
+		mContext = context;
+		postArray = jsonArray;
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		else if(viewType == TYPE_HEADER) {
 			View headerView = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_header_placeholder, parent, false);
 
-			return new VHHeader(headerView);
+			return new BlankHeader(headerView);
 		}
 
 		throw new RuntimeException("there is no type that matches the type " + viewType + "make sure your using types correctly");
@@ -63,8 +63,6 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			} catch(NullPointerException e) {
 				e.printStackTrace();
 			}
-		}
-		else if(holder instanceof VHHeader) {
 		}
 	}
 
@@ -85,7 +83,7 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		return position == 0;
 	}
 
-	public static class PostCard extends RecyclerView.ViewHolder implements View.OnClickListener {
+	private static class PostCard extends RecyclerView.ViewHolder implements View.OnClickListener {
 		private CardView postCard;
 		private LinearLayout postLayout;
 		private ImageView postImage;
@@ -125,8 +123,8 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		}
 	}
 
-	public static class VHHeader extends RecyclerView.ViewHolder {
-		public VHHeader(View cardView) {
+	private static class BlankHeader extends RecyclerView.ViewHolder {
+		public BlankHeader(View cardView) {
 			super(cardView);
 		}
 	}

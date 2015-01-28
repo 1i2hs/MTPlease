@@ -4,9 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -51,30 +48,26 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 	private static final int REAL_PICTURE_EXISTS = 1;
 
 	private Context mContext;
-	private FragmentManager mFragmentManager;
 
 	// Model: Data variables for User Interface Views
 	private JSONArray roomArray;
 	// End of the Model
 
 	// Listeners
-	private ScrollTabHolder mScrollTabHolder;
 	private ResultFragment.OnResultFragmentInteractionListener mOnResultFragmentInteractionListener;
 	// End of the listeners
 
 	// others
-	private String dateMT;
+	private String mtDate;
 	// End of the others
 
-	public RoomListRecyclerViewAdapter(Context context, FragmentManager fragmentManager, JSONArray jsonArray, String date,
-									   ScrollTabHolder scrollTabHolder, ResultFragment.OnResultFragmentInteractionListener onResultFragmentInteractionListener) {
+	public RoomListRecyclerViewAdapter(Context context, JSONArray jsonArray, String date,
+			ResultFragment.OnResultFragmentInteractionListener onResultFragmentInteractionListener) {
 		Log.d(TAG, "RoomListRecyclerViewAdapter");
-		this.mContext = context;
-		this.mFragmentManager = fragmentManager;
-		this.roomArray = jsonArray;
-		this.dateMT = date;
-		this.mScrollTabHolder = scrollTabHolder;
-		this.mOnResultFragmentInteractionListener = onResultFragmentInteractionListener;
+		mContext = context;
+		roomArray = jsonArray;
+		mtDate = date;
+		mOnResultFragmentInteractionListener = onResultFragmentInteractionListener;
 	}
 
 	@Override
@@ -92,7 +85,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			View headerView = LayoutInflater.from(parent.getContext()).
 					inflate(R.layout.view_header_placeholder, parent, false);
 
-			return new VHHeader(headerView);
+			return new BlankHeader(headerView);
 		}
 
 		throw new RuntimeException("there is no type that matches the type "
@@ -115,7 +108,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 				e.printStackTrace();
 			}
 		}
-		else if(holder instanceof VHHeader) {
+		else if(holder instanceof BlankHeader) {
 
 		}
 	}
@@ -142,13 +135,13 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 		return position == 0;
 	}
 
-	public static class VHHeader extends RecyclerView.ViewHolder {
-		public VHHeader(View cardView) {
+	private static class BlankHeader extends RecyclerView.ViewHolder {
+		public BlankHeader(View cardView) {
 			super(cardView);
 		}
 	}
 
-	public class RoomCard extends RecyclerView.ViewHolder implements View.OnClickListener {
+	private class RoomCard extends RecyclerView.ViewHolder implements View.OnClickListener {
 		private CardView roomCard;
 		private LinearLayout roomLayout;
 		private ImageView roomImage;
@@ -168,7 +161,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			roomCard = (CardView) cardView;
 			roomLayout = (LinearLayout) cardView.findViewById(R.id.LinearLayout_card_room);
 			roomImage = (ImageView) cardView.findViewById(R.id.image_room);
-			loadingProgressBar = (ProgressBar) cardView.findViewById(R.id.progressBar_image_room);
+			loadingProgressBar = (ProgressBar) cardView.findViewById(R.id.progressBar_thumbnailImage_room);
 			roomName = (TextView) cardView.findViewById(R.id.textView_name_room_card);
 			pensionName = (TextView) cardView.findViewById(R.id.textView_name_pension_card);
 			rangeNumberOfPeople = (TextView) cardView.findViewById(R.id.textView_number_range_of_people_card);
@@ -186,7 +179,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 				imageURL = MTPLEASE_URL + "img/pensions/" + roomData.getString("pen_id") + "/" + URLEncoder.encode(roomData.optString("room_name"), "utf-8").replaceAll("\\+","%20") + "/unreal/thumbnail.png";
 
 			Log.i(TAG, imageURL);
-			new RoomThumbnailImageLoadingTask(roomImage, loadingProgressBar).execute(imageURL);
+			new ImageLoadingTask(roomImage, loadingProgressBar).execute(imageURL);
 			/*Picasso imageLoader = Picasso.with(mContext);
 			imageLoader.setIndicatorsEnabled(true);
 			if(roomImage == null) {
@@ -214,7 +207,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			if (roomPriceInt == 0) {
 				roomPrice.setText(R.string.telephone_inquiry);
 			} else {
-				roomPrice.setText(roomPriceInt + "");
+				roomPrice.setText(castRoomPriceToString(roomPriceInt));
 			}
 			roomCard.setPreventCornerOverlap(false);
 		}
@@ -223,6 +216,23 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			return roomLayout;
 		}
 
+		private String castRoomPriceToString(int price) {
+			String totalRoomCostString = String.valueOf(price);
+			String totalRoomCostStringChanged = "";
+
+			if(totalRoomCostString.length() > 0) {
+				int charCounter = 0;
+				for (int i = totalRoomCostString.length() - 1; i >= 0; i--) {
+					if(charCounter != 0 && charCounter % 3 == 0)
+						totalRoomCostStringChanged += "," + totalRoomCostString.charAt(i);
+					else
+						totalRoomCostStringChanged += totalRoomCostString.charAt(i) ;
+					charCounter++;
+				}
+			}
+			return mContext.getResources().getString(R.string.currency_unit) +
+					new StringBuffer(totalRoomCostStringChanged).reverse().toString();
+		}
 
 		@Override
 		public void onClick(View v) {
@@ -230,7 +240,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			// ***************receive the specific info data of the room from the server;
 			try {
 				new RoomInfoDataDownloadingTask(this.pen_id).execute(MTPLEASE_URL +
-						"pension?pen_id="+ this.pen_id + "&date=" + dateMT + "&room_name=" + URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20"));
+						"pension?pen_id="+ this.pen_id + "&date=" + mtDate + "&room_name=" + URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20"));
 			} catch (UnsupportedEncodingException e) {
 				Log.e(TAG, "Wrong URL sent!");
 				e.printStackTrace();
@@ -243,7 +253,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 	 * AsyncTask for receiving data from the server.
 	 * Used AsyncTask to perform the task in the background
 	 */
-	private class RoomThumbnailImageLoadingTask extends AsyncTask<String, Integer, Bitmap> {
+	/*private class RoomThumbnailImageLoadingTask extends AsyncTask<String, Integer, Bitmap> {
 
 		private static final int IMAGE_LOADING_SUCCEEDED = 1;
 		private static final int IMAGE_LOADING_FAILED = -1;
@@ -322,7 +332,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			imageLoadingProgressBar.setProgress(100);
 			// end of the configuration of the progress bar
 		}
-	}
+	}*/
 
 	/**
 	 * @author In-Ho
@@ -336,6 +346,12 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
 		private RoomInfoDataDownloadingTask(int pen_id) {
 			this.pen_id = pen_id;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			mOnResultFragmentInteractionListener.onPreLoadSpecificInfoFragment();
 		}
 
 		@Override
@@ -413,19 +429,9 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 				mRoomInfoModel.setRoom_cost(roomInfoList.optInt("room_cost"));
 				// end of the setting
 
-				mOnResultFragmentInteractionListener.onSpecificInfoFragmentLoad();
+				mOnResultFragmentInteractionListener.onLoadSpecificInfoFragment(mRoomInfoModel, roomArray);
 
-				SpecificInfoFragment mSpecificInfoFragment = SpecificInfoFragment.newInstance(mRoomInfoModel, roomArray.length());
-				mSpecificInfoFragment.setScrollTabHolder(mScrollTabHolder);
-
-				// commit the SpecificInfoFragment to the current view
-				FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
-				mFragmentTransaction.replace(R.id.body_foreground, mSpecificInfoFragment);
-				mFragmentTransaction.addToBackStack(null);
-				mFragmentTransaction.commit();
-				// end of commission
-
-				mOnResultFragmentInteractionListener.onSpecificInfoFragmentLoadDone();
+				mOnResultFragmentInteractionListener.onPostLoadSpecificInfoFragment();
 
 			} catch (JSONException e) {
 				Log.e(TAG, "Error receiving room data");

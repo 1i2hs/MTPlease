@@ -40,7 +40,7 @@ public class ResultFragment extends Fragment {
 	// Model: Data variables for User Interface Views
 	private String jsonStringRoomList;
 	private JSONArray roomArray;
-	private String dateOfMt;
+	private String mtDate;
 	// End of the Model
 
 	// Flags
@@ -63,15 +63,15 @@ public class ResultFragment extends Fragment {
 	 * this fragment using the provided parameters.
 	 *
 	 * @param jsonString Parameter 1.
-	 * @param dateOfMt Parameter 1.
+	 * @param mtDate Parameter 1.
 	 * @return A new instance of fragment MainFragment.
 	 */
 	// TODO: Rename and change types and number of parameters
-	public static ResultFragment newInstance(String jsonString, String dateOfMt) {
+	public static ResultFragment newInstance(String jsonString, String mtDate) {
 		ResultFragment fragment = new ResultFragment();
 		Bundle args = new Bundle();
 		args.putString(JSONSTRING_OF_ROOMS, jsonString);
-		args.putString(DATE_OF_MT, dateOfMt);
+		args.putString(DATE_OF_MT, mtDate);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -87,8 +87,8 @@ public class ResultFragment extends Fragment {
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-		mAdapter = new RoomListRecyclerViewAdapter(getActivity(), actionBarActivity.getSupportFragmentManager(),
-				roomArray, dateOfMt, mScrollTabHolder, mOnResultFragmentInteractionListener);
+		mAdapter = new RoomListRecyclerViewAdapter(getActivity(),
+				roomArray, mtDate, mOnResultFragmentInteractionListener);
 		mRecyclerView.setAdapter(mAdapter);
 
 		mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -117,7 +117,7 @@ public class ResultFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
 			jsonStringRoomList = getArguments().getString(JSONSTRING_OF_ROOMS);
-			dateOfMt = getArguments().getString(DATE_OF_MT);
+			mtDate = getArguments().getString(DATE_OF_MT);
 			Log.i(TAG, jsonStringRoomList);
 
 			try {
@@ -129,7 +129,7 @@ public class ResultFragment extends Fragment {
 					noResults = true;
 			} catch(JSONException e) {
 				noResults = true;
-				Toast.makeText(getActivity(), R.string.notify_fail_loading_room_results, Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), R.string.fail_loading_room_results, Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			}
 		}
@@ -143,7 +143,7 @@ public class ResultFragment extends Fragment {
 		mRecyclerView = (RecyclerView) resultView.findViewById(R.id.list_room);
 
 		if(mOnResultFragmentInteractionListener != null)
-			mOnResultFragmentInteractionListener.onResultFragmentViewResumed(noResults, roomArray.length());
+			mOnResultFragmentInteractionListener.onResumeResultFragmentView(noResults, roomArray.length());
 
 		return resultView;
 	}
@@ -153,6 +153,7 @@ public class ResultFragment extends Fragment {
 		super.onAttach(activity);
 		try {
 			actionBarActivity = (ActionBarActivity) activity;
+			mScrollTabHolder = (ScrollTabHolder) activity;
 			mOnResultFragmentInteractionListener = (OnResultFragmentInteractionListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
@@ -168,16 +169,9 @@ public class ResultFragment extends Fragment {
 
 	public interface OnResultFragmentInteractionListener {
 		// TODO: Update argument type and name
-		public void onResultFragmentViewResumed(boolean noResults, int numRoom);
-		public void onSpecificInfoFragmentLoad();
-		public void onSpecificInfoFragmentLoadDone();
+		public void onResumeResultFragmentView(boolean noResults, int numRoom);
+		public void onPreLoadSpecificInfoFragment();
+		public void onLoadSpecificInfoFragment(RoomInfoModel roomInfoModel, JSONArray roomArray);
+		public void onPostLoadSpecificInfoFragment();
 	}
-
-	public void setScrollTabHolder(ScrollTabHolder scrollTabHolder) {
-		this.mScrollTabHolder = scrollTabHolder;
-	}
-
-	/*public void setFragmentManager(FragmentManager fragmentManager) {
-		this.mFragmentManager = fragmentManager;
-	}*/
 }

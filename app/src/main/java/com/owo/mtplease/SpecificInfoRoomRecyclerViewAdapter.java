@@ -47,18 +47,19 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	private static final String MTPLEASE_URL = "http://mtplease.herokuapp.com/";
 
 	// Series of cards
-	private static final int CARD_IMAGE_VIEW_PAGER = 0;
-	private static final int CARD_PHONE_AND_WEBSITE_BUTTONS = 1;
-	private static final int CARD_PRICE_AND_RATE = 2;
-	private static final int CARD_BASIC_INFO = 3;
-	private static final int CARD_OPTIONS = 4;
-	private static final int CARD_VISITED_SCHOOLS = 5;
-	private static final int CARD_REVIEWS = 6;
-	private static final int CARD_ADDRESS_AND_ROUTE_AND_MAP = 7;
-	private static final int CARD_PRICE_AND_DATE_SELECTION = 8;
-	private static final int CARD_OWNER_INFO = 9;
-	private static final int CARD_OTHERS = 10;
-	private static final int CARD_NOTICE = 11;
+	private static final int CARD_BLANK_HEADER = 0;
+	private static final int CARD_IMAGE_VIEW_PAGER = 1;
+	private static final int CARD_PHONE_AND_WEBSITE_BUTTONS = 2;
+	private static final int CARD_PRICE_AND_RATE = 3;
+	private static final int CARD_BASIC_INFO = 4;
+	private static final int CARD_OPTIONS = 5;
+	private static final int CARD_VISITED_SCHOOLS = 6;
+	private static final int CARD_REVIEWS = 7;
+	private static final int CARD_ADDRESS_AND_ROUTE_AND_MAP = 8;
+	private static final int CARD_PRICE_AND_DATE_SELECTION = 9;
+	private static final int CARD_OWNER_INFO = 10;
+	private static final int CARD_OTHERS = 11;
+	private static final int CARD_NOTICE = 12;
 	// End of series of cards
 
 	// Model: Data variables for User Interface Views
@@ -76,10 +77,10 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		/*NMapViewerResourceProvider mMapViewerResourceProvider = null;
 		NMapOverlayManager mOverlayManager;*/
 
-	public SpecificInfoRoomRecyclerViewAdapter(Context context, RoomInfoModel mRoomInfoModel) {
+	public SpecificInfoRoomRecyclerViewAdapter(Context context, RoomInfoModel roomInfoModel) {
 		Log.d(TAG, TAG);
-		this.mContext = context;
-		this.mRoomInfoModel = mRoomInfoModel;
+		mContext = context;
+		mRoomInfoModel = roomInfoModel;
 	}
 
 	@Override
@@ -89,6 +90,9 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		View cardView;
 
 		switch(cardViewType) {
+			case CARD_BLANK_HEADER :
+				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_default_header_placeholder, parent, false);
+				return new BlankHeader(cardView);
 			case CARD_IMAGE_VIEW_PAGER:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_pager_room_images, parent, false);
 				return new RoomImageViewPagerCard(cardView);
@@ -174,38 +178,46 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 	@Override
 	public int getItemCount() {
-		return 12;
+		return 13;
 	}
 
 	@Override
 	public int getItemViewType(int position) {
 		switch(position) {
 			case 0:
-				return CARD_IMAGE_VIEW_PAGER;
+				return CARD_BLANK_HEADER;
 			case 1:
-				return CARD_PHONE_AND_WEBSITE_BUTTONS;
+				return CARD_IMAGE_VIEW_PAGER;
 			case 2:
-				return CARD_PRICE_AND_RATE;
+				return CARD_PHONE_AND_WEBSITE_BUTTONS;
 			case 3:
-				return CARD_BASIC_INFO;
+				return CARD_PRICE_AND_RATE;
 			case 4:
-				return CARD_OPTIONS;
+				return CARD_BASIC_INFO;
 			case 5:
-				return CARD_VISITED_SCHOOLS;
+				return CARD_OPTIONS;
 			case 6:
-				return CARD_REVIEWS;
+				return CARD_VISITED_SCHOOLS;
 			case 7:
-				return CARD_ADDRESS_AND_ROUTE_AND_MAP;
+				return CARD_REVIEWS;
 			case 8:
-				return CARD_PRICE_AND_DATE_SELECTION;
+				return CARD_ADDRESS_AND_ROUTE_AND_MAP;
 			case 9:
-				return CARD_OWNER_INFO;
+				return CARD_PRICE_AND_DATE_SELECTION;
 			case 10:
-				return CARD_OTHERS;
+				return CARD_OWNER_INFO;
 			case 11:
+				return CARD_OTHERS;
+			case 12:
 				return CARD_NOTICE;
 			default:
 				return position;
+		}
+	}
+
+	private class BlankHeader extends RecyclerView.ViewHolder {
+		private BlankHeader(View itemView) {
+			super(itemView);
 		}
 	}
 
@@ -407,7 +419,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			mMapView.setClickable(true);
 			// register listener for map state changes
 
-			mMapView.setOnMapStateChangeListener(new OnMapStateChangeListener());
+			mMapView.setOnMapStateChangeListener(this);
 			mMapView.setOnMapViewTouchEventListener(this);
 
 			// use map controller to zoom in/out, pan and set map center, zoom
@@ -678,38 +690,4 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		}
 	}
 
-	private class OnMapStateChangeListener implements NMapView.OnMapStateChangeListener {
-
-		@Override
-		public void onMapInitHandler(NMapView nMapView, NMapError nMapError) {
-			// if initialization of the map succeeds
-			if (nMapError == null) {
-				mMapController.setMapCenter(new NGeoPoint(mRoomInfoModel.getPen_longitude(),
-						mRoomInfoModel.getPen_latitude()), 11);
-			} else {
-				Log.e("ERROR",
-						"onMapInitHandler: error=" + nMapError.toString());
-			}
-		}
-
-		@Override
-		public void onMapCenterChange(NMapView nMapView, NGeoPoint nGeoPoint) {
-
-		}
-
-		@Override
-		public void onMapCenterChangeFine(NMapView nMapView) {
-
-		}
-
-		@Override
-		public void onZoomLevelChange(NMapView nMapView, int i) {
-
-		}
-
-		@Override
-		public void onAnimationStateChange(NMapView nMapView, int i, int i2) {
-
-		}
-	}
 }
