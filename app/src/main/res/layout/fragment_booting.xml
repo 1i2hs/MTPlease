@@ -1,0 +1,96 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                tools:context="com.owo.mtplease.BootingActivity$PlaceholderFragment">
+
+
+    <EditText
+        android:id="@+id/editText_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="121dp"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="textEmailAddress"
+        android:hint="example@gmail.com"/>
+
+    <Button
+        android:id="@+id/btn_send_school"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editText_email"
+        android:layout_alignStart="@+id/editText_email"
+        android:layout_below="@+id/editText_email"
+        android:layout_marginTop="35dp"
+        android:text="학교 전송"/>
+
+    <Button
+        android:id="@+id/btn_send_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/editText_email"
+        android:layout_alignRight="@+id/editText_email"
+        android:layout_alignTop="@+id/btn_send_school"
+        android:text="집 전송"/>
+
+    <EditText
+        android:id="@+id/editText_code_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="인증코드"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/btn_send_school"
+        android:layout_alignStart="@+id/btn_send_school"
+        android:layout_marginBottom="92dp"
+        android:layout_toLeftOf="@+id/btn_confirm_code"
+        android:layout_toStartOf="@+id/btn_confirm_code"/>
+
+    <Button
+        android:id="@+id/btn_confirm_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="확인"
+        android:layout_alignBottom="@+id/editText_code_confirm"
+        android:layout_alignRight="@+id/btn_send_home"
+        android:layout_alignEnd="@+id/btn_send_home"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText_subdirectory_server"
+        android:layout_alignBottom="@+id/editText_email"
+        android:layout_marginBottom="64dp"
+        android:layout_alignLeft="@+id/editText_email"
+        android:layout_alignStart="@+id/editText_email"
+        android:layout_toLeftOf="@+id/btn_change_subdirectory"
+        android:layout_toStartOf="@+id/btn_change_subdirectory"
+        android:hint="/members/email"
+        android:singleLine="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="경로변경"
+        android:id="@+id/btn_change_subdirectory"
+        android:layout_alignBottom="@+id/editText_subdirectory_server"
+        android:layout_alignRight="@+id/editText_email"
+        android:layout_alignEnd="@+id/editText_email"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="인증코드 뜨는 곳"
+        android:id="@+id/textView_confirm_code"
+        android:layout_above="@+id/btn_confirm_code"
+        android:layout_marginBottom="40dp"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>

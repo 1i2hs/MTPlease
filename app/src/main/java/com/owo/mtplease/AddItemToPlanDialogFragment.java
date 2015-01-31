@@ -33,7 +33,7 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 	private String itemName;
 	private String itemUnit;
 	private String itemCountUnit;
-	private int itemCount;
+	private int itemCount = 0;
 	private int itemUnitPrice;
 
 	// User Interface Views
@@ -203,7 +203,8 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 			itemUnitPriceTextView.setText(castItemPriceToString(itemUnitPrice));
 
 			itemTotalPriceTextView = (TextView) addItemToPlanDialogFragmentView.
-					findViewById(R.id.textView_price_total_dialog);
+					findViewById(R.id.textView_price_total_item_dialog);
+			itemTotalPriceTextView.setText(castItemPriceToString(0));
 
 			itemNumberPicker = (NumberPicker) addItemToPlanDialogFragmentView.
 					findViewById(R.id.numberPicker_number_item_dialog);
@@ -217,10 +218,10 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 					itemCount = newVal;
 				}
 			});
-			itemNumberPicker.setValue(1);
+			itemNumberPicker.setValue(0);
 
 			itemCountUnitTextView = (TextView) addItemToPlanDialogFragmentView.
-					findViewById(R.id.textView_unit_count_item_dialog);
+					findViewById(R.id.textView_count_unit_item_dialog);
 			itemCountUnitTextView.setText(itemCountUnit);
 
 			addItemButton = (Button) addItemToPlanDialogFragmentView.
@@ -228,9 +229,13 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 			addItemButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					mOnAddItemToPlanDialogFragmentInteractionListener.
-							onClickAddButton(itemType, itemName, itemUnitPrice, itemCount, itemUnit, itemCountUnit);
-					dismiss();
+					if(itemCount > 0) {
+						mOnAddItemToPlanDialogFragmentInteractionListener.
+								onClickAddItemToPlanButton(itemType, itemName, itemUnitPrice, itemCount, itemUnit, itemCountUnit);
+						dismiss();
+					} else {
+						Toast.makeText(getActivity(), R.string.please_type_more_than_zero, Toast.LENGTH_SHORT).show();
+					}
 				}
 			});
 
@@ -257,7 +262,8 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 			customItemUnitEditText.setNextFocusDownId(R.id.editText_price_custom_dialog);
 
 			customItemTotalPriceTextView = (TextView) addItemToPlanDialogFragmentView.
-					findViewById(R.id.textView_price_total_custom_dialog);
+					findViewById(R.id.textView_price_total_item_custom_dialog);
+			customItemTotalPriceTextView.setText(castItemPriceToString(0));
 
 			itemNumberPicker = (NumberPicker) addItemToPlanDialogFragmentView.
 					findViewById(R.id.numberPicker_number_custom_item_dialog);
@@ -271,7 +277,7 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 						customItemTotalPriceTextView.setText(
 								castItemPriceToString(Integer.parseInt(customItemUnitPriceEditText.getText().toString()) * newVal));
 						itemCount = newVal;
-					} catch(NumberFormatException e) {
+					} catch (NumberFormatException e) {
 						Toast.makeText(getActivity(), R.string.please_type_price_first, Toast.LENGTH_SHORT).show();
 						e.printStackTrace();
 					}
@@ -282,10 +288,10 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 			customItemUnitPriceEditText = (EditText) addItemToPlanDialogFragmentView.
 					findViewById(R.id.editText_price_custom_dialog);
 			customItemUnitPriceEditText.addTextChangedListener(editTextWatcherForCustomItemPrice);
-			customItemUnitPriceEditText.setNextFocusDownId(R.id.editText_unit_count_custom_item_dialog);
+			customItemUnitPriceEditText.setNextFocusDownId(R.id.editText_count_unit_custom_item_dialog);
 
 			customItemCountUnitEditText = (EditText) addItemToPlanDialogFragmentView.
-					findViewById(R.id.editText_unit_count_custom_item_dialog);
+					findViewById(R.id.editText_count_unit_custom_item_dialog);
 
 			switch(itemType) {
 				case MEAT_ITEM:
@@ -306,23 +312,22 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 			addItemButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					itemName = customItemNameEditText.getText().toString();
-					itemUnit = customItemUnitEditText.getText().toString();
-					itemCountUnit = customItemCountUnitEditText.getText().toString();
-					String tempPrice = customItemUnitPriceEditText.getText().toString();
+					if(itemCount > 0) {
+						itemName = customItemNameEditText.getText().toString();
+						itemUnit = customItemUnitEditText.getText().toString();
+						itemCountUnit = customItemCountUnitEditText.getText().toString();
+						String tempPrice = customItemUnitPriceEditText.getText().toString();
 
-					if(itemName.equals(""))
-						Toast.makeText(getActivity(), R.string.please_type_every_blanks, Toast.LENGTH_SHORT).show();
-					else if(itemUnit.equals(""))
-						Toast.makeText(getActivity(), R.string.please_type_every_blanks, Toast.LENGTH_SHORT).show();
-					else if(itemCountUnit.equals(""))
-						Toast.makeText(getActivity(), R.string.please_type_every_blanks, Toast.LENGTH_SHORT).show();
-					else if(tempPrice.equals(""))
-						Toast.makeText(getActivity(), R.string.please_type_every_blanks, Toast.LENGTH_SHORT).show();
-					else {
-						mOnAddItemToPlanDialogFragmentInteractionListener.onClickAddButton(itemType, itemName,
-								itemUnitPrice, itemCount, itemUnit, itemCountUnit);
-						dismiss();
+						if (!itemName.equals("") && !itemUnit.equals("") && !itemCountUnit.equals("")
+								&& !tempPrice.equals("")) {
+							mOnAddItemToPlanDialogFragmentInteractionListener.onClickAddItemToPlanButton(itemType, itemName,
+									itemUnitPrice, itemCount, itemUnit, itemCountUnit);
+							dismiss();
+						} else {
+							Toast.makeText(getActivity(), R.string.please_type_every_blanks, Toast.LENGTH_SHORT).show();
+						}
+					} else {
+						Toast.makeText(getActivity(), R.string.please_type_more_than_zero, Toast.LENGTH_SHORT).show();
 					}
 				}
 			});
@@ -383,7 +388,7 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 
 	public interface OnAddItemToPlanDialogFragmentInteractionListener {
 		// TODO: Update argument type and name
-		public void onClickAddButton(int itemType, String itemName, int itemUnitPrice, int itemCount, String itemUnit, String itemCountUnit);
+		public void onClickAddItemToPlanButton(int itemType, String itemName, int itemUnitPrice, int itemCount, String itemUnit, String itemCountUnit);
 	}
 
 }

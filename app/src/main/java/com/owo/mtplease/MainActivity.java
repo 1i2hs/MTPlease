@@ -1,5 +1,6 @@
 package com.owo.mtplease;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -18,6 +19,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -60,7 +62,10 @@ import notboringactionbar.AlphaForegroundColorSpan;
 public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		TimelineFragment.OnTimelineFragmentInteractionListener, ResultFragment.OnResultFragmentInteractionListener,
 		CalendarDialogFragment.OnDateConfirmedListener, SpecificInfoFragment.OnSpecificInfoFragmentInteractionListener,
-		AddItemToPlanDialogFragment.OnAddItemToPlanDialogFragmentInteractionListener, ShoppingItemListFragment.OnShoppingItemListFragmentInteractionListener {
+		AddItemToPlanDialogFragment.OnAddItemToPlanDialogFragmentInteractionListener,
+		ShoppingItemListFragment.OnShoppingItemListFragmentInteractionListener,
+		ChangeItemNumberInPlanDialogFragment.OnChangeItemNumberInPlanDialogFragmentInteractionListener,
+		UndoToastController.UndoToastListener {
 
 	// Flags and Strings
 	private static final String TAG = "MainActivity";
@@ -73,11 +78,10 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	private static final int CALL_FROM_CONDITIONAL_QUERY = 1;
 	private static final int CALL_FROM_PLAN = 2;
 	private static final int CALL_FROM_ADD_ITEM_TO_PLAN_DIALOG = 3;
-	//	private static final int CALL_FROM_ADDTOPLANDIALOG = 3;
 	private static final int INDEX_OF_DAESUNGRI = 0;
 	private static final int INDEX_OF_CHEONGPYUND = 1;
 	private static final int INDEX_OF_GAPYUNG = 2;
-	private static final int FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN = 2;
+	private static final int FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN = 0;
 	private static final int CUSTOM_SHOPPING_ITEM_INPUT_MODE = 1;
 	private static final int SHOPPING_ITEM_INPUT_MODE = 2;
 	public static final int TIMELINE_FRAGMENT_VISIBLE = 1;
@@ -89,10 +93,10 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	// Fragments
 	private FragmentManager mFragmentManager;
 	private FragmentTransaction mFragmentTransaction;
-	private TimelineFragment mTimelineFragment;
-	private ResultFragment mResultFragment;
-	private SpecificInfoFragment mSpecificInfoFragment;
-	private ShoppingItemListFragment mShoppingItemListFragment;
+	private TimelineFragment mTimelineFragment = null;
+	private ResultFragment mResultFragment = null;
+	private SpecificInfoFragment mSpecificInfoFragment = null;
+	private ShoppingItemListFragment mShoppingItemListFragment = null;
 	// End of the fragments
 
 	// Graphical transitions
@@ -125,13 +129,18 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	private TextView compareButton;
 	private TextView mypageButton;
 	private TextView settingButton;
+	private LinearLayout mUndoToastView;
 	private Button dateSelectPlanButton;
 	private Spinner regionSelectPlanButton;
 	private EditText numberOfPeopleSelectPlanEditText;
 	private TextView numberOfMaleTextView;
 	private TextView numberOfFemaleTextView;
 	private SeekBar sexRatioPlanSeekBar;
+	private EditText directInputRoomPriceEditText;
+	private Button addDirectInputRoomPriceButton;
+	private Button recommendItemsPlanButton;
 	private LinearLayout roomPlanLinearLayout;
+	private LinearLayout directInputRoomPlanLinearLayout;
 	private RelativeLayout notSelectedRoomPlanRelativeLayout;
 	private TextView clearRoomPlanButton;
 	private LinearLayout meatPlanLinearLayout;
@@ -147,10 +156,12 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	private TextView totalMeatPrice;
 	private TextView totalAlcoholPrice;
 	private TextView totalOthersPrice;
+	private TextView totalPlanCost;
+	private TextView tempItemTotalPricePlanTextView;	// temporary TextView instance
+	private Button tempNumberPickerCallButton;
 	// End of User Interface Views
 
 	// Controller
-	private ScrollTabHolder mScrollTabHolder = this;
 	private TextWatcher editTextWatcherForNumberOfPeopleSelectPlan = new TextWatcher() {
 
 		@Override
@@ -164,13 +175,24 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		@Override
 		public void afterTextChanged(Editable s) throws NumberFormatException {
 			try {
-				sexRatioPlanSeekBar.setMax(Integer.parseInt(s.toString()));
+				int newNumPeople = Integer.parseInt(s.toString());
+				sexRatioPlanSeekBar.setMax(newNumPeople);
+				if(oldNumPeople != 0)
+					applyNumberOfPeopleChangeToItems(oldNumPeople, newNumPeople);
+				oldNumPeople = newNumPeople;
+
+				if(!numberOfPeopleSelectPlanEditText.getText().toString().equals("")) {
+					recommendItemsPlanButton.setEnabled(true);
+				} else {
+					recommendItemsPlanButton.setEnabled(false);
+				}
 			} catch (NumberFormatException e) {
 				sexRatioPlanSeekBar.setMax(0);
 				e.printStackTrace();
 			}
 		}
 	};
+	private UndoToastController mUndoToastController;
 	// End of Controllers
 
 	// Others
@@ -180,6 +202,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	private PlanModel mPlanModel = null;
 	private float clampValue;
 	private int searchMode;
+	private int oldNumPeople = 0;	// temporary variable to store the number of people that user input right before he/she changes the value;
+	private boolean isBackButtonPressed = false;
 	// End of others
 
 	public static float clamp(float value, float max, float min) {
@@ -260,6 +284,11 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		mPlanModel = new PlanModel();
 		// end of instantiation
 
+		// configure a custom toast controller
+		mUndoToastView = (LinearLayout) findViewById(R.id.layout_toast_plan);
+		mUndoToastController = new UndoToastController(mUndoToastView, this);
+		// end of configuration
+
 		dateSelectPlanButton = (Button) findViewById(R.id.btn_select_date_plan);
 		dateSelectPlanButton.setText(modifiedDate);
 		dateSelectPlanButton.setOnClickListener(new View.OnClickListener() {
@@ -301,11 +330,13 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				// set number of male to the TextView
 				numberOfMaleTextView.setText(progress + getResources().getString(R.string.people_unit));
 				// set number of female to the TextView
+				numberOfFemaleTextView.setText((seekBar.getMax() - progress) + getResources().getString(R.string.people_unit));
 			}
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
 				numberOfPeopleSelectPlanEditText.clearFocus();
+				directInputRoomPriceEditText.clearFocus();
 			}
 
 			@Override
@@ -313,7 +344,39 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			}
 		});
 
+		directInputRoomPriceEditText = (EditText) findViewById(R.id.editText_input_direct_price_room_plan);
+		directInputRoomPriceEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				Log.d(TAG, "onFocusChange");
+				if(!hasFocus)
+					hideKeyboard(v);
+			}
+		});
+
+		addDirectInputRoomPriceButton = (Button) findViewById(R.id.btn_add_direct_price_room_plan);
+		addDirectInputRoomPriceButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					if (!addDirectInputRoomPriceButton.getText().toString().equals(""))
+						addDirectInputRoomPriceToPlan(Integer.parseInt(directInputRoomPriceEditText.getText().toString()));
+				} catch(NumberFormatException e) {
+					Toast.makeText(v.getContext(), R.string.please_type_only_number_for_price, Toast.LENGTH_SHORT).show();
+					e.printStackTrace();
+				}
+			}
+		});
+
+		recommendItemsPlanButton = (Button) findViewById(R.id.btn_recommend_items_plan);
+		recommendItemsPlanButton.setEnabled(false);
+
+		totalPlanCost = (TextView) findViewById(R.id.textView_cost_total_plan);
+		totalPlanCost.setText(castItemPriceToString(0));
+
 		roomPlanLinearLayout = (LinearLayout) findViewById(R.id.layout_room);
+
+		directInputRoomPlanLinearLayout = (LinearLayout) findViewById(R.id.layout_room_direct_input);
 
 		notSelectedRoomPlanRelativeLayout = (RelativeLayout) findViewById(R.id.layout_add_room);
 		notSelectedRoomPlanRelativeLayout.setOnClickListener(new View.OnClickListener() {
@@ -331,13 +394,21 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			public void onClick(View v) {
 				if(mPlanModel.getRoomDataCount() > 0) {
 					for(int roomIndex = 0; roomIndex < mPlanModel.getRoomDataCount(); roomIndex++)
-						roomPlanLinearLayout.removeViewAt(FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN);
-					mPlanModel.clearRoomData();
+						planItemFadeOut(roomPlanLinearLayout.getChildAt(roomIndex));
+
+					for(int directInputRoomIndex = 0;
+						directInputRoomIndex < mPlanModel.getDirectInputRoomDataCount(); directInputRoomIndex++)
+						planItemFadeOut(directInputRoomPlanLinearLayout.getChildAt(directInputRoomIndex));
+
+					/*mUndoToastController.showUndoBar(getResources().getString(R.string.added_rooms_cleared),
+							UndoToastController.CLEAR_ADDED_ROOMS_CASE);*/
+					mUndoToastController.showUndoBar(getResources().getString(R.string.added_rooms_cleared),
+							UndoToastController.CLEAR_ADDED_ROOMS_CASE, -1);
 				}
 			}
 		});
 
-		totalRoomPrice = (TextView) findViewById(R.id.textView_price_room_plan);
+		totalRoomPrice = (TextView) findViewById(R.id.textView_price_total_room_plan);
 		totalRoomPrice.setText(getResources().getString(R.string.currency_unit) + "0");
 
 		meatPlanLinearLayout = (LinearLayout) findViewById(R.id.layout_meat);
@@ -358,13 +429,15 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 					for(int meatIndex = 0;
 						meatIndex < mPlanModel.getItemDataCount(ShoppingItemListFragment.MEAT_ITEM);
 						meatIndex++)
-						meatPlanLinearLayout.removeViewAt(FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN);
-					mPlanModel.clearRoomData();
+						planItemFadeOut(meatPlanLinearLayout.getChildAt(meatIndex));
+
+					mUndoToastController.showUndoBar(getResources().getString(R.string.added_meats_cleared),
+							UndoToastController.CLEAR_ADDED_MEATS_CASE, -1);
 				}
 			}
 		});
 
-		totalMeatPrice = (TextView) findViewById(R.id.textView_price_meat_plan);
+		totalMeatPrice = (TextView) findViewById(R.id.textView_price_total_meat_plan);
 		totalMeatPrice.setText(getResources().getString(R.string.currency_unit) + "0");
 
 		alcoholPlanLinearLayout = (LinearLayout) findViewById(R.id.layout_alcohol);
@@ -385,13 +458,15 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 					for(int alcoholIndex = 0;
 						alcoholIndex < mPlanModel.getItemDataCount(ShoppingItemListFragment.ALCOHOL_ITEM);
 						alcoholIndex++)
-						alcoholPlanLinearLayout.removeViewAt(FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN);
-					mPlanModel.clearRoomData();
+						planItemFadeOut(alcoholPlanLinearLayout.getChildAt(alcoholIndex));
+
+					mUndoToastController.showUndoBar(getResources().getString(R.string.added_alcohols_cleared),
+							UndoToastController.CLEAR_ADDED_ALCOHOLS_CASE, -1);
 				}
 			}
 		});
 
-		totalAlcoholPrice = (TextView) findViewById(R.id.textView_price_alcohol_plan);
+		totalAlcoholPrice = (TextView) findViewById(R.id.textView_price_total_alcohol_plan);
 		totalAlcoholPrice.setText(getResources().getString(R.string.currency_unit) + "0");
 
 		othersPlanLinearLayout = (LinearLayout) findViewById(R.id.layout_others);
@@ -412,13 +487,15 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 					for(int othersIndex = 0;
 						othersIndex < mPlanModel.getItemDataCount(ShoppingItemListFragment.OTHERS_ITEM);
 						othersIndex++)
-						othersPlanLinearLayout.removeViewAt(FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN);
-					mPlanModel.clearRoomData();
+						planItemFadeOut(othersPlanLinearLayout.getChildAt(othersIndex));
+
+					mUndoToastController.showUndoBar(getResources().getString(R.string.added_others_cleared),
+							UndoToastController.CLEAR_ADDED_OTHERS_CASE, -1);
 				}
 			}
 		});
 
-		totalOthersPrice = (TextView) findViewById(R.id.textView_price_others_plan);
+		totalOthersPrice = (TextView) findViewById(R.id.textView_price_total_others_plan);
 		totalOthersPrice.setText(getResources().getString(R.string.currency_unit) + "0");
 	}
 
@@ -426,7 +503,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		Toast.makeText(this, stringResId, Toast.LENGTH_SHORT).show();
 		mShoppingItemListFragment = ShoppingItemListFragment.newInstance(shoppingItemType);
 		// commit the SpecificInfoFragment to the current view
-		beginFragmentTransaction(mShoppingItemListFragment, R.id.body_foreground);
+		beginFragmentTransaction(mShoppingItemListFragment, R.id.body_background);
 		// end of the comission
 		doubleSideSlidingMenu.toggle();
 	}
@@ -516,9 +593,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			@Override
 			public void onClick(View v) {
 				try {
-					if (mConditionDataForRequest == null) {
-						mConditionDataForRequest = getUserInputData();
-					}
+					mConditionDataForRequest = getUserInputData();
 
 					numberOfPeopleSelectEditText.clearFocus();
 					/*if (mConditionDataForRequest.getFlag() == CONDITION_SEARCH_MODE) {
@@ -586,7 +661,10 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	}
 
 	@Override
-	public void onResumeResultFragmentView(boolean noResults, int numRoom) {
+	public void onCreateResultFragmentView(boolean noResults, int numRoom) {
+
+		mHeader.setVisibility(View.VISIBLE);
+
 		dateQuerySubTabText.setVisibility(View.VISIBLE);
 		regionQuerySubTabText.setVisibility(View.VISIBLE);
 		numberOfPeopleQuerySubTabText.setVisibility(View.VISIBLE);
@@ -619,8 +697,17 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		numberOfPeopleQuerySubTabText.setText(mConditionDataForRequest.getPeople() + "명");
 		// end of the configuration
 
-		if(!noResults)
+		if(!noResults && !isBackButtonPressed) {
+			Log.d(TAG, "dfsdfasdfasdfasdf");
 			mHeader.setTranslationY(-mMinHeaderHeightForResultFragment + getSupportActionBar().getHeight());
+		}
+
+		isBackButtonPressed = false;
+	}
+
+	@Override
+	public void onDestroyResultFragmentView() {
+		mHeader.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -633,7 +720,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		mSpecificInfoFragment = SpecificInfoFragment.newInstance(roomInfoModel, roomArray.length());
 
 		// commit the SpecificInfoFragment to the current view
-		beginFragmentTransaction(mSpecificInfoFragment, R.id.body_foreground);
+		beginFragmentTransaction(mSpecificInfoFragment, R.id.body_background);
 		// end of commission
 	}
 
@@ -643,13 +730,22 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	}
 
 	@Override
-	public void onResumeTimelineFragmentView() {
+	public void onCreateTimelineFragmentView() {
+		mHeader.setVisibility(View.VISIBLE);
+
 		dateQuerySubTabText.setVisibility(View.INVISIBLE);
 		regionQuerySubTabText.setVisibility(View.INVISIBLE);
 		numberOfPeopleQuerySubTabText.setVisibility(View.INVISIBLE);
 
 		changeActionBarStyle(Color.TRANSPARENT, getResources().getString(R.string.app_name), null);
 		mHeader.setTranslationY(0);
+
+		isBackButtonPressed = false;
+	}
+
+	@Override
+	public void onDestroyTimelineFragmentView() {
+		mHeader.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -664,14 +760,15 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				clampValue = changeHeaderTranslation(scrollY, mMinHeaderHeightForTimelineFragment);
 				break;
 			case RESULT_FRAGMENT_VISIBLE:
-			case SPECIFIC_INFO_FRAGMENT_VISIBLE:
-			case SHOPPINGITEMLIST_FRAGMENT_VISIBLE:
+
 				changeHeaderTranslation(scrollY, mMinHeaderHeightForResultFragment);
 				return;
 			/*case SPECIFIC_INFO_FRAGMENT_VISIBLE:
 				ratio = (float) getSupportActionBar().getHeight() / (float) (scrollY + 1);
 				clampValue = clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F);
 				break;*/
+			case SPECIFIC_INFO_FRAGMENT_VISIBLE:
+			case SHOPPINGITEMLIST_FRAGMENT_VISIBLE:
 			default:
 				return;
 		}
@@ -801,12 +898,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		changeActionBarStyle(Color.BLACK, roomName, pensionName);
 		// end of the configuration
 		// **********************actionbar button issue...........
-	}
 
-	public void onDetachSpecificInfoFragmentView(int numRoom) {
-		// configure actionbar for result page
-		changeActionBarStyle(Color.BLACK, getResources().getString(R.string.results), numRoom + "개의 방");
-		// end of the configuration
+		isBackButtonPressed = false;
 	}
 
 	@Override
@@ -820,34 +913,33 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		}
 
 		int roomDataCount = mPlanModel.getRoomDataCount();
-		int roomViewIndex = roomDataCount + FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN;
+		final int roomPlanViewIndex = roomDataCount;
 		// "roomDataCount + FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN" -> used this notation, because
 		// there is a gap, between first index of the roomDataLinkedList(inside PlanModel class)
 		// and first index of the roomPlanLinearLayout(starts the index from 2), which is 2.
-		final View roomView = getLayoutInflater().inflate(R.layout.frame_room_selected_plan,
+		final View roomPlanView = getLayoutInflater().inflate(R.layout.frame_room_selected_plan,
 				(LinearLayout) findViewById(R.id.layout_room), false);
-		addViewAtPlan(roomPlanLinearLayout, roomView, roomViewIndex);
+		addViewAtPlan(roomPlanLinearLayout, roomPlanView, roomPlanViewIndex);
 
 		// configure the room delete button
 		ImageView deleteRoomButtonImageView =
-				(ImageView) roomView.findViewById(R.id.imageView_btn_delete_room_plan);
+				(ImageView) roomPlanView.findViewById(R.id.imageView_btn_delete_room_plan);
 		deleteRoomButtonImageView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				removeViewAtPlan(roomPlanLinearLayout, roomView);
-				mPlanModel.removeRoomData(roomInfoModel.getPen_id(),
-						roomInfoModel.getRoom_name(), roomInfoModel.getRoom_cost());
+				planItemFadeOut(roomPlanView);
 
-				// calculate the total cost for the added rooms after deletion of one room
-				totalRoomPrice.setText(castItemPriceToString(mPlanModel.getTotalRoomCost()));
+				mUndoToastController.showUndoBar(roomInfoModel.getRoom_name() + " " + getResources().getString(R.string.deleted),
+						UndoToastController.DELETE_ADDED_ROOM_CASE, roomPlanViewIndex);
+//				mUndoToastController.setRoomViewAndData(roomPlanView, roomInfoModel.getPen_id(), roomInfoModel.getRoom_name(), roomInfoModel.getRoom_cost());
 			}
 		});
 		// end of the configuration
 
 		// get a thumbnail image of the room from the server and set it as an image
 		// of the added room view
-		ImageView roomThumbnailImageView = (ImageView) roomView.findViewById(R.id.imageView_room_thumbnail);
-		ProgressBar roomThumbnailImageLoadingProgressBar = (ProgressBar) roomView.
+		ImageView roomThumbnailImageView = (ImageView) roomPlanView.findViewById(R.id.imageView_room_thumbnail);
+		ProgressBar roomThumbnailImageLoadingProgressBar = (ProgressBar) roomPlanView.
 				findViewById(R.id.progressBar_thumbnailImage_room_plan);
 
 		new ImageLoadingTask(roomThumbnailImageView, roomThumbnailImageLoadingProgressBar).
@@ -855,19 +947,19 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		// end of getting and setting of the thumbnail image
 
 		// set a room name of the added room view
-		TextView roomNamePlanTextView = (TextView) roomView.findViewById(R.id.textView_name_room_plan);
+		TextView roomNamePlanTextView = (TextView) roomPlanView.findViewById(R.id.textView_name_room_plan);
 		roomNamePlanTextView.setText(roomInfoModel.getRoom_name());
 		// end of the setting
 
 		// set a pension name of the added room view
 		TextView pensionNamePlanTextView =
-				(TextView) roomView.findViewById(R.id.textView_name_pension_and_region_plan);
+				(TextView) roomPlanView.findViewById(R.id.textView_name_pension_and_region_plan);
 		pensionNamePlanTextView.setText(roomInfoModel.getPen_name() + " / " + roomInfoModel.getPen_region());
 		// end of the setting
 
 		// set standard and maximum number of people allowed of the added room view
 		TextView numberPeopleStdMaxPlanTextView =
-				(TextView) roomView.findViewById(R.id.textView_number_people_std_max_plan);
+				(TextView) roomPlanView.findViewById(R.id.textView_number_people_std_max_plan);
 		numberPeopleStdMaxPlanTextView.setText(getResources().getString(R.string.standard)
 				+ roomInfoModel.getRoom_std_people() + " / " + getResources().getString(R.string.max)
 				+ roomInfoModel.getRoom_max_people());
@@ -876,7 +968,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		// Options goes here!!!!!!!!!
 
 		// set a room price of the added room view
-		TextView roomPricePlanTextView = (TextView) roomView.findViewById(R.id.textView_price_room_plan);
+		TextView roomPricePlanTextView = (TextView) roomPlanView.findViewById(R.id.textView_price_room_plan);
 		int roomPrice = roomInfoModel.getRoom_cost();
 		if (roomPrice == 0) {
 			roomPricePlanTextView.setText(getResources().getString(R.string.telephone_inquiry));
@@ -890,6 +982,9 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 		// calculate the total cost for the added rooms
 		totalRoomPrice.setText(castItemPriceToString(mPlanModel.getTotalRoomCost()));
+
+		// calculate the total cost for the whole plan
+		totalPlanCost.setText(castItemPriceToString(mPlanModel.getPlanTotalCost()));
 
 		// notify room is added to the plan to the user
 		Toast.makeText(this, R.string.added_to_plan, Toast.LENGTH_LONG).show();
@@ -912,8 +1007,81 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		parentView.addView(viewToBeAdded, index);
 	}
 
-	private void removeViewAtPlan(ViewGroup parentView, View viewToBeDeleted) {
-		parentView.removeView(viewToBeDeleted);
+	private void addDirectInputRoomPriceToPlan(final int directInputRoomPrice) {
+
+		final int directInputRoomDataCount = mPlanModel.getRoomDataCount();
+		final int directInputRoomPlanViewIndex = directInputRoomDataCount;
+		// "directInputRoomDataCount + FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN" -> used this notation, because
+		// there is a gap, between first index of the roomDataLinkedList(inside PlanModel class)
+		// and first index of the roomPlanLinearLayout(starts the index from 2), which is 2.
+		final View directInputRoomPlanView = getLayoutInflater().inflate(R.layout.frame_room_direct_input_plan,
+				(LinearLayout) findViewById(R.id.layout_room_direct_input), false);
+		addViewAtPlan(directInputRoomPlanLinearLayout, directInputRoomPlanView, directInputRoomPlanViewIndex);
+
+		// configure the room delete button
+		ImageView deleteDirectInputRoomPlanButtonImageView =
+				(ImageView) directInputRoomPlanView.findViewById(R.id.imageView_btn_delete_room_direct_input_plan);
+		deleteDirectInputRoomPlanButtonImageView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				planItemFadeOut(directInputRoomPlanView);
+
+				mUndoToastController.showUndoBar(getResources().getString(R.string.directly_added_room)
+						+ getResources().getString(R.string.deleted), UndoToastController.DELETE_DIRECTLY_INPUT_ROOM_CASE,
+						directInputRoomPlanViewIndex);
+//				mUndoToastController.setDirectInputRoomViewAndData(directInputRoomPlanView, directInputRoomPrice);
+			}
+		});
+		// end of the configuration
+
+		// set a directly input room name of the added room view
+/*		TextView directInputRoomNamePlanTextView = (TextView) directInputRoomPlanView.findViewById(R.id.textView_room_direct_input_plan);
+		directInputRoomNamePlanTextView.setText(R.string.direct_input_room);*/
+		// end of the setting
+
+		// set a directly input room price of the added room view
+		TextView directInputRoomPricePlanTextView = (TextView) directInputRoomPlanView.findViewById(R.id.textView_price_room_direct_input_plan);
+		directInputRoomPricePlanTextView.setText(castItemPriceToString(directInputRoomPrice));
+		// end of the setting
+
+		// store room data in the mPlanModel
+		mPlanModel.addDirectInputRoomData(directInputRoomPrice);
+
+		// calculate the total cost for the added rooms
+		totalRoomPrice.setText(castItemPriceToString(mPlanModel.getTotalRoomCost()));
+
+		// calculate the total cost for the whole plan
+		totalPlanCost.setText(castItemPriceToString(mPlanModel.getPlanTotalCost()));
+
+		// notify room is added to the plan to the user
+		Toast.makeText(this, R.string.added_to_plan, Toast.LENGTH_LONG).show();
+
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK) {
+			if(doubleSideSlidingMenu.isSecondaryMenuShowing()) {
+				doubleSideSlidingMenu.toggle();
+				return false;
+			}
+
+			if(doubleSideSlidingMenu.isMenuShowing()) {
+				doubleSideSlidingMenu.toggle();
+				return false;
+			}
+
+			if(mShoppingItemListFragment != null && mShoppingItemListFragment.isVisible()) {
+				Log.d(TAG,"Visible");
+				doubleSideSlidingMenu.showSecondaryMenu(true);
+				mFragmentManager.popBackStack();
+				return false;
+			}
+
+			isBackButtonPressed = true;
+			Log.d(TAG, "onKeyDonwn");
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	private String castItemPriceToString(int price) {
@@ -968,20 +1136,14 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	private void beginFragmentTransaction(Fragment targetFragment, int containerViewId) {
 
 		mFragmentTransaction = mFragmentManager.beginTransaction();
-
-		if(targetFragment instanceof TimelineFragment) {
-			mFragmentTransaction.replace(containerViewId, targetFragment);
-		} else {
-			Log.d(TAG, "+++++++++");
-			mFragmentTransaction.replace(containerViewId, targetFragment);
-			mFragmentTransaction.addToBackStack(null);
-		}
+		mFragmentTransaction.replace(containerViewId, targetFragment);
+		mFragmentTransaction.addToBackStack(null);
 
 		mFragmentTransaction.commit();
 	}
 
 	@Override
-	public void onCreateShoppingItemListFragment(int itemType, int numRoom) {
+	public void onCreateShoppingItemListFragmentView(int itemType, int numRoom) {
 		// configure actionbar for specific info page
 		String itemTypeString = null;
 
@@ -998,10 +1160,12 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 		changeActionBarStyle(Color.BLACK, itemTypeString, numRoom + getResources().getString(R.string.n_results));
 		// end of the configuration
+
+		isBackButtonPressed = false;
 	}
 
 	@Override
-	public void onDetachShoppingItemListFragment() {
+	public void onDestroyShoppingItemListFragmentView() {
 
 	}
 
@@ -1023,83 +1187,362 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	}
 
 	@Override
-	public void onClickAddButton(final int itemType, final String itemName, final int itemUnitPrice, final int itemCount, String itemUnit, String itemUnitCount) {
+	public void onClickAddItemToPlanButton(final int itemType, final String itemName, final int itemUnitPrice,
+										   final int itemCount, final String itemUnit, final String itemCountUnit) {
 
-		Log.d(TAG, itemType + itemName + itemUnitPrice + itemCount + itemUnit + itemUnitCount);
 		// check rather room has been added already in the plan or not
-		if(mPlanModel.isItemAddedAlready(itemType, itemName, itemUnitPrice, itemCount)) {
+		if(mPlanModel.isItemAddedAlready(itemType, itemName, itemUnitPrice)) {
 			Toast.makeText(this, R.string.item_already_added_before, Toast.LENGTH_LONG).show();
 			return;
 		}
 
 		int itemDataCount = mPlanModel.getItemDataCount(itemType);
-		int itemViewIndex = itemDataCount + FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN;
+		final int itemPlanViewIndex = itemDataCount + FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN;
 		// "itemDataCount + FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN" -> used this notation, because
 		// there is a gap, between first index of the [itemData]LinkedList(inside PlanModel class)
 		// and first index of the roomPlanLinearLayout(starts the index from 2), which is 2.
-		final View itemView = getLayoutInflater().inflate(R.layout.frame_shopping_item_selected_plan,
+		final View itemPlanView = getLayoutInflater().inflate(R.layout.frame_shopping_item_selected_plan,
 				(LinearLayout) findViewById(R.id.layout_room), false);
 
-		ImageView deleteItemButtonImageView =
-				(ImageView) itemView.findViewById(R.id.imageView_btn_delete_item_plan);
+		ImageView deleteItemButtonPlanImageView =
+				(ImageView) itemPlanView.findViewById(R.id.imageView_btn_delete_item_plan);
 
 		switch(itemType) {
 			case ShoppingItemListFragment.MEAT_ITEM:
-				addViewAtPlan(meatPlanLinearLayout, itemView, itemViewIndex);
-				deleteItemButtonImageView.setOnClickListener(new View.OnClickListener() {
+				addViewAtPlan(meatPlanLinearLayout, itemPlanView, itemPlanViewIndex);
+				deleteItemButtonPlanImageView.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						removeViewAtPlan(meatPlanLinearLayout, itemView);
-						mPlanModel.removeItemData(itemType, itemName, itemUnitPrice, itemCount);
+						planItemFadeOut(itemPlanView);
 
-						// calculate the total cost for the added rooms after deletion of one room
-						//totalRoomPrice.setText(castItemPriceToString(mPlanModel.getTotalRoomCost()));
+						mUndoToastController.showUndoBar(itemName + getResources().getString(R.string.deleted),
+								UndoToastController.DELETE_ADDED_MEAT_CASE, itemPlanViewIndex);
+//						mUndoToastController.setItemViewAndData(itemPlanView, itemType, itemName, itemUnitPrice);
 					}
 				});
 				break;
 			case ShoppingItemListFragment.ALCOHOL_ITEM:
-				addViewAtPlan(alcoholPlanLinearLayout, itemView, itemViewIndex);
-				deleteItemButtonImageView.setOnClickListener(new View.OnClickListener() {
+				addViewAtPlan(alcoholPlanLinearLayout, itemPlanView, itemPlanViewIndex);
+				deleteItemButtonPlanImageView.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						removeViewAtPlan(alcoholPlanLinearLayout, itemView);
-						mPlanModel.removeItemData(itemType, itemName, itemUnitPrice, itemCount);
+						planItemFadeOut(itemPlanView);
 
-						// calculate the total cost for the added rooms after deletion of one room
-						//totalRoomPrice.setText(castItemPriceToString(mPlanModel.getTotalRoomCost()));
+						mUndoToastController.showUndoBar(itemName + getResources().getString(R.string.deleted),
+								UndoToastController.DELETE_ADDED_ALCOHOL_CASE, itemPlanViewIndex);
+//						mUndoToastController.setItemViewAndData(itemPlanView, itemType, itemName, itemUnitPrice);
 					}
 				});
 				break;
 			case ShoppingItemListFragment.OTHERS_ITEM:
-				addViewAtPlan(othersPlanLinearLayout, itemView, itemViewIndex);
-				deleteItemButtonImageView.setOnClickListener(new View.OnClickListener() {
+				addViewAtPlan(othersPlanLinearLayout, itemPlanView, itemPlanViewIndex);
+				deleteItemButtonPlanImageView.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						removeViewAtPlan(othersPlanLinearLayout, itemView);
-						mPlanModel.removeItemData(itemType, itemName, itemUnitPrice, itemCount);
+						planItemFadeOut(itemPlanView);
 
-						// calculate the total cost for the added rooms after deletion of one room
-						//totalRoomPrice.setText(castItemPriceToString(mPlanModel.getTotalRoomCost()));
+						mUndoToastController.showUndoBar(itemName + getResources().getString(R.string.deleted),
+								UndoToastController.DELETE_ADDED_OTHERS_CASE, itemPlanViewIndex);
+//						mUndoToastController.setItemViewAndData(itemPlanView, itemType, itemName, itemUnitPrice);
 					}
 				});
 				break;
 		}
 
-		// configure the room delete button
+		TextView itemNamePlanTextView =
+				(TextView) itemPlanView.findViewById(R.id.textView_name_item_plan);
+		itemNamePlanTextView.setText(itemName);
 
-		// end of the configuration
+		TextView itemUnitPlanTextView =
+				(TextView) itemPlanView.findViewById(R.id.textView_unit_item_plan);
+		itemUnitPlanTextView.setText(itemUnit);
 
+		TextView itemUnitPricePlanTextView =
+				(TextView) itemPlanView.findViewById(R.id.textView_unit_price_item_plan);
+		itemUnitPricePlanTextView.setText(castItemPriceToString(itemUnitPrice));
 
-		// store room data in the mPlanModel
+		TextView itemCountUnitPlanTextView =
+				(TextView) itemPlanView.findViewById(R.id.textView_count_unit_item_plan);
+		itemCountUnitPlanTextView.setText(itemCountUnit);
+
+		final TextView itemTotalPricePlanTextView =
+				(TextView) itemPlanView.findViewById(R.id.textView_price_total_item_plan);
+		itemTotalPricePlanTextView.setText(castItemPriceToString(itemUnitPrice * itemCount));
+
+		final Button numberPickerCallButton =
+				(Button) itemPlanView.findViewById(R.id.btn_number_picker_item_plan);
+		numberPickerCallButton.setText(String.valueOf(itemCount));
+		numberPickerCallButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				tempItemTotalPricePlanTextView = itemTotalPricePlanTextView;
+				tempNumberPickerCallButton = numberPickerCallButton;
+				ChangeItemNumberInPlanDialogFragment
+						changeItemNumberInPlanDialogFragment =
+						ChangeItemNumberInPlanDialogFragment.
+								newInstance(itemType, itemName, itemUnit, itemUnitPrice,
+										mPlanModel.getSingleItemCount(itemType, itemName, itemUnitPrice), itemCountUnit);
+				changeItemNumberInPlanDialogFragment.show(mFragmentManager, "changeItemNumberInPlanDialogFragment");
+			}
+		});
+
+		// store item data in the mPlanModel
+		mPlanModel.addItemData(itemType, itemName, itemUnitPrice, itemCount);
 
 		// calculate the total cost for the added rooms
+		switch(itemType) {
+			case ShoppingItemListFragment.MEAT_ITEM:
+				totalMeatPrice.setText(castItemPriceToString(mPlanModel.getTotalItemCost(itemType)));
+				break;
+			case ShoppingItemListFragment.ALCOHOL_ITEM:
+				totalAlcoholPrice.setText(castItemPriceToString(mPlanModel.getTotalItemCost(itemType)));
+				break;
+			case ShoppingItemListFragment.OTHERS_ITEM:
+				totalOthersPrice.setText(castItemPriceToString(mPlanModel.getTotalItemCost(itemType)));
+				break;
+		}
+
+		// calculate the total cost for the whole plan
+		totalPlanCost.setText(castItemPriceToString(mPlanModel.getPlanTotalCost()));
 
 		// notify room is added to the plan to the user
-		Toast.makeText(this, R.string.added_to_plan, Toast.LENGTH_LONG).show();
+		Toast.makeText(this, R.string.added_to_plan, Toast.LENGTH_SHORT).show();
 
 		// show plan
 		doubleSideSlidingMenu.showSecondaryMenu(true);
 
+	}
+
+	@Override
+	public void onClickChangeButton(int itemType, String itemName, int itemUnitPrice, int newItemCount) {
+		tempItemTotalPricePlanTextView.setText(castItemPriceToString(itemUnitPrice * newItemCount));
+		tempNumberPickerCallButton.setText(String.valueOf(newItemCount));
+
+		mPlanModel.changeItemCount(itemType, itemName, itemUnitPrice, newItemCount);
+
+		switch(itemType) {
+			case ShoppingItemListFragment.MEAT_ITEM:
+				totalMeatPrice.setText(castItemPriceToString(mPlanModel.getTotalItemCost(itemType)));
+				break;
+			case ShoppingItemListFragment.ALCOHOL_ITEM:
+				totalAlcoholPrice.setText(castItemPriceToString(mPlanModel.getTotalItemCost(itemType)));
+				break;
+			case ShoppingItemListFragment.OTHERS_ITEM:
+				totalOthersPrice.setText(castItemPriceToString(mPlanModel.getTotalItemCost(itemType)));
+				break;
+		}
+
+		// calculate the total cost for the whole plan
+		totalPlanCost.setText(castItemPriceToString(mPlanModel.getPlanTotalCost()));
+	}
+
+	private void applyNumberOfPeopleChangeToItems(int oldNumPeople, int newNumPeople) {
+		float rate = newNumPeople / oldNumPeople;
+
+		Log.d(TAG, "rate:" + rate);
+
+		for(int itemType = 1; itemType < 4; itemType++) {
+			for (int singleItemIndex = FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN;
+				 singleItemIndex < FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN + mPlanModel.getItemDataCount(itemType);
+				 singleItemIndex++) {
+				View singleShoppingItemLayout = null;
+				Button numberPickerButton;
+				int numPeople;
+				try {
+					switch (itemType) {
+						case ShoppingItemListFragment.MEAT_ITEM:
+							singleShoppingItemLayout = meatPlanLinearLayout.getChildAt(singleItemIndex);
+							break;
+						case ShoppingItemListFragment.ALCOHOL_ITEM:
+							singleShoppingItemLayout = alcoholPlanLinearLayout.getChildAt(singleItemIndex);
+							break;
+						case ShoppingItemListFragment.OTHERS_ITEM:
+							singleShoppingItemLayout = othersPlanLinearLayout.getChildAt(singleItemIndex);
+							break;
+					}
+					numberPickerButton = (Button) singleShoppingItemLayout.findViewById(R.id.btn_number_picker_item_plan);
+					numPeople = Integer.parseInt(numberPickerButton.getText().toString());
+					numPeople *= rate;
+					Log.d(TAG, "result:" + numPeople);
+					numberPickerButton.setText(String.valueOf(numPeople));
+					mPlanModel.changeItemCount(itemType, mPlanModel.getItemName(itemType, singleItemIndex - FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN),
+							mPlanModel.getItemUnitPrice(itemType, singleItemIndex - FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN), numPeople);
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		totalMeatPrice.setText(castItemPriceToString(mPlanModel.getTotalItemCost(ShoppingItemListFragment.MEAT_ITEM)));
+		totalAlcoholPrice.setText(castItemPriceToString(mPlanModel.getTotalItemCost(ShoppingItemListFragment.ALCOHOL_ITEM)));
+		totalOthersPrice.setText(castItemPriceToString(mPlanModel.getTotalItemCost(ShoppingItemListFragment.OTHERS_ITEM)));
+		totalPlanCost.setText(castItemPriceToString(mPlanModel.getPlanTotalCost()));
+	}
+
+	private void deleteAddedRoomInPlan(int viewIndex, LinearLayout roomPlanLinearLayout) {
+		roomPlanLinearLayout.removeViewAt(viewIndex);
+
+		if(roomPlanLinearLayout == this.roomPlanLinearLayout)
+			mPlanModel.removeRoomData(viewIndex);
+		else
+			mPlanModel.removeDirectInputRoomData(viewIndex);
+	}
+
+	private void deleteAddedItemInPlan(int viewIndex, int itemType, LinearLayout itemPlanLinearLayout, TextView totalItemPrice) {
+
+		itemPlanLinearLayout.removeViewAt(viewIndex);
+
+		mPlanModel.removeItemData(itemType, viewIndex);
+
+		// calculate the total cost for the added rooms after deletion of one room
+		totalItemPrice.setText(castItemPriceToString(mPlanModel.getTotalItemCost(itemType)));
+
+		// calculate the total cost for the whole plan
+		totalPlanCost.setText(castItemPriceToString(mPlanModel.getPlanTotalCost()));
+	}
+
+	@Override
+	public void onClickUndoButton(int toastCase, final int viewIndex) {
+		switch(toastCase) {
+			case UndoToastController.DELETE_ADDED_ROOM_CASE:
+				planItemFadeIn(roomPlanLinearLayout.getChildAt(viewIndex));
+				break;
+			case UndoToastController.DELETE_DIRECTLY_INPUT_ROOM_CASE:
+				planItemFadeIn(directInputRoomPlanLinearLayout.getChildAt(viewIndex));
+				break;
+			case UndoToastController.DELETE_ADDED_MEAT_CASE:
+				planItemFadeIn(meatPlanLinearLayout.getChildAt(viewIndex));
+				break;
+			case UndoToastController.DELETE_ADDED_ALCOHOL_CASE:
+				planItemFadeIn(alcoholPlanLinearLayout.getChildAt(viewIndex));
+				break;
+			case UndoToastController.DELETE_ADDED_OTHERS_CASE:
+				planItemFadeIn(othersPlanLinearLayout.getChildAt(viewIndex));
+				break;
+			case UndoToastController.CLEAR_ADDED_ROOMS_CASE:
+				for(int roomIndex = 0; roomIndex < mPlanModel.getRoomDataCount(); roomIndex++) {
+					planItemFadeIn(roomPlanLinearLayout.getChildAt(roomIndex));
+				}
+
+				for(int directInputRoomIndex = 0;
+					directInputRoomIndex < mPlanModel.getDirectInputRoomDataCount(); directInputRoomIndex++) {
+					planItemFadeIn(directInputRoomPlanLinearLayout.getChildAt(directInputRoomIndex));
+				}
+				break;
+			case UndoToastController.CLEAR_ADDED_MEATS_CASE:
+				makeClearedItemsInPlanVisible(ShoppingItemListFragment.MEAT_ITEM, meatPlanLinearLayout);
+				break;
+			case UndoToastController.CLEAR_ADDED_ALCOHOLS_CASE:
+				makeClearedItemsInPlanVisible(ShoppingItemListFragment.ALCOHOL_ITEM, alcoholPlanLinearLayout);
+				break;
+			case UndoToastController.CLEAR_ADDED_OTHERS_CASE:
+				makeClearedItemsInPlanVisible(ShoppingItemListFragment.OTHERS_ITEM, othersPlanLinearLayout);
+				break;
+		}
+
+	}
+
+	@Override
+	public void onTimePassed(int toastCase, int viewIndex) {
+		switch(toastCase) {
+			case UndoToastController.DELETE_ADDED_ROOM_CASE:
+				deleteAddedRoomInPlan(viewIndex, roomPlanLinearLayout);
+				break;
+			case UndoToastController.DELETE_DIRECTLY_INPUT_ROOM_CASE:
+				deleteAddedRoomInPlan(viewIndex, directInputRoomPlanLinearLayout);
+				break;
+			case UndoToastController.DELETE_ADDED_MEAT_CASE:
+				deleteAddedItemInPlan(viewIndex, ShoppingItemListFragment.MEAT_ITEM, meatPlanLinearLayout, totalMeatPrice);
+				break;
+			case UndoToastController.DELETE_ADDED_ALCOHOL_CASE:
+				deleteAddedItemInPlan(viewIndex, ShoppingItemListFragment.ALCOHOL_ITEM, alcoholPlanLinearLayout, totalAlcoholPrice);
+				break;
+			case UndoToastController.DELETE_ADDED_OTHERS_CASE:
+				deleteAddedItemInPlan(viewIndex, ShoppingItemListFragment.OTHERS_ITEM, othersPlanLinearLayout, totalOthersPrice);
+				break;
+			case UndoToastController.CLEAR_ADDED_ROOMS_CASE:
+				for(int roomIndex = 0; roomIndex < mPlanModel.getRoomDataCount(); roomIndex++)
+					roomPlanLinearLayout.removeViewAt(0);
+
+				for(int directInputRoomIndex = 0;
+					directInputRoomIndex < mPlanModel.getDirectInputRoomDataCount(); directInputRoomIndex++)
+					directInputRoomPlanLinearLayout.removeViewAt(0);
+
+				mPlanModel.clearRoomData();
+
+				totalRoomPrice.setText(castItemPriceToString(mPlanModel.getTotalRoomCost()));
+
+				// calculate the total cost for the whole plan
+				totalPlanCost.setText(castItemPriceToString(mPlanModel.getPlanTotalCost()));
+				break;
+			case UndoToastController.CLEAR_ADDED_MEATS_CASE:
+				clearAddedItemsInPlan(ShoppingItemListFragment.MEAT_ITEM, meatPlanLinearLayout, totalMeatPrice);
+				break;
+			case UndoToastController.CLEAR_ADDED_ALCOHOLS_CASE:
+				clearAddedItemsInPlan(ShoppingItemListFragment.ALCOHOL_ITEM, alcoholPlanLinearLayout, totalAlcoholPrice);
+				break;
+			case UndoToastController.CLEAR_ADDED_OTHERS_CASE:
+				clearAddedItemsInPlan(ShoppingItemListFragment.OTHERS_ITEM, othersPlanLinearLayout, totalOthersPrice);
+				break;
+		}
+	}
+
+	private void makeClearedItemsInPlanVisible(int itemType, LinearLayout itemPlanLinearLayout) {
+		for(int itemIndex = 0;
+			itemIndex < mPlanModel.getItemDataCount(itemType);
+			itemIndex++) {
+			planItemFadeIn(itemPlanLinearLayout.getChildAt(itemIndex));
+		}
+	}
+
+	private void clearAddedItemsInPlan(int itemType, LinearLayout itemPlanLinearLayout, TextView totalItemPrice) {
+		for(int itemIndex = 0;
+			itemIndex < mPlanModel.getItemDataCount(itemType);
+			itemIndex++)
+			itemPlanLinearLayout.removeViewAt(itemIndex);
+
+		mPlanModel.clearItemData(itemType);
+
+		totalItemPrice.setText(castItemPriceToString(mPlanModel.getTotalItemCost(itemType)));
+
+		// calculate the total cost for the whole plan
+		totalPlanCost.setText(castItemPriceToString(mPlanModel.getPlanTotalCost()));
+	}
+
+	private void planItemFadeOut(final View targetView) {
+		targetView.animate().alpha(0).setListener(new Animator.AnimatorListener() {
+			@Override
+			public void onAnimationStart(Animator animation) {}
+
+			@Override
+			public void onAnimationEnd(Animator animation) {
+				targetView.setVisibility(View.GONE);
+			}
+
+			@Override
+			public void onAnimationCancel(Animator animation) {}
+
+			@Override
+			public void onAnimationRepeat(Animator animation) {}
+		});
+	}
+
+	private void planItemFadeIn(final View targetView) {
+		targetView.setVisibility(View.VISIBLE);
+		targetView.animate().alpha(1).setListener(new Animator.AnimatorListener() {
+			@Override
+			public void onAnimationStart(Animator animation) {}
+
+			@Override
+			public void onAnimationEnd(Animator animation) {
+				targetView.setVisibility(View.VISIBLE);
+			}
+
+			@Override
+			public void onAnimationCancel(Animator animation) {}
+
+			@Override
+			public void onAnimationRepeat(Animator animation) {}
+		});
 	}
 
 	/**
@@ -1128,8 +1571,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				HttpClient mHttpClient = new DefaultHttpClient();
 				HttpGet mHttpGet = new HttpGet(urls[0]);
 				HttpConnectionParams.setConnectionTimeout(mHttpClient.getParams(), 5000);
-				HttpResponse mHttpResponseGet = mHttpClient.execute(mHttpGet);
-				HttpEntity resEntityGet = mHttpResponseGet.getEntity();
+				HttpResponse mHttpResponse = mHttpClient.execute(mHttpGet);
+				HttpEntity resEntityGet = mHttpResponse.getEntity();
 
 				if (resEntityGet != null) {
 					Log.i(TAG, "HttpResponseGet Completed!!");
@@ -1194,7 +1637,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	}
 
 	public void hideKeyboard(View view) {
-		InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
 		inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 }

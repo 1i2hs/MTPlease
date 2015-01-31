@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- For booting activity -->
+    <string name="confirm_code_checked">인증코드가 확인되었습니다.</string>
+    <string name="please_type_confirm_code">인증코드를 입력해주세요.</string>
+    <string name="wrong_confirm_code">인증코드가 잘못되었습니다.</string>
+
     <!-- For UI components of MainFragment -->
     <string name="actionbar_title">엠티를 부탁해</string>
     <string name="action_settings">설정</string>
@@ -26,8 +31,8 @@
     <string name="postposition_2">이서</string>
     <string name="go_MT">엠티를 간다!</string>
     <string name="select_date">엠티 출발 날짜를 선택하세요</string>
-    <string name="please_number_of_people_input">인원 수를 입력해 주세요.</string>
-    <string name="please_type_only_number_for_number_of_people">인원 수에는 숫자만 입력해 주세요.</string>
+    <string name="please_number_of_people_input">인원 수를 입력해주세요.</string>
+    <string name="please_type_only_number_for_number_of_people">인원 수에는 숫자만 입력해주세요.</string>
     <string name="network_error">네트워크 문제로 인해 데이터를 읽어오지 못하였습니다.</string>
     <string name="daesungri">대성리로</string>
     <string name="cheongpyung">청평으로</string>
@@ -64,7 +69,7 @@
     <string name="period_winter">기간</string>
     <string name="price_table">기간 별 가격표</string>
     <string name="period_table">기간표</string>
-    <string name="input_basic_data">MT 계획 기본 정보를 입력 해주세요</string>
+    <string name="input_basic_data">MT 계획 기본 정보를 입력해주세요</string>
     <string name="confirm">확인</string>
     <string name="cancel">취소</string>
 
@@ -79,14 +84,16 @@
     <string name="alcohol_question">술은?</string>
     <string name="others_question">나머지는?</string>
     <string name="people_unit">명</string>
+    <string name="hint_type_without_comma">","없이 가격 입력</string>
+    <string name="direct_input_room">입력된 방 가격:</string>
     <string name="recommend">추천받기</string>
     <string name="print_plan">계획표 뽑기</string>
     <string name="room_already_added_before">이미 등록된 방입니다.</string>
     <string name="item_already_added_before">이미 등록된 품목입니다.</string>
-    <string name="please_search_for_room">방을 검색해 주세요.</string>
-    <string name="please_select_meat">원하시는 고기를 선택 해주세요.</string>
-    <string name="please_select_alcohol">원하시는 술을 선택 해주세요.</string>
-    <string name="please_select_others">원하시는 품목을 선택 해주세요.</string>
+    <string name="please_search_for_room">방을 검색해주세요.</string>
+    <string name="please_select_meat">원하시는 고기를 선택해주세요.</string>
+    <string name="please_select_alcohol">원하시는 술을 선택해주세요.</string>
+    <string name="please_select_others">원하시는 품목을 선택해주세요.</string>
     <string name="standard">기준: </string>
     <string name="max">최대: </string>
     <string name="meat_count_unit">인분</string>
@@ -100,10 +107,10 @@
     <string name="add_item">추가</string>
     <string name="cancel_item">취소</string>
     <string name="please_configure_number_of_item">갯수 설정을 해주세요</string>
-    <string name="please_type_by_yourself">원하시는 품목을 직접 입력 해주세요.</string>
-    <string name="please_type_only_number_for_price">가격은 숫자만 입력 해주세요.</string>
-    <string name="please_type_price_first">가격을 먼저 입력 해주세요.</string>
-    <string name="please_type_every_blanks">모든 항목을 입력 해주세요.</string>
+    <string name="please_type_by_yourself">원하시는 품목을 직접 입력해주세요.</string>
+    <string name="please_type_only_number_for_price">가격은 숫자만 입력해주세요.</string>
+    <string name="please_type_price_first">가격을 먼저 입력해주세요.</string>
+    <string name="please_type_every_blanks">모든 항목을 입력해주세요.</string>
     <string name="meat_name_hint">삼겹살</string>
     <string name="meat_unit_hint">200g</string>
     <string name="meat_unit_count_hint">인분</string>
@@ -117,5 +124,15 @@
     <string name="others_unit_count_hint">세트</string>
     <string name="others_price_hint">2000</string>
     <string name="total">총:</string>
+    <string name="please_change_number_of_items">수량을 조절해주세요.</string>
+    <string name="change_number">변경</string>
+    <string name="please_type_more_than_zero">0 이상의 숫자를 입력해주세요.</string>
+    <string name="undo">실행 취소</string>
+    <string name="added_rooms_cleared">등록된 모든 방이 삭제되었습니다.</string>
+    <string name="added_meats_cleared">등록된 모든 고기가 삭제되었습니다.</string>
+    <string name="added_alcohols_cleared">등록된 모든 주류가 삭제되었습니다.</string>
+    <string name="added_others_cleared">등록된 모든 기타 품목이 삭제되었습니다.</string>
+    <string name="directly_added_room">직접 등록된 방이</string>
+    <string name="deleted">삭제되었습니다.</string>
 
 </resources>

@@ -112,11 +112,12 @@ public class TimelineFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
+		Log.d(TAG, "TimelineFragmentView created");
 		View timelineView = inflater.inflate(R.layout.fragment_timeline, container, false);
 		mRecyclerView = (RecyclerView) timelineView.findViewById(R.id.list_timeline);
 
 		if(mTimelineFragmentInteractionListener != null)
-			mTimelineFragmentInteractionListener.onResumeTimelineFragmentView();
+			mTimelineFragmentInteractionListener.onCreateTimelineFragmentView();
 
 		return timelineView;
 	}
@@ -139,9 +140,16 @@ public class TimelineFragment extends Fragment {
 		mTimelineFragmentInteractionListener = null;
 	}
 
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		Log.d(TAG, "TimelineFragmentView destroyed");
+		mTimelineFragmentInteractionListener.onDestroyTimelineFragmentView();
+	}
 
 	public interface OnTimelineFragmentInteractionListener {
 		// TODO: Update argument type and name
-		public void onResumeTimelineFragmentView();
+		public void onCreateTimelineFragmentView();
+		public void onDestroyTimelineFragmentView();
 	}
 }

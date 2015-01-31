@@ -160,14 +160,18 @@ public class SpecificInfoFragment extends Fragment {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		mOnSpecificInfoFragmentInteratcionListener.onDetachSpecificInfoFragmentView(this.numRoom);
+		Log.d(TAG, "onDetach");
 		mOnSpecificInfoFragmentInteratcionListener = null;
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
 	}
 
 	public interface OnSpecificInfoFragmentInteractionListener {
 		// TODO: Update argument type and name
 		public void onCreateSpecificInfoFragmentView(String roomName, String pensionName);
-		public void onDetachSpecificInfoFragmentView(int numRoom);
 		public void onClickAddRoomToPlanButton(RoomInfoModel roomInfoModel);
 	}
 

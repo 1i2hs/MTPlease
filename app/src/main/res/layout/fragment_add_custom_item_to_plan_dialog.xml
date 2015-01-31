@@ -77,7 +77,7 @@
             android:layout_centerVertical="true"/>
 
         <EditText
-            android:id="@+id/editText_unit_count_custom_item_dialog"
+            android:id="@+id/editText_count_unit_custom_item_dialog"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -106,7 +106,7 @@
             android:textSize="24sp"/>
 
         <TextView
-            android:id="@+id/textView_price_total_custom_dialog"
+            android:id="@+id/textView_price_total_item_custom_dialog"
             android:layout_width="184dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

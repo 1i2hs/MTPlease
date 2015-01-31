@@ -113,8 +113,6 @@ public class ShoppingItemListFragment extends Fragment {
 		if (getArguments() != null) {
 			shoppingItemType = getArguments().getInt(SHOPPING_ITEM_TYPE);
 			Log.d(TAG, shoppingItemType + "");
-
-			mOnShoppingItemListFragmentInteractionListener.onCreateShoppingItemListFragment(shoppingItemType, 9);
 		}
 	}
 
@@ -125,6 +123,9 @@ public class ShoppingItemListFragment extends Fragment {
 		Log.d(TAG, "onCreateView");
 		View shoppingItemListView = inflater.inflate(R.layout.fragment_shopping_item_list, container, false);
 		mRecyclerView = (RecyclerView) shoppingItemListView.findViewById(R.id.list_item);
+
+		if(mOnShoppingItemListFragmentInteractionListener != null)
+			mOnShoppingItemListFragmentInteractionListener.onCreateShoppingItemListFragmentView(shoppingItemType, 9);
 
 		return shoppingItemListView;
 	}
@@ -149,8 +150,8 @@ public class ShoppingItemListFragment extends Fragment {
 
 	public interface OnShoppingItemListFragmentInteractionListener {
 		// TODO: Update argument type and name
-		public void onCreateShoppingItemListFragment(int itemType, int numItem);
-		public void onDetachShoppingItemListFragment();
+		public void onCreateShoppingItemListFragmentView(int itemType, int numItem);
+		public void onDestroyShoppingItemListFragmentView();
 		public void onClickItem(int itemType, String itemName, String itemUnit, String itemUnitCount, int itemPrice);
 		public void onClickItem(int itemType);
 	}

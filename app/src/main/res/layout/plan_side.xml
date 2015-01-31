@@ -1,377 +1,286 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    android:id="@+id/scrollView_plan"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fadeScrollbars="true"
-    android:paddingBottom="16dp"
-    android:paddingLeft="16dp"
-    android:paddingTop="16dp"
-    android:scrollbars="vertical"
-    tools:context=".MainActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/scrollView_plan"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:orientation="vertical"
-        android:paddingRight="16dp">
+        android:fadeScrollbars="true"
+        android:scrollbars="vertical">
 
-        <!-- date selection part -->
         <LinearLayout
-            android:id="@+id/layout_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/when_question"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btn_select_date_plan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- region selection -->
-        <LinearLayout
-            android:id="@+id/layout_region"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/where_question"/>
-
-            <Spinner
-                android:id="@+id/spinner_select_region_plan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:prompt="@string/where_question"/>
-
-        </LinearLayout>
-
-        <!-- number of people going input -->
-        <LinearLayout
-            android:id="@+id/layout_number_people"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp">
 
-            <TextView
+            <!-- date selection part -->
+            <LinearLayout
+                android:id="@+id/layout_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/how_many_people_question"/>
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical">
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/when_question"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_select_date_plan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- region selection -->
             <LinearLayout
+                android:id="@+id/layout_region"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/where_question"/>
+
+                <Spinner
+                    android:id="@+id/spinner_select_region_plan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:prompt="@string/where_question"/>
+
+            </LinearLayout>
+
+            <!-- number of people going input -->
+            <LinearLayout
+                android:id="@+id/layout_number_people"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/editText_number_people_plan"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:inputType="numberDecimal"
-                    android:maxLength="3"/>
+                android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/people_unit"/>
+                    android:text="@string/how_many_people_question"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/editText_number_people_plan"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:inputType="numberDecimal"
+                        android:maxLength="3"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/people_unit"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
-
-        <!-- ratio of sex selection -->
-        <LinearLayout
-            android:id="@+id/layout_ratio_sex"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/sex_ratio_question"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:gravity="bottom"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_launcher"/>
-
-                    <TextView
-                        android:id="@+id/textView_number_male_plan"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1"/>
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:gravity="bottom"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textView_number_female_plan"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1"/>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_launcher"/>
-
-                </LinearLayout>
-
-
-            </RelativeLayout>
-
-            <SeekBar
-                android:id="@+id/seekBar_ratio_sex_plan"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"/>
-
-        </LinearLayout>
-
-        <!-- room selection -->
-        <LinearLayout
-            android:id="@+id/layout_room"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="48dp">
-
-                <TextView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentLeft="true"
-                    android:gravity="center_vertical"
-                    android:text="@string/room_question"/>
-
-                <TextView
-                    android:id="@+id/btn_clear_room"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:text="clear"/>
-                <!--                <Button
-                    android:id="@+id/btn_recommend_room"
-                    style="?android:attr/buttonStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:padding="4dp"
-                    android:text="@string/recommend"/>-->
-
-            </RelativeLayout>
-
-            <ImageView
+            <!-- ratio of sex selection -->
+            <LinearLayout
+                android:id="@+id/layout_ratio_sex"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/divider_shape_linearlayout_bold"/>
+                android:orientation="vertical">
 
-            <!-- index 2 position -->
-            <!-- position where room are added -->
-            <RelativeLayout
-                android:id="@+id/layout_add_room"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:background="@drawable/block_shape"
-                android:gravity="center">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sex_ratio_question"/>
 
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_launcher"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-            </RelativeLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:gravity="bottom"
+                        android:orientation="horizontal">
 
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_launcher"/>
+
+                        <TextView
+                            android:id="@+id/textView_number_male_plan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1"/>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:gravity="bottom"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView_number_female_plan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1"/>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_launcher"/>
+
+                    </LinearLayout>
+
+
+                </RelativeLayout>
+
+                <SeekBar
+                    android:id="@+id/seekBar_ratio_sex_plan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"/>
+
+            </LinearLayout>
+
+            <!-- room selection -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical">
 
-                <Space
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp">
+
+                    <TextView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:gravity="center_vertical"
+                        android:text="@string/room_question"/>
+
+                    <TextView
+                        android:id="@+id/btn_clear_room"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:text="clear"/>
+                    <!--                <Button
+                        android:id="@+id/btn_recommend_room"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:padding="4dp"
+                        android:text="@string/recommend"/>-->
+
+                </RelativeLayout>
+
+                <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/divider_shape_linearlayout_bold"/>
 
                 <LinearLayout
+                    android:id="@+id/layout_room"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_weight="1"
+                    android:layout_marginBottom="8dp"
                     android:orientation="vertical">
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/divider_shape_linearlayout_bold"/>
+                    <!-- position where items are added -->
 
-                    <TextView
-                        android:id="@+id/textView_price_room_plan"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:text="000,000원"
-                        android:textSize="20sp"/>
+                    <RelativeLayout
+                        android:id="@+id/layout_add_room"
+                        android:layout_width="match_parent"
+                        android:layout_height="64dp"
+                        android:background="@drawable/block_shape"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/ic_launcher"/>
+
+                    </RelativeLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- shopping part -->
-        <LinearLayout
-            android:id="@+id/layout_items"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="48dp">
-
-                <TextView
-                    android:layout_width="64dp"
-                    android:layout_height="48dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentLeft="true"
-                    android:gravity="center_vertical"
-                    android:text="@string/item_question"/>
-
-                <Button
-                    android:id="@+id/btn_recommend_others"
-                    style="?android:attr/buttonStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:padding="4dp"
-                    android:text="@string/recommend"/>
-
-            </RelativeLayout>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/divider_shape_linearlayout_bold"/>
-
-            <!-- meat selection -->
-            <LinearLayout
-                android:id="@+id/layout_meat"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp">
-
-                    <TextView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentLeft="true"
-                        android:gravity="center_vertical"
-                        android:text="@string/meat_question"/>
-
-                    <TextView
-                        android:id="@+id/btn_clear_meat"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true"
-                        android:clickable="true"
-                        android:gravity="center"
-                        android:text="clear"/>
-
-                </RelativeLayout>
-
-                <ImageView
+                <LinearLayout
+                    android:id="@+id/layout_room_direct_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="0dp"
-                    android:background="@drawable/divider_shape_linearlayout_bold"/>
+                    android:orientation="vertical">
 
-                <!-- index 2 position -->
-                <!-- position where items are added -->
-                <RelativeLayout
-                    android:id="@+id/layout_add_meat"
-                    android:layout_width="match_parent"
-                    android:layout_height="64dp"
-                    android:background="@drawable/block_shape"
-                    android:gravity="center">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_launcher"/>
+                        <EditText
+                            android:id="@+id/editText_input_direct_price_room_plan"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:gravity="center"
+                            android:hint="@string/hint_type_without_comma"
+                            android:inputType="numberDecimal"/>
 
-                </RelativeLayout>
+                        <Button
+                            android:id="@+id/btn_add_direct_price_room_plan"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"
+                            android:gravity="center"
+                            android:text="+"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -398,7 +307,7 @@
                             android:background="@drawable/divider_shape_linearlayout_bold"/>
 
                         <TextView
-                            android:id="@+id/textView_price_meat_plan"
+                            android:id="@+id/textView_price_total_room_plan"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
@@ -411,101 +320,9 @@
 
             </LinearLayout>
 
-            <!-- alcohol selection -->
+            <!-- shopping part -->
             <LinearLayout
-                android:id="@+id/layout_alcohol"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp">
-
-                    <TextView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentLeft="true"
-                        android:gravity="center_vertical"
-                        android:text="@string/alcohol_question"/>
-
-                    <TextView
-                        android:id="@+id/btn_clear_alcohol"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true"
-                        android:clickable="true"
-                        android:gravity="center"
-                        android:text="clear"/>
-
-                </RelativeLayout>
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/divider_shape_linearlayout_bold"/>
-
-                <!-- index 2 position -->
-                <!-- position where items are added -->
-                <RelativeLayout
-                    android:id="@+id/layout_add_alcohol"
-                    android:layout_width="match_parent"
-                    android:layout_height="64dp"
-                    android:background="@drawable/block_shape"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_launcher"/>
-
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <Space
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginTop="8dp"
-                            android:background="@drawable/divider_shape_linearlayout_bold"/>
-
-                        <TextView
-                            android:id="@+id/textView_price_alcohol_plan"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:text="000,000원"
-                            android:textSize="20sp"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- others selection -->
-            <LinearLayout
-                android:id="@+id/layout_others"
+                android:id="@+id/layout_items"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -521,17 +338,17 @@
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentLeft="true"
                         android:gravity="center_vertical"
-                        android:text="@string/others_question"/>
+                        android:text="@string/item_question"/>
 
-                    <TextView
-                        android:id="@+id/btn_clear_others"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                    <Button
+                        android:id="@+id/btn_recommend_items_plan"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentRight="true"
-                        android:clickable="true"
-                        android:gravity="center"
-                        android:text="clear"/>
+                        android:padding="4dp"
+                        android:text="@string/recommend"/>
 
                 </RelativeLayout>
 
@@ -541,53 +358,302 @@
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/divider_shape_linearlayout_bold"/>
 
-                <!-- index 2 position -->
-                <!-- position where items are added -->
-                <RelativeLayout
-                    android:id="@+id/layout_add_others"
-                    android:layout_width="match_parent"
-                    android:layout_height="64dp"
-                    android:background="@drawable/block_shape"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_launcher"/>
-
-                </RelativeLayout>
-
+                <!-- meat selection -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_marginBottom="8dp"
+                    android:orientation="vertical">
 
-                    <Space
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp">
+
+                        <TextView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentLeft="true"
+                            android:gravity="center_vertical"
+                            android:text="@string/meat_question"/>
+
+                        <TextView
+                            android:id="@+id/btn_clear_meat"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentRight="true"
+                            android:clickable="true"
+                            android:gravity="center"
+                            android:text="clear"/>
+
+                    </RelativeLayout>
+
+                    <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="0dp"
+                        android:background="@drawable/divider_shape_linearlayout_bold"/>
+
+                    <LinearLayout
+                        android:id="@+id/layout_meat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="vertical">
+
+                        <!-- position where items are added -->
+
+                        <RelativeLayout
+                            android:id="@+id/layout_add_meat"
+                            android:layout_width="match_parent"
+                            android:layout_height="64dp"
+                            android:background="@drawable/block_shape"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:src="@drawable/ic_launcher"/>
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
-                        <ImageView
+                        <Space
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginTop="8dp"
-                            android:background="@drawable/divider_shape_linearlayout_bold"/>
+                            android:layout_weight="1"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/divider_shape_linearlayout_bold"/>
+
+                            <TextView
+                                android:id="@+id/textView_price_total_meat_plan"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:text="000,000원"
+                                android:textSize="20sp"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- alcohol selection -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp">
 
                         <TextView
-                            android:id="@+id/textView_price_others_plan"
-                            android:layout_width="wrap_content"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentLeft="true"
+                            android:gravity="center_vertical"
+                            android:text="@string/alcohol_question"/>
+
+                        <TextView
+                            android:id="@+id/btn_clear_alcohol"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentRight="true"
+                            android:clickable="true"
+                            android:gravity="center"
+                            android:text="clear"/>
+
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/divider_shape_linearlayout_bold"/>
+
+                    <LinearLayout
+                        android:id="@+id/layout_alcohol"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="vertical">
+
+                        <!-- position where items are added -->
+
+                        <RelativeLayout
+                            android:id="@+id/layout_add_alcohol"
+                            android:layout_width="match_parent"
+                            android:layout_height="64dp"
+                            android:background="@drawable/block_shape"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:src="@drawable/ic_launcher"/>
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Space
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:text="000,000원"
-                            android:textSize="20sp"/>
+                            android:layout_weight="1"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/divider_shape_linearlayout_bold"/>
+
+                            <TextView
+                                android:id="@+id/textView_price_total_alcohol_plan"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:text="000,000원"
+                                android:textSize="20sp"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- others selection -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp">
+
+                        <TextView
+                            android:layout_width="64dp"
+                            android:layout_height="48dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentLeft="true"
+                            android:gravity="center_vertical"
+                            android:text="@string/others_question"/>
+
+                        <TextView
+                            android:id="@+id/btn_clear_others"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentRight="true"
+                            android:clickable="true"
+                            android:gravity="center"
+                            android:text="clear"/>
+
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/divider_shape_linearlayout_bold"/>
+
+                    <LinearLayout
+                        android:id="@+id/layout_others"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="vertical">
+
+                        <!-- position where items are added -->
+
+                        <RelativeLayout
+                            android:id="@+id/layout_add_others"
+                            android:layout_width="match_parent"
+                            android:layout_height="64dp"
+                            android:background="@drawable/block_shape"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:src="@drawable/ic_launcher"/>
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/divider_shape_linearlayout_bold"/>
+
+                            <TextView
+                                android:id="@+id/textView_price_total_others_plan"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:text="000,000원"
+                                android:textSize="20sp"/>
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -595,33 +661,70 @@
 
             </LinearLayout>
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/divider_shape_linearlayout_bold"/>
+
+            <!-- total cost for MT -->
+            <TextView
+                android:id="@+id/textView_cost_total_plan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginBottom="32dp"
+                android:text="000,000원"
+                android:textSize="24sp"/>
+
+            <!-- button for printing out whole plan -->
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="@string/print_plan"/>
+
         </LinearLayout>
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/divider_shape_linearlayout_bold"/>
+    </ScrollView>
 
-        <!-- total cost for MT -->
+    <LinearLayout
+        android:id="@+id/layout_toast_plan"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        android:background="@android:color/darker_gray"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
         <TextView
-            android:id="@+id/textView_price_total_plan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginBottom="32dp"
-            android:text="000,000원"
-            android:textSize="24sp"/>
-
-        <!-- button for printing out whole plan -->
-        <Button
+            android:id="@+id/textView_message_notification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:text="@string/print_plan"/>
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:background="@drawable/divider_shape_right_line"
+            android:gravity="center"
+            android:text="notification message"
+            android:textColor="@android:color/white"
+            android:textSize="16dp"/>
+
+        <TextView
+            android:id="@+id/textView_btn_undo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="4"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/undo"
+            android:textColor="@android:color/white"
+            android:textSize="16dp"/>
 
     </LinearLayout>
 
-</ScrollView>
+</RelativeLayout>

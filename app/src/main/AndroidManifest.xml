@@ -2,17 +2,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.owo.mtplease" >
 
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
-            android:name="com.owo.mtplease.MainActivity"
+            android:name=".BootingActivity"
             android:label="@string/app_name"
-            android:theme="@style/TransparentTheme">
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/TransparentTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,15 +25,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.owo.mtplease.SettingsActivity"
+            android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName="com.owo.mtplease.MainActivity"
-            android:theme="@style/AppTheme">
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.owo.mtplease.MainActivity" />
         </activity>
     </application>
-
 
 </manifest>

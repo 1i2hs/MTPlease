@@ -139,11 +139,12 @@ public class ResultFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
+		Log.d(TAG, "ResultFragmentView created");
 		View resultView = inflater.inflate(R.layout.fragment_result, container, false);
 		mRecyclerView = (RecyclerView) resultView.findViewById(R.id.list_room);
 
 		if(mOnResultFragmentInteractionListener != null)
-			mOnResultFragmentInteractionListener.onResumeResultFragmentView(noResults, roomArray.length());
+			mOnResultFragmentInteractionListener.onCreateResultFragmentView(noResults, roomArray.length());
 
 		return resultView;
 	}
@@ -164,14 +165,23 @@ public class ResultFragment extends Fragment {
 	@Override
 	public void onDetach() {
 		super.onDetach();
+		Log.d(TAG, "ResultFragmentView detached");
 		mOnResultFragmentInteractionListener = null;
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		Log.d(TAG, "ResultFragmentView destroyed");
+		mOnResultFragmentInteractionListener.onDestroyResultFragmentView();
 	}
 
 	public interface OnResultFragmentInteractionListener {
 		// TODO: Update argument type and name
-		public void onResumeResultFragmentView(boolean noResults, int numRoom);
+		public void onCreateResultFragmentView(boolean noResults, int numRoom);
 		public void onPreLoadSpecificInfoFragment();
 		public void onLoadSpecificInfoFragment(RoomInfoModel roomInfoModel, JSONArray roomArray);
 		public void onPostLoadSpecificInfoFragment();
+		public void onDestroyResultFragmentView();
 	}
 }
