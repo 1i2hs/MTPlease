@@ -19,16 +19,14 @@ import android.widget.Toast;
  */
 public class AddItemToPlanDialogFragment extends DialogFragment {
 	private static final String TAG = "AddItemToPlanDialogFragment";
-	// TODO: Rename parameter arguments, choose names that match
-	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-	private static final String SHOPPING_ITEM_TYPE = "param1";
-	private static final String NAME_OF_ITEM = "param2";
-	private static final String UNIT_OF_ITEM = "param3";
-	private static final String COUNT_UNIT_OF_ITEM = "param4";
-	private static final String PRICE_OF_ITEM = "param5";
-	private static final String INPUT_MODE = "param6";
 
-	// TODO: Rename and change types of parameters
+	private static final String ARG_SHOPPING_ITEM_TYPE = "param1";
+	private static final String ARG_NAME_OF_ITEM = "param2";
+	private static final String ARG_UNIT_OF_ITEM = "param3";
+	private static final String ARG_COUNT_UNIT_OF_ITEM = "param4";
+	private static final String ARG_PRICE_OF_ITEM = "param5";
+	private static final String ARG_INPUT_MODE = "param6";
+
 	private int itemType;
 	private String itemName;
 	private String itemUnit;
@@ -102,12 +100,12 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 	// End of the controllers
 
 	// Listeners
-	private OnAddItemToPlanDialogFragmentInteractionListener mOnAddItemToPlanDialogFragmentInteractionListener;
+	private OnAddItemToPlanDialogFragmentListener mOnAddItemToPlanDialogFragmentListener;
 	// End of the listeners
 
 	// Flags
-	private static final int CUSTOM_SHOPPING_ITEM_INPUT_MODE = 1;
-	private static final int SHOPPING_ITEM_INPUT_MODE = 2;
+	private static final int CUSTOM_SHOPPING_ITEM_ARG_INPUT_MODE = 1;
+	private static final int SHOPPING_ITEM_ARG_INPUT_MODE = 2;
 	private static final int MEAT_ITEM = 1;
 	private static final int ALCOHOL_ITEM = 2;
 	private static final int OTHERS_ITEM = 3;
@@ -132,12 +130,12 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 	public static AddItemToPlanDialogFragment newInstance(int itemType, String itemName, String itemUnit, String itemCountUnit, int itemUnitPrice, int inputMode) {
 		AddItemToPlanDialogFragment fragment = new AddItemToPlanDialogFragment();
 		Bundle args = new Bundle();
-		args.putInt(SHOPPING_ITEM_TYPE, itemType);
-		args.putString(NAME_OF_ITEM, itemName);
-		args.putString(UNIT_OF_ITEM, itemUnit);
-		args.putString(COUNT_UNIT_OF_ITEM, itemCountUnit);
-		args.putInt(PRICE_OF_ITEM, itemUnitPrice);
-		args.putInt(INPUT_MODE, inputMode);
+		args.putInt(ARG_SHOPPING_ITEM_TYPE, itemType);
+		args.putString(ARG_NAME_OF_ITEM, itemName);
+		args.putString(ARG_UNIT_OF_ITEM, itemUnit);
+		args.putString(ARG_COUNT_UNIT_OF_ITEM, itemCountUnit);
+		args.putInt(ARG_PRICE_OF_ITEM, itemUnitPrice);
+		args.putInt(ARG_INPUT_MODE, inputMode);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -152,8 +150,8 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 	public static AddItemToPlanDialogFragment newInstance(int itemType, int inputMode) {
 		AddItemToPlanDialogFragment fragment = new AddItemToPlanDialogFragment();
 		Bundle args = new Bundle();
-		args.putInt(SHOPPING_ITEM_TYPE, itemType);
-		args.putInt(INPUT_MODE, inputMode);
+		args.putInt(ARG_SHOPPING_ITEM_TYPE, itemType);
+		args.putInt(ARG_INPUT_MODE, inputMode);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -166,15 +164,15 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			itemType = getArguments().getInt(SHOPPING_ITEM_TYPE);
-			itemName = getArguments().getString(NAME_OF_ITEM);
-			itemUnit = getArguments().getString(UNIT_OF_ITEM);
-			itemCountUnit = getArguments().getString(COUNT_UNIT_OF_ITEM);
-			itemUnitPrice = getArguments().getInt(PRICE_OF_ITEM);
-			inputMode = getArguments().getInt(INPUT_MODE);
+			itemType = getArguments().getInt(ARG_SHOPPING_ITEM_TYPE);
+			itemName = getArguments().getString(ARG_NAME_OF_ITEM);
+			itemUnit = getArguments().getString(ARG_UNIT_OF_ITEM);
+			itemCountUnit = getArguments().getString(ARG_COUNT_UNIT_OF_ITEM);
+			itemUnitPrice = getArguments().getInt(ARG_PRICE_OF_ITEM);
+			inputMode = getArguments().getInt(ARG_INPUT_MODE);
 		} else {
-			itemType = getArguments().getInt(SHOPPING_ITEM_TYPE);
-			inputMode = getArguments().getInt(INPUT_MODE);
+			itemType = getArguments().getInt(ARG_SHOPPING_ITEM_TYPE);
+			inputMode = getArguments().getInt(ARG_INPUT_MODE);
 		}
 	}
 
@@ -183,7 +181,7 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 							 Bundle savedInstanceState) {
 		View addItemToPlanDialogFragmentView;
 
-		if(inputMode == SHOPPING_ITEM_INPUT_MODE) {
+		if(inputMode == SHOPPING_ITEM_ARG_INPUT_MODE) {
 			// Inflate the layout for this fragment
 			addItemToPlanDialogFragmentView = inflater.
 					inflate(R.layout.fragment_add_item_to_plan_dialog, container, false);
@@ -230,7 +228,7 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 				@Override
 				public void onClick(View v) {
 					if(itemCount > 0) {
-						mOnAddItemToPlanDialogFragmentInteractionListener.
+						mOnAddItemToPlanDialogFragmentListener.
 								onClickAddItemToPlanButton(itemType, itemName, itemUnitPrice, itemCount, itemUnit, itemCountUnit);
 						dismiss();
 					} else {
@@ -320,7 +318,7 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 
 						if (!itemName.equals("") && !itemUnit.equals("") && !itemCountUnit.equals("")
 								&& !tempPrice.equals("")) {
-							mOnAddItemToPlanDialogFragmentInteractionListener.onClickAddItemToPlanButton(itemType, itemName,
+							mOnAddItemToPlanDialogFragmentListener.onClickAddItemToPlanButton(itemType, itemName,
 									itemUnitPrice, itemCount, itemUnit, itemCountUnit);
 							dismiss();
 						} else {
@@ -373,20 +371,20 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mOnAddItemToPlanDialogFragmentInteractionListener = (OnAddItemToPlanDialogFragmentInteractionListener) activity;
+			mOnAddItemToPlanDialogFragmentListener = (OnAddItemToPlanDialogFragmentListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " must implement OnFragmentInteractionListener");
+					+ " must implement OnFragmentListener");
 		}
 	}
 
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		mOnAddItemToPlanDialogFragmentInteractionListener = null;
+		mOnAddItemToPlanDialogFragmentListener = null;
 	}
 
-	public interface OnAddItemToPlanDialogFragmentInteractionListener {
+	public interface OnAddItemToPlanDialogFragmentListener {
 		// TODO: Update argument type and name
 		public void onClickAddItemToPlanButton(int itemType, String itemName, int itemUnitPrice, int itemCount, String itemUnit, String itemCountUnit);
 	}

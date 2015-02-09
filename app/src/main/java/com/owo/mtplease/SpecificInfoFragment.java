@@ -17,10 +17,9 @@ import android.widget.Button;
 public class SpecificInfoFragment extends Fragment {
 
 	private static final String TAG = "SpecificInfoFragment";
-	// TODO: Rename parameter arguments, choose names that match
-	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-	private static final String SPECIFIC_ROOM_DATA = "param1";
-	private static final String NUMBER_OF_ROOMS_FOUND = "param2";
+
+	private static final String ARG_SPECIFIC_ROOM_DATA = "param1";
+	private static final String ARG_NUMBER_OF_ROOMS_FOUND = "param2";
 
 	// View: User Interface Views
 	private RecyclerView mRecyclerView;
@@ -35,12 +34,12 @@ public class SpecificInfoFragment extends Fragment {
 	// End of the Controller
 
 	// Model: Data variables for User Interface Views
-	private RoomInfoModel mRoomInfoModel;
+	private RoomInfoModelController mRoomInfoModelController;
 	private int numRoom;
 	// End of the Model
 
 	//Listeners
-	private OnSpecificInfoFragmentInteractionListener mOnSpecificInfoFragmentInteratcionListener;
+	private  OnSpecificInfoFragmentListener mOnSpecificInfoFragmentListener;
 	protected ScrollTabHolder mScrollTabHolder;
 
 	public SpecificInfoFragment() {
@@ -51,16 +50,16 @@ public class SpecificInfoFragment extends Fragment {
 	 * Use this factory method to create a new instance of
 	 * this fragment using the provided parameters.
 	 *
-	 * @param roomInfoModel Parameter 1.
+	 * @param roomInfoModelController Parameter 1.
 	 * @param numRoom Parameter 2.
 	 * @return A new instance of fragment SpecificInfoFragment.
 	 */
 	// TODO: Rename and change types and number of parameters
-	public static SpecificInfoFragment newInstance(RoomInfoModel roomInfoModel, int numRoom) {
+	public static SpecificInfoFragment newInstance(RoomInfoModelController roomInfoModelController, int numRoom) {
 		SpecificInfoFragment fragment = new SpecificInfoFragment();
 		Bundle args = new Bundle();
-		args.putParcelable(SPECIFIC_ROOM_DATA, roomInfoModel);
-		args.putInt(NUMBER_OF_ROOMS_FOUND, numRoom);
+		args.putParcelable(ARG_SPECIFIC_ROOM_DATA, roomInfoModelController);
+		args.putInt(ARG_NUMBER_OF_ROOMS_FOUND, numRoom);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -70,12 +69,12 @@ public class SpecificInfoFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		Log.i(TAG, "onCreate()");
 		if (getArguments() != null) {
-			this.mRoomInfoModel = getArguments().getParcelable(SPECIFIC_ROOM_DATA);
-			this.numRoom = getArguments().getInt(NUMBER_OF_ROOMS_FOUND);
+			this.mRoomInfoModelController = getArguments().getParcelable(ARG_SPECIFIC_ROOM_DATA);
+			this.numRoom = getArguments().getInt(ARG_NUMBER_OF_ROOMS_FOUND);
 		}
 
-		Log.d(TAG, mRoomInfoModel.getPen_homepage());
-		Log.d(TAG, mRoomInfoModel.getPen_phone1());
+		Log.d(TAG, mRoomInfoModelController.getPen_homepage());
+		Log.d(TAG, mRoomInfoModelController.getPen_phone1());
 	}
 
 	@Override
@@ -85,7 +84,7 @@ public class SpecificInfoFragment extends Fragment {
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-		mAdapter = new SpecificInfoRoomRecyclerViewAdapter(getActivity(), mRoomInfoModel);
+		mAdapter = new SpecificInfoRoomRecyclerViewAdapter(getActivity(), mRoomInfoModelController);
 		Log.d(TAG, "before setting adapter");
 		mRecyclerView.setAdapter(mAdapter);
 
@@ -126,7 +125,7 @@ public class SpecificInfoFragment extends Fragment {
 		planButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mOnSpecificInfoFragmentInteratcionListener.onClickAddRoomToPlanButton(mRoomInfoModel);
+				mOnSpecificInfoFragmentListener.onClickAddRoomToPlanButton(mRoomInfoModelController);
 			}
 		});
 
@@ -138,9 +137,9 @@ public class SpecificInfoFragment extends Fragment {
 			}
 		});
 */
-		if(mOnSpecificInfoFragmentInteratcionListener != null)
-			mOnSpecificInfoFragmentInteratcionListener
-					.onCreateSpecificInfoFragmentView(mRoomInfoModel.getRoom_name(), mRoomInfoModel.getPen_name());
+		if(mOnSpecificInfoFragmentListener != null)
+			mOnSpecificInfoFragmentListener
+					.onCreateSpecificInfoFragmentView(mRoomInfoModelController.getRoom_name(), mRoomInfoModelController.getPen_name());
 
 		return specificInfoView;
 	}
@@ -150,7 +149,7 @@ public class SpecificInfoFragment extends Fragment {
 		super.onAttach(activity);
 		try {
 			mScrollTabHolder = (ScrollTabHolder) activity;
-			mOnSpecificInfoFragmentInteratcionListener = (OnSpecificInfoFragmentInteractionListener) activity;
+			mOnSpecificInfoFragmentListener = ( OnSpecificInfoFragmentListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnFragmentInteractionListener");
@@ -161,7 +160,7 @@ public class SpecificInfoFragment extends Fragment {
 	public void onDetach() {
 		super.onDetach();
 		Log.d(TAG, "onDetach");
-		mOnSpecificInfoFragmentInteratcionListener = null;
+		mOnSpecificInfoFragmentListener = null;
 	}
 
 	@Override
@@ -169,10 +168,10 @@ public class SpecificInfoFragment extends Fragment {
 		super.onDestroyView();
 	}
 
-	public interface OnSpecificInfoFragmentInteractionListener {
+	public interface OnSpecificInfoFragmentListener {
 		// TODO: Update argument type and name
 		public void onCreateSpecificInfoFragmentView(String roomName, String pensionName);
-		public void onClickAddRoomToPlanButton(RoomInfoModel roomInfoModel);
+		public void onClickAddRoomToPlanButton(RoomInfoModelController roomInfoModelController);
 	}
 
 }

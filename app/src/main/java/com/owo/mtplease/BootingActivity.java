@@ -22,14 +22,12 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -136,7 +134,7 @@ public class BootingActivity extends ActionBarActivity {
 				}
 			});
 
-			emailEditText = (EditText) signUpFragmentView.findViewById(R.id.editText_email);
+			emailEditText = (EditText) signUpFragmentView.findViewById(R.id.editText_input_email_for_looking_for_password);
 
 			confirmCodeTextView = (TextView) signUpFragmentView.findViewById(R.id.textView_confirm_code);
 
@@ -200,13 +198,12 @@ public class BootingActivity extends ActionBarActivity {
 
 			@Override
 			protected String doInBackground(String... urls) {
-				Log.d(TAG_CONFIRM_CODE, "asdfasdfasdf");
 				try {
 					HttpClient mHttpClient = new DefaultHttpClient();
 					HttpConnectionParams.setConnectionTimeout(mHttpClient.getParams(), 5000);
 					HttpPost mHttpPost = new HttpPost(urls[0]);
 					List params = new ArrayList();
-					params.add(new BasicNameValuePair("email_address", emailAddress));
+					params.add(new BasicNameValuePair("user_id", emailAddress));
 					UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
 					mHttpPost.setEntity(ent);
 					HttpResponse responsePost = mHttpClient.execute(mHttpPost);
@@ -244,4 +241,5 @@ public class BootingActivity extends ActionBarActivity {
 			}
 		}
 	}
+
 }

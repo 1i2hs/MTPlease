@@ -13,17 +13,17 @@ import java.util.LinkedList;
 /**
  * Created by In-Ho on 2015-01-16.
  */
-public class RoomInfoModel implements Parcelable {
+public class RoomInfoModelController implements Parcelable {
 
-	public static final Parcelable.Creator CREATOR = new Creator<RoomInfoModel>() {
+	public static final Parcelable.Creator CREATOR = new Creator<RoomInfoModelController>() {
 		@Override
-		public RoomInfoModel createFromParcel(Parcel in) {
-			return new RoomInfoModel(in);
+		public RoomInfoModelController createFromParcel(Parcel in) {
+			return new RoomInfoModelController(in);
 		}
 
 		@Override
-		public RoomInfoModel[] newArray(int size) {
-			return new RoomInfoModel[size];
+		public RoomInfoModelController[] newArray(int size) {
+			return new RoomInfoModelController[size];
 		}
 	};
 
@@ -83,10 +83,10 @@ public class RoomInfoModel implements Parcelable {
 	private JSONArray period_table;
 	private int room_cost;
 
-	public RoomInfoModel() {
+	public RoomInfoModelController() {
 	}
 
-	public RoomInfoModel(Parcel in) {
+	public RoomInfoModelController(Parcel in) {
 		readFromParcel(in);
 	}
 

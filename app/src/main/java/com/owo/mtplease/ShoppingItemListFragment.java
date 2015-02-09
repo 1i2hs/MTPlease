@@ -1,10 +1,8 @@
 package com.owo.mtplease;
 
 import android.app.Activity;
-import android.net.Uri;
-import android.os.Bundle;;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,15 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+;
+
 
 public class ShoppingItemListFragment extends Fragment {
 
 	private static final String TAG = "ShoppingItemListFragment";
-	// TODO: Rename parameter arguments, choose names that match
-	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-	private static final String SHOPPING_ITEM_TYPE = "param1";
 
-	// TODO: Rename and change types of parameters
+	private static final String ARG_SHOPPING_ITEM_TYPE = "param1";
+
 	private int shoppingItemType;
 
 	// View: User Interface Views
@@ -34,7 +32,7 @@ public class ShoppingItemListFragment extends Fragment {
 	// End of Controller;
 
 	// Listeners
-	private OnShoppingItemListFragmentInteractionListener mOnShoppingItemListFragmentInteractionListener;
+	private OnShoppingItemListFragmentListener mOnShoppingItemListFragmentListener;
 	protected ScrollTabHolder mScrollTabHolder;
 	// End of the Listeners
 
@@ -55,7 +53,7 @@ public class ShoppingItemListFragment extends Fragment {
 	public static ShoppingItemListFragment newInstance(int shoppingItemType) {
 		ShoppingItemListFragment fragment = new ShoppingItemListFragment();
 		Bundle args = new Bundle();
-		args.putInt(SHOPPING_ITEM_TYPE, shoppingItemType);
+		args.putInt(ARG_SHOPPING_ITEM_TYPE, shoppingItemType);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -75,15 +73,15 @@ public class ShoppingItemListFragment extends Fragment {
 		switch(shoppingItemType) {
 			case MEAT_ITEM:
 				mAdapter = new ShoppingItemListRecyclerViewAdapter
-						(MEAT_ITEM, mOnShoppingItemListFragmentInteractionListener, getActivity());
+						(MEAT_ITEM, mOnShoppingItemListFragmentListener, getActivity());
 				break;
 			case ALCOHOL_ITEM:
 				mAdapter = new ShoppingItemListRecyclerViewAdapter
-						(ALCOHOL_ITEM, mOnShoppingItemListFragmentInteractionListener, getActivity());
+						(ALCOHOL_ITEM, mOnShoppingItemListFragmentListener, getActivity());
 				break;
 			case OTHERS_ITEM:
 				mAdapter = new ShoppingItemListRecyclerViewAdapter
-						(OTHERS_ITEM, mOnShoppingItemListFragmentInteractionListener, getActivity());
+						(OTHERS_ITEM, mOnShoppingItemListFragmentListener, getActivity());
 				break;
 		}
 		mRecyclerView.setAdapter(mAdapter);
@@ -111,7 +109,7 @@ public class ShoppingItemListFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
 		if (getArguments() != null) {
-			shoppingItemType = getArguments().getInt(SHOPPING_ITEM_TYPE);
+			shoppingItemType = getArguments().getInt(ARG_SHOPPING_ITEM_TYPE);
 			Log.d(TAG, shoppingItemType + "");
 		}
 	}
@@ -124,8 +122,19 @@ public class ShoppingItemListFragment extends Fragment {
 		View shoppingItemListView = inflater.inflate(R.layout.fragment_shopping_item_list, container, false);
 		mRecyclerView = (RecyclerView) shoppingItemListView.findViewById(R.id.list_item);
 
-		if(mOnShoppingItemListFragmentInteractionListener != null)
-			mOnShoppingItemListFragmentInteractionListener.onCreateShoppingItemListFragmentView(shoppingItemType, 9);
+		if(mOnShoppingItemListFragmentListener != null) {
+			switch(shoppingItemType) {
+				case MEAT_ITEM:
+					mOnShoppingItemListFragmentListener.onCreateShoppingItemListFragmentView(shoppingItemType, 9);
+					break;
+				case ALCOHOL_ITEM:
+					mOnShoppingItemListFragmentListener.onCreateShoppingItemListFragmentView(shoppingItemType, 9);
+					break;
+				case OTHERS_ITEM:
+					mOnShoppingItemListFragmentListener.onCreateShoppingItemListFragmentView(shoppingItemType, 9);
+					break;
+			}
+		}
 
 		return shoppingItemListView;
 	}
@@ -135,7 +144,7 @@ public class ShoppingItemListFragment extends Fragment {
 		super.onAttach(activity);
 		try {
 			mScrollTabHolder = (ScrollTabHolder) activity;
-			mOnShoppingItemListFragmentInteractionListener = (OnShoppingItemListFragmentInteractionListener) activity;
+			mOnShoppingItemListFragmentListener = (OnShoppingItemListFragmentListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnFragmentInteractionListener");
@@ -145,10 +154,38 @@ public class ShoppingItemListFragment extends Fragment {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		mOnShoppingItemListFragmentInteractionListener = null;
+		mOnShoppingItemListFragmentListener = null;
 	}
 
-	public interface OnShoppingItemListFragmentInteractionListener {
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		Log.d(TAG, "onDestroyView");
+		mOnShoppingItemListFragmentListener.onDestroyShoppingItemListFragmentView();
+	}
+
+	public void switchRecyclerViewAdpater(int shoppingItemType) {
+		switch(shoppingItemType) {
+			case MEAT_ITEM:
+				mOnShoppingItemListFragmentListener.onCreateShoppingItemListFragmentView(shoppingItemType, 9);
+				mAdapter = new ShoppingItemListRecyclerViewAdapter
+						(MEAT_ITEM, mOnShoppingItemListFragmentListener, getActivity());
+				break;
+			case ALCOHOL_ITEM:
+				mOnShoppingItemListFragmentListener.onCreateShoppingItemListFragmentView(shoppingItemType, 9);
+				mAdapter = new ShoppingItemListRecyclerViewAdapter
+						(ALCOHOL_ITEM, mOnShoppingItemListFragmentListener, getActivity());
+				break;
+			case OTHERS_ITEM:
+				mOnShoppingItemListFragmentListener.onCreateShoppingItemListFragmentView(shoppingItemType, 9);
+				mAdapter = new ShoppingItemListRecyclerViewAdapter
+						(OTHERS_ITEM, mOnShoppingItemListFragmentListener, getActivity());
+				break;
+		}
+		mRecyclerView.setAdapter(mAdapter);
+	}
+
+	public interface OnShoppingItemListFragmentListener {
 		// TODO: Update argument type and name
 		public void onCreateShoppingItemListFragmentView(int itemType, int numItem);
 		public void onDestroyShoppingItemListFragmentView();

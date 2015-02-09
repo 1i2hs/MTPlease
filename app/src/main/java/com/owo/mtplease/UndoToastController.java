@@ -38,16 +38,6 @@ public class UndoToastController {
 		}
 	};
 	private UndoToastListener mUndoToastListener;
-	/*private View roomPlanView;
-	private int penId;
-	private String roomName;
-	private int roomPrice;
-	private View directInputRoomPlanView;
-	private int directInputRoomPrice;
-	private View itemPlanView;
-	private int itemType;
-	private String itemName;
-	private int itemUnitPrice;*/
 	private int viewIndex;
 
 	public UndoToastController(View undoToastView, UndoToastListener undoToastButtonListener) {

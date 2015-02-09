@@ -51,7 +51,11 @@ public class ImageLoadingTask extends AsyncTask<String, Integer, Bitmap> {
 		try {
 			isImageLoaded = IMAGE_LOADING_FAILED;
 
-			HttpEntity resEntityGet = getHttpEntityFromServer(urls[0]);
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpGet httpGet = new HttpGet(urls[0]);
+			HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 5000);
+			HttpResponse mHttpResponseGet = httpClient.execute(httpGet);
+			HttpEntity resEntityGet = mHttpResponseGet.getEntity();
 
 			if(resEntityGet != null) {
 				Log.i(TAG, "Receiving room image from the server succeeded!");
@@ -68,8 +72,11 @@ public class ImageLoadingTask extends AsyncTask<String, Integer, Bitmap> {
 					resEntityGet.consumeContent();
 				}
 			}
+		} catch(ClientProtocolException e) {
+			Log.e(TAG, "ClientProtocolException");
+			e.printStackTrace();
 		} catch(IOException e) {
-			Log.i(TAG,"Receiving room image from the server failed....");
+			Log.i(TAG, "Receiving room image from the server failed....");
 			e.printStackTrace();
 		}
 		return null;
@@ -104,18 +111,4 @@ public class ImageLoadingTask extends AsyncTask<String, Integer, Bitmap> {
 		// end of the configuration of the progress bar
 	}
 
-	private HttpEntity getHttpEntityFromServer(String url) throws IOException {
-		try {
-			HttpClient mHttpClient = new DefaultHttpClient();
-			HttpGet mHttpGet = new HttpGet(url);
-			HttpConnectionParams.setConnectionTimeout(mHttpClient.getParams(), 5000);
-			HttpResponse mHttpResponseGet = mHttpClient.execute(mHttpGet);
-			HttpEntity resEntityGet = mHttpResponseGet.getEntity();
-			return resEntityGet;
-		} catch(ClientProtocolException e) {
-			Log.e(TAG, "ClientProtocolException");
-			e.printStackTrace();
-		}
-		return null;
-	}
 }

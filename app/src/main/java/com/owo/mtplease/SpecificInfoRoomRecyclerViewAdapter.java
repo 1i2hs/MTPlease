@@ -32,7 +32,6 @@ import com.nhn.android.mapviewer.overlay.NMapCalloutOverlay;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -63,7 +62,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	// End of series of cards
 
 	// Model: Data variables for User Interface Views
-	private RoomInfoModel mRoomInfoModel;
+	private RoomInfoModelController mRoomInfoModelController;
 	// End of the Model
 
 	// others
@@ -77,10 +76,10 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		/*NMapViewerResourceProvider mMapViewerResourceProvider = null;
 		NMapOverlayManager mOverlayManager;*/
 
-	public SpecificInfoRoomRecyclerViewAdapter(Context context, RoomInfoModel roomInfoModel) {
+	public SpecificInfoRoomRecyclerViewAdapter(Context context, RoomInfoModelController roomInfoModelController) {
 		Log.d(TAG, TAG);
 		mContext = context;
-		mRoomInfoModel = roomInfoModel;
+		mRoomInfoModelController = roomInfoModelController;
 	}
 
 	@Override
@@ -292,7 +291,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			phoneCallButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Uri phoneNumber = Uri.parse("tel:"+ mRoomInfoModel.getPen_phone1());
+					Uri phoneNumber = Uri.parse("tel:"+ mRoomInfoModelController.getPen_phone1());
 					Intent phoneCallIntent = new Intent(Intent.ACTION_DIAL, phoneNumber);
 					mContext.startActivity(phoneCallIntent);
 				}
@@ -300,7 +299,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			websiteButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Uri webLink = Uri.parse(mRoomInfoModel.getPen_homepage());
+					Uri webLink = Uri.parse(mRoomInfoModelController.getPen_homepage());
 					Intent webBrowseIntent = new Intent(Intent.ACTION_VIEW, webLink);
 					mContext.startActivity(webBrowseIntent);
 				}
@@ -318,7 +317,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private TextView roomPrice;
 
 		public void setComponents() {
-			int room_cost = mRoomInfoModel.getRoom_cost();
+			int room_cost = mRoomInfoModelController.getRoom_cost();
 			if(room_cost == 0)
 				roomPrice.setText(R.string.telephone_inquiry);
 			else
@@ -338,11 +337,11 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private TextView numberToilets;
 
 		public void setComponents() {
-			numberPeopleRoom.setText("기준 인원: " + mRoomInfoModel.getRoom_std_people()
-					+ "명 / 최대 인원: " + mRoomInfoModel.getRoom_max_people() + "명");
-			roomSize.setText(mRoomInfoModel.getRoom_pyeong() + "평");
-			numberRooms.setText(mRoomInfoModel.getNum_rooms() + "개");
-			numberToilets.setText(mRoomInfoModel.getNum_toilets() + "개");
+			numberPeopleRoom.setText("기준 인원: " + mRoomInfoModelController.getRoom_std_people()
+					+ "명 / 최대 인원: " + mRoomInfoModelController.getRoom_max_people() + "명");
+			roomSize.setText(mRoomInfoModelController.getRoom_pyeong() + "평");
+			numberRooms.setText(mRoomInfoModelController.getNum_rooms() + "개");
+			numberToilets.setText(mRoomInfoModelController.getNum_toilets() + "개");
 		}
 
 		public BasicInfoCard(View cardView) {
@@ -362,11 +361,11 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private TextView aircon;
 
 		public void setComponents() {
-			playground.setText(mRoomInfoModel.getPen_ground() + "");
-			pickup.setText(mRoomInfoModel.getPen_pickup() + "");
-			barbecue.setText(mRoomInfoModel.getPen_barbecue() + "");
-			valley.setText(mRoomInfoModel.getPen_valley() + "");
-			aircon.setText(mRoomInfoModel.getRoom_aircon() + "");
+			playground.setText(mRoomInfoModelController.getPen_ground() + "");
+			pickup.setText(mRoomInfoModelController.getPen_pickup() + "");
+			barbecue.setText(mRoomInfoModelController.getPen_barbecue() + "");
+			valley.setText(mRoomInfoModelController.getPen_valley() + "");
+			aircon.setText(mRoomInfoModelController.getRoom_aircon() + "");
 		}
 
 
@@ -410,8 +409,8 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 
 		public void setComponents() {
-			walkFromStationTime.setText(mRoomInfoModel.getPen_walk_station());
-			walkFromTerminalTime.setText(mRoomInfoModel.getPen_walk_terminal());
+			walkFromStationTime.setText(mRoomInfoModelController.getPen_walk_station());
+			walkFromTerminalTime.setText(mRoomInfoModelController.getPen_walk_terminal());
 
 			// set a registered API key for Open MapViewer Library
 			mMapView.setApiKey(NAVER_MAP_API_KEY);
@@ -529,8 +528,8 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 		public void setComponents() {
 			try {
-				for (int i = 0; i < mRoomInfoModel.getCost_table().length(); i++) {
-					JSONObject costObject = mRoomInfoModel.getCost_table().getJSONObject(i);
+				for (int i = 0; i < mRoomInfoModelController.getCost_table().length(); i++) {
+					JSONObject costObject = mRoomInfoModelController.getCost_table().getJSONObject(i);
 					String pen_period_division = costObject.optString("pen_period_division");
 					Log.d(TAG, pen_period_division);
 					if (pen_period_division.equals(mContext.getResources().getString(R.string.off_season))) {
@@ -556,7 +555,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 				}
 
 				if(!isPeriodTableVisible) {
-					for (int i = 0; i < mRoomInfoModel.getPeriod_table().length(); i++) {
+					for (int i = 0; i < mRoomInfoModelController.getPeriod_table().length(); i++) {
 						int rowNum = i + 1;
 
 						TableRow periodTableRow = new TableRow(mContext);
@@ -564,7 +563,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 						periodTableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT));
 
 
-						JSONObject periodObject = mRoomInfoModel.getPeriod_table().getJSONObject(i);
+						JSONObject periodObject = mRoomInfoModelController.getPeriod_table().getJSONObject(i);
 						String pen_period_division = periodObject.optString("pen_period_division");
 						String period = periodObject.optString("period_start") + " ~ " + periodObject.optString("period_end");
 
@@ -605,7 +604,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private void setPeriodCell(TextView periodCell, int periodResId, String period) {
 			if(periodCell.getId() % 10 == 1) {
 				periodCell.setText(periodResId);
-				periodCell.setBackgroundResource(R.drawable.cell_shape_right_line);
+				periodCell.setBackgroundResource(R.drawable.shape_cell_right_line);
 			} else
 				periodCell.setText(period);
 		}
@@ -643,7 +642,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private TextView ceoAccount;
 
 		public void setComponents() {
-			ceoName.setText(mRoomInfoModel.getPen_ceo());
+			ceoName.setText(mRoomInfoModelController.getPen_ceo());
 			//ceoAccount.setText(mRoomInfoModel);
 		}
 
@@ -661,11 +660,11 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private TextView pensionNotice;
 
 		public void setComponents() {
-			otherFacilities.setText(mRoomInfoModel.getPen_etc_facility());
-			checkInOutTime.setText("입실 시간: " + mRoomInfoModel.getPen_checkin()
-					+ " / 퇴실 시간: " + mRoomInfoModel.getPen_checkout());
-			checkInOutNotice.setText(mRoomInfoModel.getPen_check_caution());
-			pensionNotice.setText(mRoomInfoModel.getPen_caution());
+			otherFacilities.setText(mRoomInfoModelController.getPen_etc_facility());
+			checkInOutTime.setText("입실 시간: " + mRoomInfoModelController.getPen_checkin()
+					+ " / 퇴실 시간: " + mRoomInfoModelController.getPen_checkout());
+			checkInOutNotice.setText(mRoomInfoModelController.getPen_check_caution());
+			pensionNotice.setText(mRoomInfoModelController.getPen_caution());
 		}
 
 		public OthersCard(View cardView) {

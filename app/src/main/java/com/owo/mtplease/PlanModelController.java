@@ -9,7 +9,7 @@ import java.util.LinkedList;
 /**
  * Created by In-Ho on 2015-01-27.
  */
-public class PlanModel {
+public class PlanModelController {
 	
 	private static final String TAG = "PlanModel";
 
@@ -41,7 +41,7 @@ public class PlanModel {
 	private LinkedList<Integer> othersCountLinkedList;
 	// End of the alcohol info
 
-	public PlanModel() {
+	public PlanModelController() {
 		initPlanModel();
 	}
 

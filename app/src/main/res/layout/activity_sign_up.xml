@@ -1,0 +1,28 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.owo.mtplease.SignUpActivity">
+
+    <com.owo.mtplease.view.SwippingDisabledViewPager
+        android:id="@+id/swippingDisabledViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </com.owo.mtplease.view.SwippingDisabledViewPager>
+
+    <FrameLayout
+        android:id="@+id/background_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black">
+
+
+        <ProgressBar
+            android:id="@+id/progressBar_login"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+
+</RelativeLayout>

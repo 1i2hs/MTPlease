@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,10 +22,9 @@ import org.json.JSONObject;
 public class ResultFragment extends Fragment {
 
 	private static final String TAG = "ResultFragment";
-	// TODO: Rename parameter arguments, choose names that match
-	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-	private static final String JSONSTRING_OF_ROOMS = "param1";
-	private static final String DATE_OF_MT = "param2";
+
+	private static final String ARG_JSONSTRING_OF_ROOMS = "param1";
+	private static final String ARG_DATE_OF_MET = "param2";
 
 	// View: User Interface Views
 	private RecyclerView mRecyclerView;
@@ -48,7 +46,7 @@ public class ResultFragment extends Fragment {
 	// Counters
 
 	// Listeners
-	private OnResultFragmentInteractionListener mOnResultFragmentInteractionListener;
+	private OnResultFragmentListener mOnResultFragmentListener;
 	protected ScrollTabHolder mScrollTabHolder;
 	// End of the Listeners
 
@@ -70,8 +68,8 @@ public class ResultFragment extends Fragment {
 	public static ResultFragment newInstance(String jsonString, String mtDate) {
 		ResultFragment fragment = new ResultFragment();
 		Bundle args = new Bundle();
-		args.putString(JSONSTRING_OF_ROOMS, jsonString);
-		args.putString(DATE_OF_MT, mtDate);
+		args.putString(ARG_JSONSTRING_OF_ROOMS, jsonString);
+		args.putString(ARG_DATE_OF_MET, mtDate);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -88,7 +86,7 @@ public class ResultFragment extends Fragment {
 		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
 		mAdapter = new RoomListRecyclerViewAdapter(getActivity(),
-				roomArray, mtDate, mOnResultFragmentInteractionListener);
+				roomArray, mtDate, mOnResultFragmentListener);
 		mRecyclerView.setAdapter(mAdapter);
 
 		mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -116,8 +114,8 @@ public class ResultFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			jsonStringRoomList = getArguments().getString(JSONSTRING_OF_ROOMS);
-			mtDate = getArguments().getString(DATE_OF_MT);
+			jsonStringRoomList = getArguments().getString(ARG_JSONSTRING_OF_ROOMS);
+			mtDate = getArguments().getString(ARG_DATE_OF_MET);
 			Log.i(TAG, jsonStringRoomList);
 
 			try {
@@ -143,8 +141,8 @@ public class ResultFragment extends Fragment {
 		View resultView = inflater.inflate(R.layout.fragment_result, container, false);
 		mRecyclerView = (RecyclerView) resultView.findViewById(R.id.list_room);
 
-		if(mOnResultFragmentInteractionListener != null)
-			mOnResultFragmentInteractionListener.onCreateResultFragmentView(noResults, roomArray.length());
+		if(mOnResultFragmentListener != null)
+			mOnResultFragmentListener.onCreateResultFragmentView(noResults, roomArray.length());
 
 		return resultView;
 	}
@@ -155,10 +153,10 @@ public class ResultFragment extends Fragment {
 		try {
 			actionBarActivity = (ActionBarActivity) activity;
 			mScrollTabHolder = (ScrollTabHolder) activity;
-			mOnResultFragmentInteractionListener = (OnResultFragmentInteractionListener) activity;
+			mOnResultFragmentListener = (OnResultFragmentListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " must implement OnFragmentInteractionListener");
+					+ " must implement OnFragmentListener");
 		}
 	}
 
@@ -166,21 +164,21 @@ public class ResultFragment extends Fragment {
 	public void onDetach() {
 		super.onDetach();
 		Log.d(TAG, "ResultFragmentView detached");
-		mOnResultFragmentInteractionListener = null;
+		mOnResultFragmentListener = null;
 	}
 
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
 		Log.d(TAG, "ResultFragmentView destroyed");
-		mOnResultFragmentInteractionListener.onDestroyResultFragmentView();
+		mOnResultFragmentListener.onDestroyResultFragmentView();
 	}
 
-	public interface OnResultFragmentInteractionListener {
+	public interface OnResultFragmentListener {
 		// TODO: Update argument type and name
 		public void onCreateResultFragmentView(boolean noResults, int numRoom);
 		public void onPreLoadSpecificInfoFragment();
-		public void onLoadSpecificInfoFragment(RoomInfoModel roomInfoModel, JSONArray roomArray);
+		public void onLoadSpecificInfoFragment(RoomInfoModelController roomInfoModelController, JSONArray roomArray);
 		public void onPostLoadSpecificInfoFragment();
 		public void onDestroyResultFragmentView();
 	}

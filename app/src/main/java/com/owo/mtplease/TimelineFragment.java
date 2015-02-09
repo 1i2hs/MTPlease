@@ -1,12 +1,8 @@
 package com.owo.mtplease;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,9 +18,8 @@ import org.json.JSONObject;
 public class TimelineFragment extends Fragment {
 
 	private static final String TAG = "TimelineFragment";
-	// TODO: Rename parameter arguments, choose names that match
-	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-	private static final String ARG_PARAM1 = "param1";
+	
+	private static final String ARG_JSONSTRING_POST_LIST = "param1";
 
 	// View: User Interface Views
 	private RecyclerView mRecyclerView;
@@ -41,7 +36,7 @@ public class TimelineFragment extends Fragment {
 	private JSONArray postArray;
 
 	// Listeners
-	private OnTimelineFragmentInteractionListener mTimelineFragmentInteractionListener;
+	private OnTimelineFragmentListener mTimelineFragmentListener;
 	protected ScrollTabHolder mScrollTabHolder;
 
 	/**
@@ -55,7 +50,7 @@ public class TimelineFragment extends Fragment {
 	public static TimelineFragment newInstance(String jsonString) {
 		TimelineFragment fragment = new TimelineFragment();
 		Bundle args = new Bundle();
-		args.putString(ARG_PARAM1, jsonString);
+		args.putString(ARG_JSONSTRING_POST_LIST, jsonString);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -95,7 +90,7 @@ public class TimelineFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			jsonStringPostList = getArguments().getString(ARG_PARAM1);
+			jsonStringPostList = getArguments().getString(ARG_JSONSTRING_POST_LIST);
 			Log.i(TAG, jsonStringPostList + "");
 
 			try {
@@ -116,8 +111,8 @@ public class TimelineFragment extends Fragment {
 		View timelineView = inflater.inflate(R.layout.fragment_timeline, container, false);
 		mRecyclerView = (RecyclerView) timelineView.findViewById(R.id.list_timeline);
 
-		if(mTimelineFragmentInteractionListener != null)
-			mTimelineFragmentInteractionListener.onCreateTimelineFragmentView();
+		if(mTimelineFragmentListener != null)
+			mTimelineFragmentListener.onCreateTimelineFragmentView();
 
 		return timelineView;
 	}
@@ -127,7 +122,7 @@ public class TimelineFragment extends Fragment {
 		super.onAttach(activity);
 		try {
 			mScrollTabHolder = (ScrollTabHolder) activity;
-			mTimelineFragmentInteractionListener = (OnTimelineFragmentInteractionListener) activity;
+			mTimelineFragmentListener = (OnTimelineFragmentListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnFragmentInteractionListener");
@@ -137,17 +132,23 @@ public class TimelineFragment extends Fragment {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		mTimelineFragmentInteractionListener = null;
+		mTimelineFragmentListener = null;
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG, "onStop");
 	}
 
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
 		Log.d(TAG, "TimelineFragmentView destroyed");
-		mTimelineFragmentInteractionListener.onDestroyTimelineFragmentView();
+		mTimelineFragmentListener.onDestroyTimelineFragmentView();
 	}
 
-	public interface OnTimelineFragmentInteractionListener {
+	public interface OnTimelineFragmentListener {
 		// TODO: Update argument type and name
 		public void onCreateTimelineFragmentView();
 		public void onDestroyTimelineFragmentView();

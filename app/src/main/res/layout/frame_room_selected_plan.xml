@@ -118,7 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/divider_shape_linearlayout_bold"/>
+            android:background="@drawable/shape_divider_linearlayout_bold"/>
 
         <TextView
             android:id="@+id/textView_price_room_plan"

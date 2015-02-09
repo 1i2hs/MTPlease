@@ -10,7 +10,7 @@
 
 
     <EditText
-        android:id="@+id/editText_email"
+        android:id="@+id/editText_input_email_for_looking_for_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -25,9 +25,9 @@
         android:id="@+id/btn_send_school"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText_email"
-        android:layout_alignStart="@+id/editText_email"
-        android:layout_below="@+id/editText_email"
+        android:layout_alignLeft="@+id/editText_input_email_for_looking_for_password"
+        android:layout_alignStart="@+id/editText_input_email_for_looking_for_password"
+        android:layout_below="@+id/editText_input_email_for_looking_for_password"
         android:layout_marginTop="35dp"
         android:text="학교 전송"/>
 
@@ -35,8 +35,8 @@
         android:id="@+id/btn_send_home"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/editText_email"
-        android:layout_alignRight="@+id/editText_email"
+        android:layout_alignEnd="@+id/editText_input_email_for_looking_for_password"
+        android:layout_alignRight="@+id/editText_input_email_for_looking_for_password"
         android:layout_alignTop="@+id/btn_send_school"
         android:text="집 전송"/>
 
@@ -66,10 +66,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editText_subdirectory_server"
-        android:layout_alignBottom="@+id/editText_email"
+        android:layout_alignBottom="@+id/editText_input_email_for_looking_for_password"
         android:layout_marginBottom="64dp"
-        android:layout_alignLeft="@+id/editText_email"
-        android:layout_alignStart="@+id/editText_email"
+        android:layout_alignLeft="@+id/editText_input_email_for_looking_for_password"
+        android:layout_alignStart="@+id/editText_input_email_for_looking_for_password"
         android:layout_toLeftOf="@+id/btn_change_subdirectory"
         android:layout_toStartOf="@+id/btn_change_subdirectory"
         android:hint="/members/email"
@@ -81,8 +81,8 @@
         android:text="경로변경"
         android:id="@+id/btn_change_subdirectory"
         android:layout_alignBottom="@+id/editText_subdirectory_server"
-        android:layout_alignRight="@+id/editText_email"
-        android:layout_alignEnd="@+id/editText_email"/>
+        android:layout_alignRight="@+id/editText_input_email_for_looking_for_password"
+        android:layout_alignEnd="@+id/editText_input_email_for_looking_for_password"/>
 
     <TextView
         android:layout_width="wrap_content"

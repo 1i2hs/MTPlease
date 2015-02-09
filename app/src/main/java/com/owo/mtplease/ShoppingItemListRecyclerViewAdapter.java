@@ -28,14 +28,14 @@ public class ShoppingItemListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	private static final int OTHERS_ITEM = 3;
 
 	private int shoppingItemType;
-	private ShoppingItemListFragment.OnShoppingItemListFragmentInteractionListener mOnShoppingItemListFragmentInteractionListener;
+	private ShoppingItemListFragment.OnShoppingItemListFragmentListener mOnShoppingItemListFragmentListener;
 	private Context mContext;
 
 	public ShoppingItemListRecyclerViewAdapter(int shoppingItemType,
-											   ShoppingItemListFragment.OnShoppingItemListFragmentInteractionListener
-													   onShoppingItemListFragmentInteractionListener, Context context) {
+											   ShoppingItemListFragment.OnShoppingItemListFragmentListener
+													   onShoppingItemListFragmentListener, Context context) {
 		this.shoppingItemType = shoppingItemType;
-		mOnShoppingItemListFragmentInteractionListener = onShoppingItemListFragmentInteractionListener;
+		mOnShoppingItemListFragmentListener = onShoppingItemListFragmentListener;
 		mContext = context;
 	}
 
@@ -50,12 +50,12 @@ public class ShoppingItemListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			View customShoppingItemView = LayoutInflater.from(parent.getContext()).
 					inflate(R.layout.card_custom_shopping_item_input, parent, false);
 
-			return new CustomInputShoppingItemCard(customShoppingItemView, mOnShoppingItemListFragmentInteractionListener);
+			return new CustomInputShoppingItemCard(customShoppingItemView, mOnShoppingItemListFragmentListener);
 		} else if (viewType == TYPE_SHOPPING_ITEM_CARD) {
 			View shoppingItemView = LayoutInflater.from(parent.getContext()).
 					inflate(R.layout.card_shopping_item, parent, false);
 
-			return new ShoppingItemCard(shoppingItemView, mOnShoppingItemListFragmentInteractionListener, mContext);
+			return new ShoppingItemCard(shoppingItemView, mOnShoppingItemListFragmentListener, mContext);
 		}
 
 		throw new RuntimeException("there is no type that matches the type "
@@ -118,7 +118,7 @@ public class ShoppingItemListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private TextView itemNameTextView;
 		private TextView itemUnitTextView;
 		private TextView itemPriceTextView;
-		private ShoppingItemListFragment.OnShoppingItemListFragmentInteractionListener mOnShoppingItemListFragmentInteractionListener;
+		private ShoppingItemListFragment.OnShoppingItemListFragmentListener mOnShoppingItemListFragmentListener;
 		private Context mContext;
 
 		private int itemType;
@@ -128,15 +128,15 @@ public class ShoppingItemListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private int itemPrice;
 
 		public ShoppingItemCard(View cardView,
-								ShoppingItemListFragment.OnShoppingItemListFragmentInteractionListener
-										onShoppingItemListFragmentInteractionListener,
+								ShoppingItemListFragment.OnShoppingItemListFragmentListener
+										onShoppingItemListFragmentListener,
 								Context context) {
 			super(cardView);
 			shoppingItemCardLayout = (RelativeLayout) cardView.findViewById(R.id.RelativeLayout_card_shopping_item);
 			itemNameTextView = (TextView) cardView.findViewById(R.id.textView_name_item);
 			itemUnitTextView = (TextView) cardView.findViewById(R.id.textView_unit_item);
 			itemPriceTextView = (TextView) cardView.findViewById(R.id.textView_price_item);
-			mOnShoppingItemListFragmentInteractionListener = onShoppingItemListFragmentInteractionListener;
+			mOnShoppingItemListFragmentListener = onShoppingItemListFragmentListener;
 			mContext = context;
 		}
 
@@ -171,22 +171,22 @@ public class ShoppingItemListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 		@Override
 		public void onClick(View v) {
-			mOnShoppingItemListFragmentInteractionListener.onClickItem(itemType, itemName, itemUnit, itemUnitCount, itemPrice);
+			mOnShoppingItemListFragmentListener.onClickItem(itemType, itemName, itemUnit, itemUnitCount, itemPrice);
 		}
 	}
 
 	private static class CustomInputShoppingItemCard extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 		private FrameLayout customInputShoppingItemCardLayout;
-		private ShoppingItemListFragment.OnShoppingItemListFragmentInteractionListener mOnShoppingItemListFragmentInteractionListener;
+		private ShoppingItemListFragment.OnShoppingItemListFragmentListener mOnShoppingItemListFragmentListener;
 		private int itemType;
 
 		public CustomInputShoppingItemCard(View cardView,
-										   ShoppingItemListFragment.OnShoppingItemListFragmentInteractionListener
-												   onShoppingItemListFragmentInteractionListener) {
+										   ShoppingItemListFragment.OnShoppingItemListFragmentListener
+												   onShoppingItemListFragmentListener) {
 			super(cardView);
 			customInputShoppingItemCardLayout = (FrameLayout) cardView.findViewById(R.id.FrameLayout_card_custom_input_shopping_item);
-			mOnShoppingItemListFragmentInteractionListener = onShoppingItemListFragmentInteractionListener;
+			mOnShoppingItemListFragmentListener = onShoppingItemListFragmentListener;
 		}
 
 		public void setItemType(int itemType) {
@@ -199,7 +199,7 @@ public class ShoppingItemListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 		@Override
 		public void onClick(View v) {
-			mOnShoppingItemListFragmentInteractionListener.onClickItem(itemType);
+			mOnShoppingItemListFragmentListener.onClickItem(itemType);
 		}
 	}
 
