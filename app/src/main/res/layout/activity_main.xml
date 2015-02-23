@@ -1,150 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
-             android:layout_height="match_parent">
+             android:layout_height="match_parent"
+             android:background="@color/mtplease_main_background_color">
 
     <FrameLayout
         android:id="@+id/body_background"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/mtplease_main_background_color"
+        >
+
+        <Button
+            android:id="@+id/btn_reconnect_server"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="100dp"
+            android:background="@drawable/shape_button_big"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="@string/reconnect_to_server"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"/>
     </FrameLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/min_header_height"
-        android:background="#FFF3FFE7"
+        android:background="@color/mtplease_main_background_color"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:gravity="center|bottom"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="?android:attr/actionBarSize"
-            android:layout_marginBottom="4dp"
-            android:text="@string/we"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:gravity="center">
-
-            <Button
-                android:id="@+id/btn_select_date"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true">
 
             <TextView
-                android:id="@+id/textView_postposition"
+                android:id="@+id/textView_we"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_toRightOf="@id/btn_select_date"
-                android:text="@string/postposition_1"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-            <Spinner
-                android:id="@+id/spinner_select_region"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="8dp"
-                android:layout_toRightOf="@id/textView_postposition"
-                android:prompt="@string/where"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:gravity="center">
-
-            <EditText
-                android:id="@+id/editText_input_number_people"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center_horizontal"
-                android:hint="@string/howMany"
-                android:imeOptions="actionDone"
-                android:inputType="numberDecimal"
-                android:maxLength="3"
-                android:ems="5"
-                android:elegantTextHeight="false"
-                android:singleLine="true"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_toRightOf="@id/editText_input_number_people"
-                android:text="@string/postposition_2"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/textView_with"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/go_MT"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_centerInParent="true"
-                android:layout_toRightOf="@+id/textView_with"
-                android:layout_marginLeft="8dp"/>
+                android:layout_marginBottom="8dp"
+                android:text="@string/we"
+                android:textColor="@color/mtplease_main_text_color"
+                android:textSize="20sp"
+                />
 
+            <RelativeLayout
+                android:id="@+id/layout_select_date_and_region"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView_we"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="8dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_select_date"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/shape_button_date"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:layout_marginRight="4dp"
+                    android:textColor="@color/mtplease_main_text_color"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:id="@+id/textView_postposition"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/btn_select_date"
+                    android:text="@string/postposition_1"
+                    android:textColor="@color/mtplease_main_text_color"
+                    android:textSize="20sp"/>
+
+                <Spinner
+                    android:id="@+id/spinner_select_region"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@id/textView_postposition"
+                    android:prompt="@string/where"
+                    android:spinnerMode="dropdown"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_select_number_of_people"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layout_select_date_and_region"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="16dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center">
+
+                <EditText
+                    android:id="@+id/editText_input_number_people"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:elegantTextHeight="false"
+                    android:ems="4"
+                    android:gravity="center_horizontal"
+                    android:hint="@string/howMany"
+                    android:imeOptions="actionDone"
+                    android:inputType="numberDecimal"
+                    android:maxLength="3"
+                    android:singleLine="true"
+                    android:textColor="@color/mtplease_main_text_color"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:id="@+id/textView_with"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="4dp"
+                    android:layout_toRightOf="@id/editText_input_number_people"
+                    android:text="@string/postposition_2"
+                    android:textColor="@color/mtplease_main_text_color"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:id="@+id/textView_go_MT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_toRightOf="@+id/textView_with"
+                    android:singleLine="false"
+                    android:text="@string/go_MT"
+                    android:textColor="@color/mtplease_main_text_color"
+                    android:textSize="20sp"/>
+
+            </RelativeLayout>
+
+            <ImageButton
+                android:id="@+id/btn_search_room"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layout_select_number_of_people"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/btn_mtplease"/>
         </RelativeLayout>
-
-        <ImageButton
-            android:id="@+id/btn_search_room"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="8dp"/>
 
         <TextView
             android:id="@+id/text_room_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"/>
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="12dp"
+            android:textColor="@color/mtplease_main_text_color"
+            android:textSize="20sp"/>
 
         <LinearLayout
+            android:id="@+id/layout_subtab"
             android:layout_width="match_parent"
             android:layout_height="@dimen/query_status_bar_height"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="bottom"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:clickable="true">
 
             <TextView
-                android:id="@+id/text_query_date"
+                android:id="@+id/textView_query"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:clickable="true"/>
-
-            <TextView
-                android:id="@+id/text_query_region"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:clickable="true"/>
-
-            <TextView
-                android:id="@+id/text_query_number_people"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"/>
+                android:layout_marginRight="4dp"
+                android:clickable="true"
+                android:textColor="@color/mtplease_main_text_color"/>
 
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/background_loading"
@@ -162,4 +207,19 @@
             android:layout_gravity="center"/>
 
     </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/screen_splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageButton"
+            android:background="@drawable/scrn_splash"
+            android:scaleType="centerCrop"/>
+    </FrameLayout>
+
 </FrameLayout>

@@ -24,7 +24,7 @@
             android:layout_height="200dp"
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
-            android:src="@drawable/img_sample"/>
+            android:src="@drawable/ic_launcher"/>
 
         <ProgressBar
             android:id="@+id/progressBar_thumbnailImage_room_plan"

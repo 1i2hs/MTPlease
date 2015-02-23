@@ -2,25 +2,39 @@ package com.owo.mtplease;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageRequest;
+import com.owo.mtplease.view.TypefaceLoader;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.net.URLEncoder;
+
 /**
  * Created by In-Ho on 2015-01-07.
  */
 public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 	private static final String TAG = "TimelinePostListRecyclerViewAdapter";
+	private static final String MTPLEASE_URL = "http://mtplease.herokuapp.com/";
 
 	private static final int TYPE_HEADER = 0;
 	private static final int TYPE_ITEM = 1;
@@ -28,9 +42,43 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	private Context mContext;
 	private JSONArray postArray;
 
+	private static String imageUrl;
+
 	public TimelinePostListRecyclerViewAdapter(Context context, JSONArray jsonArray) {
 		mContext = context;
 		postArray = jsonArray;
+
+		preLoadImage();
+	}
+
+	private void preLoadImage() {
+		for(int i = 0; i < postArray.length(); i++) {
+			try {
+				JSONObject timelinePostData = postArray.getJSONObject(i);
+
+				imageUrl = MTPLEASE_URL + "img/timeline/" + timelinePostData.optInt("timeline_id") + ".jpg";
+
+				Log.d(TAG, imageUrl);
+
+				if(!ServerCommunicationManager.getInstance(mContext).containsImage(imageUrl)) {
+					ImageRequest imageRequest = new ImageRequest(imageUrl, new Response.Listener<Bitmap>() {
+						@Override
+						public void onResponse(Bitmap response) {
+							ServerCommunicationManager.getInstance(mContext).putBitmap(imageUrl, response);
+						}
+					}, 0, 0, null, new Response.ErrorListener() {
+						@Override
+						public void onErrorResponse(VolleyError error) {
+							error.printStackTrace();
+						}
+					});
+
+					ServerCommunicationManager.getInstance(mContext).addToRequestQueue(imageRequest);
+				}
+			} catch(JSONException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
@@ -38,7 +86,7 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		if(viewType == TYPE_ITEM) {
 			//inflate your layout and pass it to view holder
 			View itemView = LayoutInflater.from(parent.getContext())
-					.inflate(R.layout.card_timeline, parent, false);
+						.inflate(R.layout.card_timeline, parent, false);
 
 			return new PostCard(itemView, mContext);
 		}
@@ -97,14 +145,22 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			postCard = (CardView) cardView;
 			postLayout = (LinearLayout) cardView.findViewById(R.id.LinearLayout_card_timeline);
 			postImage = (ImageView) cardView.findViewById(R.id.image_post);
+			postImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			postTitle = (TextView) cardView.findViewById(R.id.text_post_title);
+			postTitle.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
 			postDate = (TextView) cardView.findViewById(R.id.text_post_date);
+			postDate.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
 			mContext = context;
 		}
 
 		public void setItem(JSONObject postData) throws JSONException {
-			postImage.setImageResource(R.drawable.img_sample);
-			postImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+			imageUrl = MTPLEASE_URL + "img/timeline/" + postData.optInt("timeline_id") + ".jpg";
+
+			Log.d(TAG, imageUrl);
+
+			ServerCommunicationManager.getInstance(mContext).getImage(imageUrl,
+					ImageLoader.getImageListener(postImage, R.drawable.scrn_room_img_place_holder, R.drawable.scrn_room_img_place_holder));
+
 			postTitle.setText(postData.optString("timeline_title"));
 			postDate.setText(postData.optString("timeline_datetime"));
 			linkURL = postData.optString("timeline_link");
@@ -119,7 +175,8 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		public void onClick(View v) {
 			Uri webLink = Uri.parse(linkURL);
 			Intent webBrowseIntent = new Intent(Intent.ACTION_VIEW, webLink);
-			mContext.startActivity(webBrowseIntent);
+			//mContext.startActivity(webBrowseIntent);
+			v.getContext().startActivity(webBrowseIntent);
 		}
 	}
 

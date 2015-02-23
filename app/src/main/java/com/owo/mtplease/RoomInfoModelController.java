@@ -2,6 +2,7 @@ package com.owo.mtplease;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,6 +28,7 @@ public class RoomInfoModelController implements Parcelable {
 		}
 	};
 
+	private static final String TAG = "RoomInfoModelController";
 	private static final String MTPLEASE_URL = "http://mtplease.herokuapp.com/";
 
 	private LinkedList<String> roomRealImageURL;
@@ -46,175 +48,54 @@ public class RoomInfoModelController implements Parcelable {
 	private int weekends;
 	private int room_std_people;
 	private int room_max_people;
-	private int room_pyeong; // type check required
+	private String room_pyeong;
 	private int num_rooms;
 	private int num_toilets;
-	private int room_aircon; // type check required
+	private int room_aircon;
 	private String room_equipment;
 	private String room_description;
+	private int room_picture_flag;
+	private int num_images;
 	private String pen_region;
 	private String pen_name;
 	private String pen_homepage;
 	private String pen_lot_adr;
 	private String pen_road_adr;
-	private double pen_latitude;
-	private double pen_longitude;
 	private String pen_ceo;
 	private String pen_phone1;
 	private String pen_phone2;
+	private String pen_ceo_account;
 	private String pen_checkin;
 	private String pen_checkout;
-	private String pen_check_caution;
 	private int pen_pickup;
+	private String pen_pickup_cost;
+	private String pen_pickup_location;
 	private String pen_pickup_description;
 	private int pen_barbecue;
+	private String pen_barbecue_cost;
+	private String pen_barbecue_component;
+	private String pen_barbecue_location;
 	private String pen_barbecue_description;
 	private int pen_ground;
+	private String pen_ground_type;
 	private String pen_ground_description;
 	private int pen_valley;
+	private String pen_valley_distance;
+	private String pen_valley_depth;
 	private String pen_valley_description;
-	private String pen_etc_facility;
-	private String pen_caution; // need to be considered how to show later
-	private String pen_cost_caution;
+	private double pen_latitude;
+	private double pen_longitude;
 	private String pen_walk_station;
 	private String pen_walk_terminal;
-	private int pen_picture_flag; // type check required
 	private JSONArray cost_table;
 	private JSONArray period_table;
 	private int room_cost;
-
-	public RoomInfoModelController() {
-	}
-
-	public RoomInfoModelController(Parcel in) {
-		readFromParcel(in);
-	}
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(pen_id);
-		dest.writeString(room_name);
-		dest.writeString(pen_period_division);
-		dest.writeString(period_start);
-		dest.writeString(period_end);
-		dest.writeInt(weekdays);
-		dest.writeInt(friday);
-		dest.writeInt(weekends);
-		dest.writeInt(room_std_people);
-		dest.writeInt(room_max_people);
-		dest.writeInt(room_pyeong); // type check required
-		dest.writeInt(num_rooms);
-		dest.writeInt(num_toilets);
-		dest.writeInt(room_aircon); // type check required
-		dest.writeString(room_equipment);
-		dest.writeString(room_description);
-		dest.writeString(pen_region);
-		dest.writeString(pen_name);
-		dest.writeString(pen_homepage);
-		dest.writeString(pen_lot_adr);
-		dest.writeString(pen_road_adr);
-		dest.writeDouble(pen_latitude);
-		dest.writeDouble(pen_longitude);
-		dest.writeString(pen_ceo);
-		dest.writeString(pen_phone1);
-		dest.writeString(pen_phone2);
-		dest.writeString(pen_checkin);
-		dest.writeString(pen_checkout);
-		dest.writeString(pen_check_caution);
-		dest.writeInt(pen_pickup);
-		dest.writeString(pen_pickup_description);
-		dest.writeInt(pen_barbecue);
-		dest.writeString(pen_barbecue_description);
-		dest.writeInt(pen_ground);
-		dest.writeString(pen_ground_description);
-		dest.writeInt(pen_valley);
-		dest.writeString(pen_valley_description);
-		dest.writeString(pen_etc_facility);
-		dest.writeString(pen_caution); // need to be considered how to show later
-		dest.writeString(pen_cost_caution);
-		dest.writeString(pen_walk_station);
-		dest.writeString(pen_walk_terminal);
-		dest.writeInt(pen_picture_flag); // type check required
-		dest.writeString(cost_table.toString());
-		dest.writeString(period_table.toString());
-		dest.writeInt(room_cost);
-	}
-
-	public void readFromParcel(Parcel in) {
-		try {
-			pen_id = in.readInt();
-			room_name = in.readString();
-			pen_period_division = in.readString();
-			period_start = in.readString();
-			period_end = in.readString();
-			weekdays = in.readInt();
-			friday = in.readInt();
-			weekends = in.readInt();
-			room_std_people = in.readInt();
-			room_max_people = in.readInt();
-			room_pyeong = in.readInt(); // type check required
-			num_rooms = in.readInt();
-			num_toilets = in.readInt();
-			room_aircon = in.readInt(); // type check required
-			room_equipment = in.readString();
-			room_description = in.readString();
-			pen_region = in.readString();
-			pen_name = in.readString();
-			pen_homepage = in.readString();
-			pen_lot_adr = in.readString();
-			pen_road_adr = in.readString();
-			pen_latitude = in.readDouble();
-			pen_longitude = in.readDouble();
-			pen_ceo = in.readString();
-			pen_phone1 = in.readString();
-			pen_phone2 = in.readString();
-			pen_checkin = in.readString();
-			pen_checkout = in.readString();
-			pen_check_caution = in.readString();
-			pen_pickup = in.readInt();
-			pen_pickup_description = in.readString();
-			pen_barbecue = in.readInt();
-			pen_barbecue_description= in.readString();
-			pen_ground = in.readInt();
-			pen_ground_description = in.readString();
-			pen_valley = in.readInt();
-			pen_valley_description = in.readString();
-			pen_etc_facility = in.readString();
-			pen_caution = in.readString(); // need to be considered how to show later
-			pen_cost_caution = in.readString();
-			pen_walk_station = in.readString();
-			pen_walk_terminal = in.readString();
-			pen_picture_flag = in.readInt(); // type check required
-			cost_table = null;
-			cost_table = new JSONArray(in.readString());
-			period_table = null;
-			period_table = new JSONArray(in.readString());
-			room_cost = in.readInt();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public boolean isRoomRealThumbnailImageExists() {
-		return roomRealThumbnailImageExists;
-	}
-
-	public void setRoomRealThumbnailImageExists(boolean roomRealThumbnailImageExists) {
-		this.roomRealThumbnailImageExists = roomRealThumbnailImageExists;
-	}
-
-	public boolean isRoomRealImageExists() {
-		return roomRealImageExists;
-	}
-
-	public void setRoomRealImageExists(boolean roomRealImageExists) {
-		this.roomRealImageExists = roomRealImageExists;
-	}
+	private JSONArray facility;
+	private JSONArray service;
+	private JSONArray usage_caution;
+	private JSONArray reserve_caution;
+	private JSONArray refund_caution;
+	private String pen_description;
 
 	public int getPen_id() {
 		return pen_id;
@@ -296,11 +177,11 @@ public class RoomInfoModelController implements Parcelable {
 		this.room_max_people = room_max_people;
 	}
 
-	public int getRoom_pyeong() {
+	public String getRoom_pyeong() {
 		return room_pyeong;
 	}
 
-	public void setRoom_pyeong(int room_pyeong) {
+	public void setRoom_pyeong(String room_pyeong) {
 		this.room_pyeong = room_pyeong;
 	}
 
@@ -344,6 +225,22 @@ public class RoomInfoModelController implements Parcelable {
 		this.room_description = room_description;
 	}
 
+	public int getRoom_picture_flag() {
+		return room_picture_flag;
+	}
+
+	public void setRoom_picture_flag(int room_picture_flag) {
+		this.room_picture_flag = room_picture_flag;
+	}
+
+	public int getNum_images() {
+		return num_images;
+	}
+
+	public void setNum_images(int num_images) {
+		this.num_images = num_images;
+	}
+
 	public String getPen_region() {
 		return pen_region;
 	}
@@ -384,22 +281,6 @@ public class RoomInfoModelController implements Parcelable {
 		this.pen_road_adr = pen_road_adr;
 	}
 
-	public double getPen_latitude() {
-		return pen_latitude;
-	}
-
-	public void setPen_latitude(double pen_latitude) {
-		this.pen_latitude = pen_latitude;
-	}
-
-	public double getPen_longitude() {
-		return pen_longitude;
-	}
-
-	public void setPen_longitude(double pen_longitude) {
-		this.pen_longitude = pen_longitude;
-	}
-
 	public String getPen_ceo() {
 		return pen_ceo;
 	}
@@ -424,6 +305,14 @@ public class RoomInfoModelController implements Parcelable {
 		this.pen_phone2 = pen_phone2;
 	}
 
+	public String getPen_ceo_account() {
+		return pen_ceo_account;
+	}
+
+	public void setPen_ceo_account(String pen_ceo_account) {
+		this.pen_ceo_account = pen_ceo_account;
+	}
+
 	public String getPen_checkin() {
 		return pen_checkin;
 	}
@@ -440,20 +329,28 @@ public class RoomInfoModelController implements Parcelable {
 		this.pen_checkout = pen_checkout;
 	}
 
-	public String getPen_check_caution() {
-		return pen_check_caution;
-	}
-
-	public void setPen_check_caution(String pen_check_caution) {
-		this.pen_check_caution = pen_check_caution;
-	}
-
 	public int getPen_pickup() {
 		return pen_pickup;
 	}
 
 	public void setPen_pickup(int pen_pickup) {
 		this.pen_pickup = pen_pickup;
+	}
+
+	public String getPen_pickup_cost() {
+		return pen_pickup_cost;
+	}
+
+	public void setPen_pickup_cost(String pen_pickup_cost) {
+		this.pen_pickup_cost = pen_pickup_cost;
+	}
+
+	public String getPen_pickup_location() {
+		return pen_pickup_location;
+	}
+
+	public void setPen_pickup_location(String pen_pickup_location) {
+		this.pen_pickup_location = pen_pickup_location;
 	}
 
 	public String getPen_pickup_description() {
@@ -472,6 +369,30 @@ public class RoomInfoModelController implements Parcelable {
 		this.pen_barbecue = pen_barbecue;
 	}
 
+	public String getPen_barbecue_cost() {
+		return pen_barbecue_cost;
+	}
+
+	public void setPen_barbecue_cost(String pen_barbecue_cost) {
+		this.pen_barbecue_cost = pen_barbecue_cost;
+	}
+
+	public String getPen_barbecue_component() {
+		return pen_barbecue_component;
+	}
+
+	public void setPen_barbecue_component(String pen_barbecue_component) {
+		this.pen_barbecue_component = pen_barbecue_component;
+	}
+
+	public String getPen_barbecue_location() {
+		return pen_barbecue_location;
+	}
+
+	public void setPen_barbecue_location(String pen_barbecue_location) {
+		this.pen_barbecue_location = pen_barbecue_location;
+	}
+
 	public String getPen_barbecue_description() {
 		return pen_barbecue_description;
 	}
@@ -486,6 +407,14 @@ public class RoomInfoModelController implements Parcelable {
 
 	public void setPen_ground(int pen_ground) {
 		this.pen_ground = pen_ground;
+	}
+
+	public String getPen_ground_type() {
+		return pen_ground_type;
+	}
+
+	public void setPen_ground_type(String pen_ground_type) {
+		this.pen_ground_type = pen_ground_type;
 	}
 
 	public String getPen_ground_description() {
@@ -504,6 +433,22 @@ public class RoomInfoModelController implements Parcelable {
 		this.pen_valley = pen_valley;
 	}
 
+	public String getPen_valley_distance() {
+		return pen_valley_distance;
+	}
+
+	public void setPen_valley_distance(String pen_valley_distance) {
+		this.pen_valley_distance = pen_valley_distance;
+	}
+
+	public String getPen_valley_depth() {
+		return pen_valley_depth;
+	}
+
+	public void setPen_valley_depth(String pen_valley_depth) {
+		this.pen_valley_depth = pen_valley_depth;
+	}
+
 	public String getPen_valley_description() {
 		return pen_valley_description;
 	}
@@ -512,28 +457,20 @@ public class RoomInfoModelController implements Parcelable {
 		this.pen_valley_description = pen_valley_description;
 	}
 
-	public String getPen_etc_facility() {
-		return pen_etc_facility;
+	public double getPen_latitude() {
+		return pen_latitude;
 	}
 
-	public void setPen_etc_facility(String pen_etc_facility) {
-		this.pen_etc_facility = pen_etc_facility;
+	public void setPen_latitude(double pen_latitude) {
+		this.pen_latitude = pen_latitude;
 	}
 
-	public String getPen_caution() {
-		return pen_caution;
+	public double getPen_longitude() {
+		return pen_longitude;
 	}
 
-	public void setPen_caution(String pen_caution) {
-		this.pen_caution = pen_caution;
-	}
-
-	public String getPen_cost_caution() {
-		return pen_cost_caution;
-	}
-
-	public void setPen_cost_caution(String pen_cost_caution) {
-		this.pen_cost_caution = pen_cost_caution;
+	public void setPen_longitude(double pen_longitude) {
+		this.pen_longitude = pen_longitude;
 	}
 
 	public String getPen_walk_station() {
@@ -552,14 +489,6 @@ public class RoomInfoModelController implements Parcelable {
 		this.pen_walk_terminal = pen_walk_terminal;
 	}
 
-	public int getPen_picture_flag() {
-		return pen_picture_flag;
-	}
-
-	public void setPen_picture_flag(int pen_picture_flag) {
-		this.pen_picture_flag = pen_picture_flag;
-	}
-
 	public JSONArray getCost_table() {
 		return cost_table;
 	}
@@ -573,6 +502,7 @@ public class RoomInfoModelController implements Parcelable {
 	}
 
 	public void setPeriod_table(JSONArray period_table) {
+		Log.d(TAG, period_table.toString());
 		this.period_table = period_table;
 	}
 
@@ -583,6 +513,241 @@ public class RoomInfoModelController implements Parcelable {
 	public void setRoom_cost(int room_cost) {
 		this.room_cost = room_cost;
 	}
+
+	public JSONArray getFacility() {
+		return facility;
+	}
+
+	public void setFacility(JSONArray facility) {
+		this.facility = facility;
+	}
+
+	public JSONArray getService() {
+		return service;
+	}
+
+	public void setService(JSONArray service) {
+		this.service = service;
+	}
+
+	public JSONArray getUsage_caution() {
+		return usage_caution;
+	}
+
+	public void setUsage_caution(JSONArray usage_caution) {
+		this.usage_caution = usage_caution;
+	}
+
+	public JSONArray getReserve_caution() {
+		return reserve_caution;
+	}
+
+	public void setReserve_caution(JSONArray reserve_caution) {
+		this.reserve_caution = reserve_caution;
+	}
+
+	public JSONArray getRefund_caution() {
+		return refund_caution;
+	}
+
+	public void setRefund_caution(JSONArray refund_caution) {
+		this.refund_caution = refund_caution;
+	}
+
+	public String getPen_description() {
+		return pen_description;
+	}
+
+	public void setPen_description(String pen_description) {
+		this.pen_description = pen_description;
+	}
+
+	public RoomInfoModelController() {
+	}
+
+	public RoomInfoModelController(Parcel in) {
+		readFromParcel(in);
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(pen_id);
+		dest.writeString(room_name);
+		dest.writeString(pen_period_division);
+		dest.writeString(period_start);
+		dest.writeString(period_end);
+		dest.writeInt(weekdays);
+		dest.writeInt(friday);
+		dest.writeInt(weekends);
+		dest.writeInt(room_std_people);
+		dest.writeInt(room_max_people);
+		dest.writeString(room_pyeong);
+		dest.writeInt(num_rooms);
+		dest.writeInt(num_toilets);
+		dest.writeInt(room_aircon);
+		dest.writeString(room_equipment);
+		dest.writeString(room_description);
+		dest.writeInt(room_picture_flag);
+		dest.writeInt(num_images);
+		dest.writeString(pen_region);
+		dest.writeString(pen_name);
+		dest.writeString(pen_homepage);
+		dest.writeString(pen_lot_adr);
+		dest.writeString(pen_road_adr);
+		dest.writeString(pen_ceo);
+		dest.writeString(pen_phone1);
+		dest.writeString(pen_phone2);
+		dest.writeString(pen_ceo_account);
+		dest.writeString(pen_checkin);
+		dest.writeString(pen_checkout);
+		dest.writeInt(pen_pickup);
+		dest.writeString(pen_pickup_cost);
+		dest.writeString(pen_pickup_location);
+		dest.writeString(pen_pickup_description);
+		dest.writeInt(pen_barbecue);
+		dest.writeString(pen_barbecue_cost);
+		dest.writeString(pen_barbecue_component);
+		dest.writeString(pen_barbecue_location);
+		dest.writeString(pen_barbecue_description);
+		dest.writeInt(pen_ground);
+		dest.writeString(pen_ground_type);
+		dest.writeString(pen_ground_description);
+		dest.writeInt(pen_valley);
+		dest.writeString(pen_valley_distance);
+		dest.writeString(pen_valley_depth);
+		dest.writeString(pen_valley_description);
+		dest.writeDouble(pen_latitude);
+		dest.writeDouble(pen_longitude);
+		dest.writeString(pen_walk_station);
+		dest.writeString(pen_walk_terminal);
+		if(cost_table != null)
+			dest.writeString(cost_table.toString());
+		else
+			dest.writeString("");
+
+		Log.d(TAG, period_table.toString());
+		if(period_table != null)
+			dest.writeString(period_table.toString());
+		else
+			dest.writeString("");
+
+		dest.writeInt(room_cost);
+
+		if(facility != null)
+			dest.writeString(facility.toString());
+		else
+			dest.writeString("");
+
+		if(service != null)
+			dest.writeString(service.toString());
+		else
+			dest.writeString("");
+
+		if(usage_caution != null)
+			dest.writeString(usage_caution.toString());
+		else
+			dest.writeString("");
+
+		if(reserve_caution != null)
+			dest.writeString(reserve_caution.toString());
+		else
+			dest.writeString("");
+
+		if(refund_caution != null)
+			dest.writeString(refund_caution.toString());
+		else
+			dest.writeString("");
+
+		dest.writeString(pen_description);
+	}
+	public void readFromParcel(Parcel in) {
+		try {
+			pen_id = in.readInt();
+			room_name = in.readString();
+			pen_period_division  = in.readString();
+			period_start = in.readString();
+			period_end = in.readString();
+			weekdays = in.readInt();
+			friday = in.readInt();
+			weekends = in.readInt();
+			room_std_people = in.readInt();
+			room_max_people = in.readInt();
+			room_pyeong = in.readString();
+			num_rooms = in.readInt();
+			num_toilets = in.readInt();
+			room_aircon = in.readInt();
+			room_equipment = in.readString();
+			room_description = in.readString();
+			room_picture_flag = in.readInt();
+			num_images = in.readInt();
+			pen_region = in.readString();
+			pen_name = in.readString();
+			pen_homepage = in.readString();
+			pen_lot_adr = in.readString();
+			pen_road_adr = in.readString();
+			pen_ceo = in.readString();
+			pen_phone1 = in.readString();
+			pen_phone2 = in.readString();
+			pen_ceo_account = in.readString();
+			pen_checkin = in.readString();
+			pen_checkout = in.readString();
+			pen_pickup = in.readInt();
+			pen_pickup_cost = in.readString();
+			pen_pickup_location = in.readString();
+			pen_pickup_description = in.readString();
+			pen_barbecue = in.readInt();
+			pen_barbecue_cost = in.readString();
+			pen_barbecue_component = in.readString();
+			pen_barbecue_location = in.readString();
+			pen_barbecue_description = in.readString();
+			pen_ground = in.readInt();
+			pen_ground_type = in.readString();
+			pen_ground_description = in.readString();
+			pen_valley = in.readInt();
+			pen_valley_distance = in.readString();
+			pen_valley_depth = in.readString();
+			pen_valley_description = in.readString();
+			pen_latitude = in.readDouble();
+			pen_longitude = in.readDouble();
+			pen_walk_station = in.readString();
+			pen_walk_terminal = in.readString();
+			cost_table = new JSONArray(in.readString());
+			period_table = new JSONArray(in.readString());
+			Log.d(TAG, period_table.toString());
+			room_cost = in.readInt();
+			facility = new JSONArray(in.readString());
+			service = new JSONArray(in.readString());
+			usage_caution = new JSONArray(in.toString());
+			reserve_caution = new JSONArray(in.toString());
+			refund_caution = new JSONArray(in.toString());
+			pen_description = in.readString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public boolean isRoomRealThumbnailImageExists() {
+		return roomRealThumbnailImageExists;
+	}
+
+	public void setRoomRealThumbnailImageExists(boolean roomRealThumbnailImageExists) {
+		this.roomRealThumbnailImageExists = roomRealThumbnailImageExists;
+	}
+
+	public boolean isRoomRealImageExists() {
+		return roomRealImageExists;
+	}
+
+	public void setRoomRealImageExists(boolean roomRealImageExists) {
+		this.roomRealImageExists = roomRealImageExists;
+	}
+
+
 
 	public String getRoomThumbnailImageURL() {
 		String imageURL;

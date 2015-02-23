@@ -1,29 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="4dp"
+              android:layout_marginRight="4dp"
+              android:layout_marginTop="4dp"
+              android:gravity="center"
+              android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/btn_call"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="4dp"
+        android:layout_weight="1"
+        android:background="@drawable/shape_button_big"
+        android:text="@string/call_phone"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"/>
+
+    <Button
+        android:id="@+id/btn_website"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_weight="1"
+        android:background="@drawable/shape_button_big"
+        android:text="@string/go_website"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"/>
+</LinearLayout>
+
+    <!--
+<?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                    android:orientation="horizontal" android:layout_width="match_parent"
                                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                                    android:layout_margin="8dp"
-                                    card_view:cardCornerRadius="0dp"
-                                    android:layout_height="match_parent">
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="horizontal"
+                                    android:layout_marginLeft="4dp"
+                                    android:layout_marginRight="4dp"
+                                    card_view:cardCornerRadius="6dp"
+                                    android:background="@android:color/transparent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <Button
+            android:id="@+id/btn_call"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
             android:layout_weight="1"
+            android:background="@drawable/shape_button_big"
             android:text="@string/call_phone"
-            android:id="@+id/button_call"/>
+            android:textColor="@android:color/white"
+            android:textSize="16sp"/>
 
         <Button
+            android:id="@+id/btn_website"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
             android:layout_weight="1"
+            android:background="@drawable/shape_button_big"
             android:text="@string/go_website"
-            android:id="@+id/button_website"/>
+            android:textColor="@android:color/white"
+            android:textSize="16sp"/>
     </LinearLayout>
 
-</android.support.v7.widget.CardView>
+</android.support.v7.widget.CardView>-->

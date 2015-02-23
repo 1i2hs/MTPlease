@@ -2,7 +2,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="com.owo.mtplease.SignUpActivity">
+                tools:context="com.owo.mtplease.Activity.SignUpActivity">
 
     <com.owo.mtplease.view.SwippingDisabledViewPager
         android:id="@+id/swippingDisabledViewPager"

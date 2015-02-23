@@ -2,6 +2,8 @@ package com.owo.mtplease;
 
 import android.util.Log;
 
+import com.owo.mtplease.fragment.ShoppingItemListFragment;
+
 import org.json.JSONObject;
 
 import java.util.LinkedList;

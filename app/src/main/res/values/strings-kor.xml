@@ -2,10 +2,20 @@
 <resources>
 
     <!-- FOR GLOBAL USE-->
+    <string name="application_version">version 0.1.2 (beta)</string>
+    <string name="pref_app_ver">pref_app_ver</string>
     <string name="pref_user_id_key">pref_user_id</string>
     <string name="pref_user_password_key">pref_user_password</string>
     <string name="pref_auto_login_key">pref_auto_login_key</string>
     <string name="pref_withdrawal_id">pref_withdrawal_id</string>
+    <string name="pref_saved_cookie">pref_saved_cookie</string>
+    <string name="pref_first_use">pref_first_use</string>
+    <string name="reconnect_to_server">다시 연결</string>
+    <string name="version">앱 버전</string>
+    <string name="help">가이드</string>
+    <string name="terminate">종료</string>
+    <string name="mtplease_email_address">the.team.owo@gmail.com</string>
+    <string name="subject_mail">[엠티를 부탁해 문의사항]</string>
 
     <!-- For booting activity -->
     <string name="confirm_code_checked">인증코드가 확인되었습니다.</string>
@@ -36,7 +46,9 @@
         -->
     </string-array>
     <string name="howMany">몇</string>
-    <string name="postposition_2">이서</string>
+    <string name="postposition_2">명이서</string>
+    <string name="postposition_3">로</string>
+    <string name="postposition_4">으로</string>
     <string name="go_MT">엠티를 간다!</string>
     <string name="select_date">엠티 출발 날짜를 선택하세요</string>
     <string name="please_number_of_people_input">인원 수를 입력해주세요.</string>
@@ -54,6 +66,7 @@
     <string name="no_results">0개의 방</string>
     <string name="no_results_found">조건에 해당되는 방이 존재하지 않습니다.</string>
     <string name="telephone_inquiry">전화 문의</string>
+    <string name="fail_loading_room_info">방 정보를 읽어오는데 실패하였습니다.</string>
 
     <!-- For timeline postings -->
     <string name="notify_fail_loading_timeline">네트워크 문제로 인해 타임라인 읽어오기를 실패하였습니다.</string>
@@ -61,6 +74,20 @@
     <!-- For specific information page -->
     <string name="call_phone">전화 걸기</string>
     <string name="go_website">홈페이지</string>
+    <string name="option">옵션</string>
+    <string name="option_playground">운동장</string>
+    <string name="option_pickup">픽업</string>
+    <string name="option_barbecue">바베큐</string>
+    <string name="option_valley">계곡</string>
+    <string name="option_air_conditioner">에어컨</string>
+    <string name="route">찾아오는길</string>
+    <string name="look_map">지도 크게 보기</string>
+    <string name="road_address">도로명주소:</string>
+    <string name="parcel_address">지번주소:</string>
+    <string name="from_bus_terminal">버스터미널로부터</string>
+    <string name="from_train_station">전철역으로부터</string>
+    <string name="minute">분</string>
+    <string name="second">초</string>
     <string name="compare">비교하기</string>
     <string name="add_to_plan">계획표에 추가</string>
     <string name="added_to_compare">비교하기 항목에 추가 되었습니다.</string>
@@ -74,12 +101,41 @@
     <string name="weekdays">평일</string>
     <string name="friday">금요일</string>
     <string name="weekends">주말</string>
-    <string name="period_winter">기간</string>
+    <string name="period">기간</string>
     <string name="price_table">기간 별 가격표</string>
     <string name="period_table">기간표</string>
     <string name="input_basic_data">MT 계획 기본 정보를 입력해주세요</string>
     <string name="confirm">확인</string>
     <string name="cancel">취소</string>
+    <string name="type">종류</string>
+    <string name="description">사장님 말씀</string>
+    <string name="price">가격</string>
+    <string name="location">장소</string>
+    <string name="component">구성품</string>
+    <string name="depth">깊이</string>
+    <string name="distance">거리</string>
+    <string name="price_info">가격정보</string>
+    <string name="basic_info">기본정보</string>
+    <string name="checkin_time">입실시각</string>
+    <string name="checkout_time">퇴실시각</string>
+    <string name="number_of_rooms">방갯수</string>
+    <string name="number_of_toilets">화장실갯수</string>
+    <string name="std_number_of_people">기준인원</string>
+    <string name="max_number_of_people">최대인원</string>
+    <string name="structure_of_room">방구조</string>
+    <string name="size_of_room">방넓이</string>
+    <string name="ceo_info">대표자 정보</string>
+    <string name="ceo_name">성명</string>
+    <string name="ceo_account">계좌번호</string>
+    <string name="equipment">비품</string>
+    <string name="cautions">주의사항</string>
+    <string name="usage_of_room_related">객실이용관련</string>
+    <string name="reservation_related">예약관련</string>
+    <string name="refund_standard">환불기준</string>
+    <string name="facility_and_service">부대시설 및 서비스</string>
+    <string name="facility">부대시설</string>
+    <string name="service">서비스</string>
+    <string name="our_pension_is">우리 펜션은요...</string>
 
     <!-- For plan page -->
     <string name="when_question">언제?</string>

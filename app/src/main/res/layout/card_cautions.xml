@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                    android:orientation="horizontal" android:layout_width="match_parent"
+                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                    android:layout_margin="4dp"
+                                    card_view:cardCornerRadius="0dp"
+                                    android:layout_height="match_parent"
+                                    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/white">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="@color/mtplease_actionbar_color">
+        </FrameLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:measureWithLargestChild="false"
+            android:padding="@dimen/cardView_padding">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cautions"
+                android:id="@+id/textView_cautions"
+                android:layout_marginBottom="12dp"
+                android:textColor="@color/mtplease_main_text_color"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/usage_of_room_related"
+                android:id="@+id/textView_usage_room"
+                android:textColor="@color/mtplease_main_text_color"
+                android:textSize="20sp"
+                android:layout_marginBottom="12dp"/>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:id="@+id/layout_usage_room">
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@drawable/shape_cell_bottom_line"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reservation_related"
+                android:id="@+id/textView_reservation"
+                android:textColor="@color/mtplease_main_text_color"
+                android:textSize="20sp"
+                android:layout_marginBottom="12sp"/>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:id="@+id/layout_reservation"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@drawable/shape_cell_bottom_line"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/refund_standard"
+                android:id="@+id/textView_std_refund"
+                android:textColor="@color/mtplease_main_text_color"
+                android:textSize="20sp"
+                android:layout_marginBottom="12sp"/>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="*"
+                android:id="@+id/tableLayout_refund_std">
+
+            </TableLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_margin="4dp"
+                                    android:orientation="horizontal"
+                                    card_view:cardCornerRadius="0dp"
+                                    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="@color/mtplease_actionbar_color"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/cardView_padding">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/price_info"
+                android:id="@+id/textView_info_price"
+                android:textSize="20sp"
+                android:textColor="@color/mtplease_main_text_color"
+                android:layout_marginBottom="12dp"/>
+
+            <TableLayout
+                android:id="@+id/tablelayout_price_room"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="*"
+                android:layout_marginBottom="24dp">
+
+                <TableRow
+                    android:id="@+id/tableRow1_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/cell11_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        >
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/cell12_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/weekdays"
+                        android:textSize="16sp"
+                        android:textColor="@color/mtplease_main_text_color"
+                        android:background="@drawable/shape_background_cell"
+                        android:paddingBottom="@dimen/cell_vertical_padding"
+                        android:paddingTop="@dimen/cell_vertical_padding">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/cell13_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/friday"
+                        android:textColor="@color/mtplease_main_text_color"
+                        android:textSize="16sp"
+                        android:background="@drawable/shape_background_cell"
+                        android:paddingTop="@dimen/cell_vertical_padding"
+                        android:paddingBottom="@dimen/cell_vertical_padding">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/cell14_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/weekends"
+                        android:textSize="16sp"
+                        android:textColor="@color/mtplease_main_text_color"
+                        android:background="@drawable/shape_background_cell"
+                        android:paddingBottom="@dimen/cell_vertical_padding"
+                        android:paddingTop="@dimen/cell_vertical_padding">
+                    </TextView>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow2_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/cell21_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/off_season"
+                        android:textSize="16sp"
+                        android:textColor="@color/mtplease_main_text_color"
+                        android:background="@drawable/shape_background_cell"
+                        android:paddingTop="@dimen/cell_vertical_padding"
+                        android:paddingBottom="@dimen/cell_vertical_padding">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/cell22_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/cell_vertical_padding"
+                        android:paddingBottom="@dimen/cell_vertical_padding"
+                        android:text="-"
+                        android:textSize="14sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/cell23_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:background="@drawable/shape_background_cell"
+                        android:paddingTop="@dimen/cell_vertical_padding"
+                        android:paddingBottom="@dimen/cell_vertical_padding"
+                        android:text="-"
+                        android:textSize="14sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/cell24_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/cell_vertical_padding"
+                        android:paddingBottom="@dimen/cell_vertical_padding"
+                        android:text="-"
+                        android:textSize="14sp">
+                    </TextView>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow3_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/cell31_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+
+                        android:text="@string/semi_on_season"
+                        android:textColor="@color/mtplease_main_text_color"
+                        android:textSize="16sp"
+                        android:background="@drawable/shape_background_cell"
+                        android:paddingTop="@dimen/cell_vertical_padding"
+                        android:paddingBottom="@dimen/cell_vertical_padding">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/cell32_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/cell_vertical_padding"
+                        android:paddingBottom="@dimen/cell_vertical_padding"
+                        android:text="-"
+                        android:textSize="14sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/cell33_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:background="@drawable/shape_background_cell"
+                        android:paddingBottom="@dimen/cell_vertical_padding"
+                        android:paddingTop="@dimen/cell_vertical_padding"
+                        android:text="-"
+                        android:textSize="14sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/cell34_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/cell_vertical_padding"
+                        android:paddingBottom="@dimen/cell_vertical_padding"
+                        android:text="-"
+                        android:textSize="14sp">
+                    </TextView>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow4_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/cell41_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/on_season"
+                        android:textColor="@color/mtplease_main_text_color"
+                        android:textSize="16sp"
+                        android:background="@drawable/shape_background_cell"
+                        android:paddingTop="@dimen/cell_vertical_padding"
+                        android:paddingBottom="@dimen/cell_vertical_padding">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/cell42_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:paddingBottom="@dimen/cell_vertical_padding"
+                        android:paddingTop="@dimen/cell_vertical_padding"
+                        android:text="-"
+                        android:textSize="14sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/cell43_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:background="@drawable/shape_background_cell"
+                        android:paddingTop="@dimen/cell_vertical_padding"
+                        android:paddingBottom="@dimen/cell_vertical_padding"
+                        android:text="-"
+                        android:textSize="14sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/cell44_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/cell_vertical_padding"
+                        android:paddingBottom="@dimen/cell_vertical_padding"
+                        android:text="-"
+                        android:textSize="14sp">
+                    </TextView>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow5_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/cell51_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/extreme_on_season"
+                        android:textColor="@color/mtplease_main_text_color"
+                        android:textIsSelectable="false"
+                        android:textSize="16sp"
+                        android:background="@drawable/shape_background_cell"
+                        android:paddingTop="@dimen/cell_vertical_padding"
+                        android:paddingBottom="@dimen/cell_vertical_padding">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/cell52_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/cell_vertical_padding"
+                        android:paddingBottom="@dimen/cell_vertical_padding"
+                        android:text="-"
+                        android:textSize="14sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/cell53_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:background="@drawable/shape_background_cell"
+                        android:paddingTop="@dimen/cell_vertical_padding"
+                        android:paddingBottom="@dimen/cell_vertical_padding"
+                        android:text="-"
+                        android:textSize="14sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/cell54_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/cell_vertical_padding"
+                        android:paddingBottom="@dimen/cell_vertical_padding"
+                        android:text="-"
+                        android:textSize="14sp">
+                    </TextView>
+                </TableRow>
+
+            </TableLayout>
+
+            <TableLayout
+                android:id="@+id/tablelayout_period_room"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:stretchColumns="*">
+
+                <TableRow
+                    android:id="@+id/tableRow1_period"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/cell11_period"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"/>
+
+                    <TextView
+                        android:id="@+id/cell12_period"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textSize="16sp"
+                        android:textColor="@color/mtplease_main_text_color"
+                        android:background="@drawable/shape_background_cell"
+                        android:text="@string/period"
+                        android:paddingTop="@dimen/cell_vertical_padding"
+                        android:paddingBottom="@dimen/cell_vertical_padding"/>
+
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

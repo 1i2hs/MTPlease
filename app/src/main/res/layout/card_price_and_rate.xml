@@ -1,24 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                    android:orientation="horizontal" android:layout_width="match_parent"
                                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                                    android:layout_margin="8dp"
-                                    card_view:cardCornerRadius="0dp"
-                                    android:layout_height="match_parent">
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_margin="4dp"
+                                    android:background="@android:color/white"
+                                    android:orientation="horizontal"
+                                    card_view:cardCornerRadius="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="가격 정보, 평점(후기수)"/>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="@color/mtplease_actionbar_color"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/text_price_room"/>
+            android:clickable="true"
+            android:padding="@dimen/cardView_padding">
+
+            <TextView
+                android:id="@+id/text_price_room"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/mtplease_main_text_color"
+                android:textSize="20sp"/>
+
+        </RelativeLayout>
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

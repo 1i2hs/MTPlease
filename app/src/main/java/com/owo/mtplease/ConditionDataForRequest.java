@@ -59,8 +59,6 @@ public class ConditionDataForRequest {
 	}
 
 	public boolean isVariableSet() {
-
-		// ************************************************************string compare reminded!!
 		if (this.region != -1 && this.date != null && this.people != -1 && this.flag != -1) {
 			return true;
 		} else {

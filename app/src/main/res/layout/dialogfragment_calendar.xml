@@ -6,12 +6,46 @@
 
                 tools:context="com.owo.app.myapplication.CalendarDialogFragment">
 
-    <CalendarView
+    <!--<CalendarView
         android:id="@+id/calendarView"
         android:layout_width="400dp"
         android:layout_height="300dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"/>
+
+    <Button
+        android:id="@+id/button_date_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/calendarView"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        android:text="@string/confirm"
+        android:textColor="@android:color/black"/>-->
+
+    <RelativeLayout
+        android:id="@+id/layout_title_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/mtplease_actionbar_color"
+        android:paddingLeft="@dimen/cardView_padding">
+
+        <TextView
+            android:id="@+id/textView_title_dialog_calendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/select_date"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"/>
+
+    </RelativeLayout>
+
+    <com.squareup.timessquare.CalendarPickerView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_below="@+id/layout_title_dialog"/>
 
     <Button
         android:id="@+id/button_date_confirm"

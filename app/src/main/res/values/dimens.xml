@@ -3,8 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="negative_activity_horizontal_margin">-16dp</dimen>
-    <dimen name="negative_activity_vertical_margin">-16dp</dimen>
+    <dimen name="cardView_padding">16dp</dimen>
 
     <dimen name="header_height">240dp</dimen>
     <dimen name="min_header_height">280dp</dimen>
@@ -12,4 +11,6 @@
 
     <dimen name="shadow_width">10dp</dimen>
     <dimen name="slidingmenu_offset">40dp</dimen>
+
+    <dimen name="cell_vertical_padding">8dp</dimen>
 </resources>
