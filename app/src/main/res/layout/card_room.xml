@@ -26,7 +26,8 @@
                 android:layout_height="200dp"
                 android:layout_centerInParent="true"
                 android:adjustViewBounds="true"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                android:src="@drawable/scrn_room_img_place_holder"/>
 
             <ImageView
                 android:id="@+id/imageView_sticker_real"

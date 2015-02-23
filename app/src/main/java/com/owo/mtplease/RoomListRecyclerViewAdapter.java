@@ -19,6 +19,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.owo.mtplease.fragment.ResultFragment;
 import com.owo.mtplease.view.TypefaceLoader;
 import com.squareup.picasso.Picasso;
@@ -214,7 +216,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			roomLayout = (LinearLayout) cardView.findViewById(R.id.LinearLayout_card_room);
 			roomThumbnailImage = (ImageView) cardView.findViewById(R.id.imageView_thumbnail_room);
 			realPictureSticker = (ImageView) cardView.findViewById(R.id.imageView_sticker_real);
-
+			realPictureSticker.setAlpha(0.0F);
 			roomName = (TextView) cardView.findViewById(R.id.textView_name_room_card);
 			roomName.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
 			pensionName = (TextView) cardView.findViewById(R.id.textView_name_pension_card);
@@ -230,7 +232,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			roomPrice.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
 		}
 
-		public void setComponents(JSONObject roomData) throws UnsupportedEncodingException, JSONException {
+		public void setComponents(final JSONObject roomData) throws UnsupportedEncodingException, JSONException {
 
 			pen_id = roomData.optInt("pen_id");
 
@@ -242,8 +244,28 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
 			Log.i(TAG, imageUrl);
 
-			ServerCommunicationManager.getInstance(mContext).getImage(imageUrl,
-					ImageLoader.getImageListener(roomThumbnailImage, R.drawable.scrn_room_img_place_holder, R.drawable.scrn_room_img_error));
+			ServerCommunicationManager.getInstance(mContext).getImage(imageUrl, new ImageLoader.ImageListener() {
+				@Override
+				public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+					if(response.getBitmap() != null) {
+						roomThumbnailImage.setAlpha(0.0F);
+						roomThumbnailImage.setImageBitmap(response.getBitmap());
+						roomThumbnailImage.animate().alpha(1.0F);
+						if (roomData.optInt("room_picture_flag") == REAL_PICTURE_EXISTS) {
+							realPictureSticker.setImageResource(R.drawable.ic_real_picture_sticker);
+							realPictureSticker.animate().alpha(1.0F);
+						}
+					} else {
+						roomThumbnailImage.setImageResource(R.drawable.scrn_room_img_place_holder);
+					}
+				}
+
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					realPictureSticker.setAlpha(0.0F);
+					roomThumbnailImage.setImageResource(R.drawable.scrn_room_img_error);
+				}
+			});
 
 			this.room_name = roomData.optString("room_name");
 			roomName.setText(this.room_name);
@@ -277,10 +299,6 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 				roomPrice.setText(castRoomPriceToString(roomPriceInt));
 			}
 
-			if(roomData.optInt("room_picture_flag") == 1) {
-				realPictureSticker.setImageResource(R.drawable.ic_real_picture_sticker);
-			}
-
 			roomCard.setPreventCornerOverlap(false);
 		}
 
@@ -308,6 +326,13 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
 		@Override
 		public void onClick(View v) {
+			Tracker t = ((Analytics) mContext.getApplicationContext()).getTracker();
+			t.send(new HitBuilders.EventBuilder()
+					.setCategory("User Interaction")
+					.setAction("Room Card Clikced")
+					.setLabel("Pension Name: " + pen_name + " / Room Name: " + room_name)
+					.build());
+
 			try {
 				String specificRoomURL = MTPLEASE_URL +
 						"pension?pen_id="+ this.pen_id + "&date=" + mtDate + "&room_name="

@@ -75,4 +75,10 @@ public class ConditionDataForRequest {
 		}
 		return null;
 	}
+
+	public String getUserQueryString() {
+		String queryString = "Date: " + date + " / Region: "
+				+ region + " / Number of People: " + people;
+		return queryString;
+	}
 }

@@ -158,8 +158,23 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 			Log.d(TAG, imageUrl);
 
-			ServerCommunicationManager.getInstance(mContext).getImage(imageUrl,
-					ImageLoader.getImageListener(postImage, R.drawable.scrn_room_img_place_holder, R.drawable.scrn_room_img_place_holder));
+			ServerCommunicationManager.getInstance(mContext).getImage(imageUrl, new ImageLoader.ImageListener() {
+						@Override
+						public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+							if(response.getBitmap() != null) {
+								postImage.setAlpha(0.0F);
+								postImage.setImageBitmap(response.getBitmap());
+								postImage.animate().alpha(1.0F);
+							} else {
+								postImage.setImageResource(R.drawable.scrn_room_img_place_holder);
+							}
+						}
+
+						@Override
+						public void onErrorResponse(VolleyError error) {
+							postImage.setImageResource(R.drawable.scrn_room_img_error);
+						}
+					});
 
 			postTitle.setText(postData.optString("timeline_title"));
 			postDate.setText(postData.optString("timeline_datetime"));

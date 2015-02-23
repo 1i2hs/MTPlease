@@ -48,10 +48,13 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.kakao.APIErrorResult;
 import com.kakao.LogoutResponseCallback;
 import com.kakao.UserManagement;
+import com.owo.mtplease.Analytics;
 import com.owo.mtplease.ConditionDataForRequest;
 import com.owo.mtplease.ImageLoadingTask;
 import com.owo.mtplease.PlanModelController;
@@ -98,7 +101,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		GuideFragment.OnGuideFragmentListener {
 
 	// String for application version
-	private static final int APPLICATION_VERSION = 12;
+	private static final int APPLICATION_VERSION = 14;
 
 	// Flags and Strings
 	public static final int TIMELINE_FRAGMENT_VISIBLE = 1;
@@ -779,6 +782,13 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		roomSearchButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				String userQueryString = getUserInputData().getUserQueryString();
+				Tracker t = ((Analytics) getApplication()).getTracker();
+				t.send(new HitBuilders.EventBuilder()
+						.setCategory("User Interaction")
+						.setAction("Search Button Clicked")
+						.setLabel(userQueryString)
+						.build());
 				loadResultFragment();
 			}
 		});

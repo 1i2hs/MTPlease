@@ -289,6 +289,8 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private PictureCarouselAdapter roomImageCarouselAdapter;
 		private Context mContext;
 
+		private boolean isRoomImageCarouselVisible = false;
+
 		public RoomImageViewPagerCard(View cardView, Context context) {
 			super(cardView);
 			roomImageViewPager = (ViewPager) cardView.findViewById(R.id.view_pager_room_images);
@@ -303,67 +305,71 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		}
 
 		public void setRoomImages() {
-			final int numPicture = mRoomInfoModelController.getNum_images();
-			roomImageCarouselAdapter = new PictureCarouselAdapter(mContext, numPicture);
-			roomImageViewPager.setAdapter(roomImageCarouselAdapter);
-			roomImageViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-				@Override
-				public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-				}
-
-				@Override
-				public void onPageSelected(int position) {
-					View currentPictureIndicator = roomPictureIndicatorLinearLayout.getChildAt(position);
-					((ImageView) currentPictureIndicator).setImageResource(R.drawable.ic_indicator_selected);
-
-					if(position - 1 >= 0) {
-						View leftPictureIndicator = roomPictureIndicatorLinearLayout.getChildAt(position - 1);
-						((ImageView) leftPictureIndicator).setImageResource(R.drawable.ic_indicator_not_selected);
+			if (!isRoomImageCarouselVisible) {
+				final int numPicture = mRoomInfoModelController.getNum_images();
+				roomImageCarouselAdapter = new PictureCarouselAdapter(mContext, numPicture);
+				roomImageViewPager.setAdapter(roomImageCarouselAdapter);
+				roomImageViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+					@Override
+					public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 					}
 
-					if(position + 1 < numPicture) {
-						View leftPictureIndicator = roomPictureIndicatorLinearLayout.getChildAt(position + 1);
-						((ImageView) leftPictureIndicator).setImageResource(R.drawable.ic_indicator_not_selected);
+					@Override
+					public void onPageSelected(int position) {
+						View currentPictureIndicator = roomPictureIndicatorLinearLayout.getChildAt(position);
+						((ImageView) currentPictureIndicator).setImageResource(R.drawable.ic_indicator_selected);
+
+						if (position - 1 >= 0) {
+							View leftPictureIndicator = roomPictureIndicatorLinearLayout.getChildAt(position - 1);
+							((ImageView) leftPictureIndicator).setImageResource(R.drawable.ic_indicator_not_selected);
+						}
+
+						if (position + 1 < numPicture) {
+							View leftPictureIndicator = roomPictureIndicatorLinearLayout.getChildAt(position + 1);
+							((ImageView) leftPictureIndicator).setImageResource(R.drawable.ic_indicator_not_selected);
+						}
+
+						if (position == 0) {
+							prevPictureIndicator.setAlpha(0.0F);
+							nextPictureIndicator.setAlpha(1.0F);
+						} else if (position == numPicture - 1) {
+							prevPictureIndicator.setAlpha(1.0F);
+							nextPictureIndicator.setAlpha(0.0F);
+						} else {
+							prevPictureIndicator.setAlpha(1.0F);
+							nextPictureIndicator.setAlpha(1.0F);
+						}
+						prevPictureIndicator.animate().alpha(0);
+						nextPictureIndicator.animate().alpha(0);
 					}
 
-					if(position == 0) {
-						prevPictureIndicator.setAlpha(0.0F);
-						nextPictureIndicator.setAlpha(1.0F);
-					} else if(position == numPicture - 1) {
-						prevPictureIndicator.setAlpha(1.0F);
-						nextPictureIndicator.setAlpha(0.0F);
-					} else {
-						prevPictureIndicator.setAlpha(1.0F);
-						nextPictureIndicator.setAlpha(1.0F);
+					@Override
+					public void onPageScrollStateChanged(int state) {
+
 					}
-					prevPictureIndicator.animate().alpha(0);
-					nextPictureIndicator.animate().alpha(0);
+				});
+
+				for (int i = 0; i < numPicture; i++) {
+					ImageView pictureIndicator = new ImageView(mContext);
+					if (i == 0)
+						pictureIndicator.setImageResource(R.drawable.ic_indicator_selected);
+					else
+						pictureIndicator.setImageResource(R.drawable.ic_indicator_not_selected);
+
+					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+					params.setMargins(0, 0, convertDpToPx(4, mContext), 0);
+
+					pictureIndicator.setLayoutParams(params);
+
+					roomPictureIndicatorLinearLayout.addView(pictureIndicator);
 				}
-
-				@Override
-				public void onPageScrollStateChanged(int state) {
-
-				}
-			});
-
-			for(int i = 0; i < numPicture; i++) {
-				ImageView pictureIndicator = new ImageView(mContext);
-				if(i == 0)
-					pictureIndicator.setImageResource(R.drawable.ic_indicator_selected);
-				else
-					pictureIndicator.setImageResource(R.drawable.ic_indicator_not_selected);
-
-				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-				params.setMargins(0, 0, convertDpToPx(4, mContext), 0);
-
-				pictureIndicator.setLayoutParams(params);
-
-				roomPictureIndicatorLinearLayout.addView(pictureIndicator);
+				isRoomImageCarouselVisible = true;
 			}
 		}
 	}
 
 	private static class PictureCarouselAdapter extends PagerAdapter {
+		private ImageView roomImage;
 		private Context mContext;
 		private int pictureCount;
 
@@ -395,15 +401,35 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 				Log.d(TAG, imageUrl);
 
-				ImageView imageView = new ImageView(mContext);
+				roomImage = new ImageView(mContext);
+				roomImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+				roomImage.setImageResource(R.drawable.scrn_room_img_place_holder);
 
 				ServerCommunicationManager.getInstance(mContext).getImage(imageUrl,
-						ImageLoader.getImageListener(imageView, R.drawable.scrn_room_img_place_holder, R.drawable.scrn_room_img_error));
+						new ImageLoader.ImageListener() {
+							@Override
+							public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+								if(response.getBitmap() != null) {
+									roomImage.setAlpha(0.0F);
+									roomImage.setImageBitmap(response.getBitmap());
+									roomImage.animate().alpha(1.0F);
+								/*if(mRoomInfoModelController.getRoom_picture_flag() == REAL_PICTURE_EXISTS) {
+									roomImage.setImageResource(R.drawable.ic_real_picture_sticker);
+									roomImage.animate().alpha(1.0F);
+								}*/
+								} else {
+									roomImage.setImageResource(R.drawable.scrn_room_img_place_holder);
+								}
+							}
 
-				imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+							@Override
+							public void onErrorResponse(VolleyError error) {
+								roomImage.setImageResource(R.drawable.scrn_room_img_error);
+							}
+						});
 
-				container.addView(imageView, 0);
-				return imageView;
+				container.addView(roomImage, 0);
+				return roomImage;
 			} catch(UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
@@ -570,9 +596,8 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 					pensionDescriptionLinearLayout.addView(pensionDescriptionTextView);
 				}
+				isComponentsLoaded = true;
 			}
-
-			isComponentsLoaded = true;
 		}
 
 		public PensionNoticeCard(View cardView, Context context) {
@@ -937,7 +962,6 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-
 		}
 
 		private void setPeriodCell(TextView periodCell, int periodResId, String period) {
@@ -1162,8 +1186,8 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 						e.printStackTrace();
 					}
 				}
+				isComponentVisible = true;
 			}
-			isComponentVisible = true;
 		}
 
 		private TextView createCell() {
@@ -1277,8 +1301,8 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 						e.printStackTrace();
 					}
 				}
+				isComponentsLoaded = true;
 			}
-			isComponentsLoaded = true;
 		}
 
 		public CautionsCard(View cardView, Context context) {

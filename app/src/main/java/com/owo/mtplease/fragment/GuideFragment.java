@@ -58,10 +58,6 @@ public class GuideFragment extends Fragment {
 		if(mOnGuideFragmentListener != null)
 			mOnGuideFragmentListener.onCreateGuideFragmentView();
 
-		Tracker t = ((Analytics) getActivity().getApplication()).getTracker();
-		t.setScreenName("Guide Page");
-		t.send(new HitBuilders.AppViewBuilder().build());
-
 		return guideFragmentView;
 	}
 
@@ -70,6 +66,11 @@ public class GuideFragment extends Fragment {
 		super.onAttach(activity);
 		try {
 			mOnGuideFragmentListener = (OnGuideFragmentListener) activity;
+
+			Tracker t = ((Analytics) getActivity().getApplication()).getTracker();
+			t.setScreenName("Guide Page View");
+			t.send(new HitBuilders.AppViewBuilder().build());
+
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnGuideFragmentListener");

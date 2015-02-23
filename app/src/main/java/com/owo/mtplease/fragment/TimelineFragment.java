@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.owo.mtplease.Analytics;
 import com.owo.mtplease.R;
 import com.owo.mtplease.ScrollTabHolder;
 import com.owo.mtplease.TimelinePostListRecyclerViewAdapter;
@@ -125,9 +128,15 @@ public class TimelineFragment extends Fragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		Log.d(TAG, "onAttach()");
 		try {
 			mScrollTabHolder = (ScrollTabHolder) activity;
 			mTimelineFragmentListener = (OnTimelineFragmentListener) activity;
+
+			Tracker t = ((Analytics) getActivity().getApplication()).getTracker();
+			t.setScreenName("Timeline Page View");
+			t.send(new HitBuilders.AppViewBuilder().build());
+
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnFragmentInteractionListener");
@@ -137,6 +146,7 @@ public class TimelineFragment extends Fragment {
 	@Override
 	public void onDetach() {
 		super.onDetach();
+		Log.d(TAG, "onDetach()");
 		mTimelineFragmentListener = null;
 	}
 
