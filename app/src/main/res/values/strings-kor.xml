@@ -3,6 +3,8 @@
 
     <!-- FOR GLOBAL USE-->
     <string name="application_version">version 0.1.4 (beta)</string>
+    <string name="mtplease_url">http://mtplease.herokuapp.com/</string>
+    <string name="mtplease_url_temp">http://owo.naraeon.net/</string>
     <string name="pref_app_ver">pref_app_ver</string>
     <string name="pref_user_id_key">pref_user_id</string>
     <string name="pref_user_password_key">pref_user_password</string>

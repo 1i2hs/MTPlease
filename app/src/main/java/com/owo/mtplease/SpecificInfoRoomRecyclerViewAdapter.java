@@ -23,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -32,14 +31,10 @@ import com.android.volley.toolbox.ImageRequest;
 import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapView;
 import com.owo.mtplease.view.TypefaceLoader;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 /**
  * Created by In-Ho on 2015-01-14.
@@ -47,7 +42,6 @@ import java.net.URLEncoder;
 public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 	private static final String TAG = "SIR_RecyclerViewAdapter";
-	private static final String MTPLEASE_URL = "http://mtplease.herokuapp.com/";
 	private static final int REAL_PICTURE_DOESNT_EXISTS = 0;
 	private static final int REAL_PICTURE_EXISTS = 1;
 
@@ -94,34 +88,33 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 	private void preLoadImages() {
 		for(int i = 1; i <= mRoomInfoModelController.getNum_images(); i++) {
-			try {
-				imageUrl = MTPLEASE_URL + "img/pensions/" + mRoomInfoModelController.getPen_id() + "/"
-						+ URLEncoder.encode(mRoomInfoModelController.getRoom_name(), "utf-8").replaceAll("\\+", "%20");
+				/*imageUrl = mContext.getResources().getString(R.string.mtplease_url) + "img/pensions/" + mRoomInfoModelController.getPen_id() + "/"
+						+ URLEncoder.encode(mRoomInfoModelController.getRoom_name(), "utf-8").replaceAll("\\+", "%20");*/
 
-				if (mRoomInfoModelController.getRoom_picture_flag() == REAL_PICTURE_EXISTS)
-					imageUrl += "/real/" + i + ".JPG";
-				else
-					imageUrl += "/unreal/" + i + ".JPG";
+			imageUrl = mContext.getResources().getString(R.string.mtplease_url_temp) + "pensions/" + mRoomInfoModelController.getPen_id() + "/"
+					+ mRoomInfoModelController.getRoom_id();
 
-				Log.d(TAG, imageUrl);
+			if (mRoomInfoModelController.getRoom_picture_flag() == REAL_PICTURE_EXISTS)
+				imageUrl += "/real/" + i + ".JPG";
+			else
+				imageUrl += "/unreal/" + i + ".JPG";
 
-				if(!ServerCommunicationManager.getInstance(mContext).containsImage(imageUrl)) {
-					ImageRequest imageRequest = new ImageRequest(imageUrl, new Response.Listener<Bitmap>() {
-						@Override
-						public void onResponse(Bitmap response) {
-							ServerCommunicationManager.getInstance(mContext).putBitmap(imageUrl, response);
-						}
-					}, 0, 0, null, new Response.ErrorListener() {
-						@Override
-						public void onErrorResponse(VolleyError error) {
-							error.printStackTrace();
-						}
-					});
+			Log.d(TAG, imageUrl);
 
-					ServerCommunicationManager.getInstance(mContext).addToRequestQueue(imageRequest);
-				}
-			} catch(Exception e) {
-				e.printStackTrace();
+			if(!ServerCommunicationManager.getInstance(mContext).containsImage(imageUrl)) {
+				ImageRequest imageRequest = new ImageRequest(imageUrl, new Response.Listener<Bitmap>() {
+					@Override
+					public void onResponse(Bitmap response) {
+						ServerCommunicationManager.getInstance(mContext).putBitmap(imageUrl, response);
+					}
+				}, 0, 0, null, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						error.printStackTrace();
+					}
+				});
+
+				ServerCommunicationManager.getInstance(mContext).addToRequestQueue(imageRequest);
 			}
 		}
 	}
@@ -390,50 +383,49 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
-			try {
-				imageUrl = MTPLEASE_URL + "img/pensions/" + mRoomInfoModelController.getPen_id() + "/"
-						+ URLEncoder.encode(mRoomInfoModelController.getRoom_name(), "utf-8").replaceAll("\\+", "%20");
 
-				if (mRoomInfoModelController.getRoom_picture_flag() == REAL_PICTURE_EXISTS)
-					imageUrl += "/real/" + (position + 1) + ".JPG";
-				else
-					imageUrl += "/unreal/" + (position + 1) + ".JPG";
+				/*imageUrl = mContext.getResources().getString(R.string.mtplease_url) + "img/pensions/" + mRoomInfoModelController.getPen_id() + "/"
+						+ URLEncoder.encode(mRoomInfoModelController.getRoom_name(), "utf-8").replaceAll("\\+", "%20");*/
 
-				Log.d(TAG, imageUrl);
+			imageUrl = mContext.getResources().getString(R.string.mtplease_url_temp) + "pensions/" + mRoomInfoModelController.getPen_id() + "/"
+					+ mRoomInfoModelController.getRoom_id();
 
-				roomImage = new ImageView(mContext);
-				roomImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
-				roomImage.setImageResource(R.drawable.scrn_room_img_place_holder);
+			if (mRoomInfoModelController.getRoom_picture_flag() == REAL_PICTURE_EXISTS)
+				imageUrl += "/real/" + (position + 1) + ".JPG";
+			else
+				imageUrl += "/unreal/" + (position + 1) + ".JPG";
 
-				ServerCommunicationManager.getInstance(mContext).getImage(imageUrl,
-						new ImageLoader.ImageListener() {
-							@Override
-							public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-								if(response.getBitmap() != null) {
-									roomImage.setAlpha(0.0F);
-									roomImage.setImageBitmap(response.getBitmap());
-									roomImage.animate().alpha(1.0F);
+			Log.d(TAG, imageUrl);
+
+			roomImage = new ImageView(mContext);
+			roomImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+			roomImage.setImageResource(R.drawable.scrn_room_img_place_holder);
+
+			ServerCommunicationManager.getInstance(mContext).getImage(imageUrl,
+					new ImageLoader.ImageListener() {
+						@Override
+						public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+							if(response.getBitmap() != null) {
+								roomImage.setAlpha(0.0F);
+								roomImage.setImageBitmap(response.getBitmap());
+								roomImage.animate().alpha(1.0F);
 								/*if(mRoomInfoModelController.getRoom_picture_flag() == REAL_PICTURE_EXISTS) {
 									roomImage.setImageResource(R.drawable.ic_real_picture_sticker);
 									roomImage.animate().alpha(1.0F);
 								}*/
-								} else {
-									roomImage.setImageResource(R.drawable.scrn_room_img_place_holder);
-								}
+							} else {
+								roomImage.setImageResource(R.drawable.scrn_room_img_place_holder);
 							}
+						}
 
-							@Override
-							public void onErrorResponse(VolleyError error) {
-								roomImage.setImageResource(R.drawable.scrn_room_img_error);
-							}
-						});
+						@Override
+						public void onErrorResponse(VolleyError error) {
+							roomImage.setImageResource(R.drawable.scrn_room_img_error);
+						}
+					});
 
-				container.addView(roomImage, 0);
-				return roomImage;
-			} catch(UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-			return null;
+			container.addView(roomImage, 0);
+			return roomImage;
 		}
 
 		@Override

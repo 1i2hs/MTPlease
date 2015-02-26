@@ -13,20 +13,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.owo.mtplease.view.TypefaceLoader;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.URLEncoder;
 
 /**
  * Created by In-Ho on 2015-01-07.
@@ -34,7 +30,6 @@ import java.net.URLEncoder;
 public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 	private static final String TAG = "TimelinePostListRecyclerViewAdapter";
-	private static final String MTPLEASE_URL = "http://mtplease.herokuapp.com/";
 
 	private static final int TYPE_HEADER = 0;
 	private static final int TYPE_ITEM = 1;
@@ -56,7 +51,7 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			try {
 				JSONObject timelinePostData = postArray.getJSONObject(i);
 
-				imageUrl = MTPLEASE_URL + "img/timeline/" + timelinePostData.optInt("timeline_id") + ".jpg";
+				imageUrl = mContext.getResources().getString(R.string.mtplease_url) + "img/timeline/" + timelinePostData.optInt("timeline_id") + ".jpg";
 
 				Log.d(TAG, imageUrl);
 
@@ -154,7 +149,7 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		}
 
 		public void setItem(JSONObject postData) throws JSONException {
-			imageUrl = MTPLEASE_URL + "img/timeline/" + postData.optInt("timeline_id") + ".jpg";
+			imageUrl = mContext.getResources().getString(R.string.mtplease_url) + "img/timeline/" + postData.optInt("timeline_id") + ".jpg";
 
 			Log.d(TAG, imageUrl);
 

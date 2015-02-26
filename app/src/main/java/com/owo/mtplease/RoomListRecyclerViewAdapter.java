@@ -23,7 +23,6 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.owo.mtplease.fragment.ResultFragment;
 import com.owo.mtplease.view.TypefaceLoader;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +37,6 @@ import java.net.URLEncoder;
 public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 	private static final String TAG = "RoomListRecyclerViewAdapter";
-	private static final String MTPLEASE_URL = "http://mtplease.herokuapp.com/";
 
 	private static final int TYPE_HEADER = 0;
 	private static final int TYPE_ITEM = 1;
@@ -77,11 +75,15 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			try {
 				JSONObject roomBasicData = roomArray.getJSONObject(i);
 
-				imageUrl =  MTPLEASE_URL + "img/pensions/" + roomBasicData.optInt("pen_id")
-						+ "/" + URLEncoder.encode(roomBasicData.optString("room_name"), "utf-8").replaceAll("\\+","%20");
+				/*imageUrl =  mContext.getResources().getString(R.string.mtplease_url) + "img/pensions/" + roomBasicData.optInt("pen_id")
+						+ "/" + URLEncoder.encode(roomBasicData.optString("room_name"), "utf-8").replaceAll("\\+","%20");*/
 
-				if(Integer.parseInt(roomBasicData.optString("room_picture_flag")) == REAL_PICTURE_EXISTS)
+				imageUrl =  mContext.getResources().getString(R.string.mtplease_url_temp) + "pensions/" + roomBasicData.optInt("pen_id")
+						+ "/" + roomBasicData.optInt("room_id");
+
+				if(Integer.parseInt(roomBasicData.optString("room_picture_flag")) == REAL_PICTURE_EXISTS) {
 					imageUrl += "/real/1.JPG";
+				}
 				else
 					imageUrl += "/unreal/1.JPG";
 
@@ -138,8 +140,6 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 				JSONObject roomData = roomArray.getJSONObject(position - 1);
 				((RoomCard) holder).setComponents(roomData);
 				((RoomCard) holder).getLayout().setOnClickListener((RoomCard) holder);
-			} catch(UnsupportedEncodingException e) {
-				e.printStackTrace();
 			} catch(JSONException e) {
 				e.printStackTrace();
 			} catch(NullPointerException e) {
@@ -195,6 +195,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 		private ImageView valleyIcon;
 		private TextView roomPrice;
 		private int pen_id;
+		private int room_id;
 		private String room_name;
 		private String pen_name;
 		private Context mContext;
@@ -232,11 +233,16 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			roomPrice.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
 		}
 
-		public void setComponents(final JSONObject roomData) throws UnsupportedEncodingException, JSONException {
+		public void setComponents(final JSONObject roomData) throws JSONException {
 
 			pen_id = roomData.optInt("pen_id");
+			room_id = roomData.optInt("room_id");
 
-			imageUrl =  MTPLEASE_URL + "img/pensions/" + pen_id + "/" + URLEncoder.encode(roomData.optString("room_name"), "utf-8").replaceAll("\\+","%20");
+//			imageUrl = mContext.getResources().getString(R.string.mtplease_url) + "img/pensions/" + pen_id + "/" + URLEncoder.encode(roomData.optString("room_name"), "utf-8").replaceAll("\\+","%20");
+
+			imageUrl =  mContext.getResources().getString(R.string.mtplease_url_temp) + "pensions/" + pen_id
+					+ "/" + room_id;
+
 			if(Integer.parseInt(roomData.optString("room_picture_flag")) == REAL_PICTURE_EXISTS)
 				imageUrl += "/real/1.JPG";
 			else
@@ -334,7 +340,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 					.build());
 
 			try {
-				String specificRoomURL = MTPLEASE_URL +
+				String specificRoomURL = mContext.getResources().getString(R.string.mtplease_url) +
 						"pension?pen_id="+ this.pen_id + "&date=" + mtDate + "&room_name="
 						+ URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20");
 
@@ -450,6 +456,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 							roomInfoModelController.setWeekdays(roomInfoList.optInt("weekdays"));
 							roomInfoModelController.setFriday(roomInfoList.optInt("friday"));
 							roomInfoModelController.setWeekends(roomInfoList.optInt("weekends"));
+							roomInfoModelController.setRoom_id(roomInfoList.optInt("room_id"));
 							roomInfoModelController.setRoom_std_people(roomInfoList.optInt("room_std_people"));
 							roomInfoModelController.setRoom_max_people(roomInfoList.optInt("room_max_people"));
 							roomInfoModelController.setRoom_pyeong(roomInfoList.optString("room_pyeong"));

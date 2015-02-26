@@ -80,7 +80,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -119,13 +118,11 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	public static final int VERSION_PAGE_STATE = 5;
 	public static final int SHOPPINGITEMLIST_PAGE_STATE = 6;
 
-	//public static final int ACTIONBAR_BACKGROUND_COLOR = 0xFF38E4FF;
 	private static final int CONDITION_SEARCH_MODE = 1;
 	private static final int KEYWORD_SEARCH_MODE = 2;
 	private static final int NETWORK_CONNECTION_FAILED = -1;
 	private static final int TIMELINE = 1;
 	private static final int RESULT = 2;
-	private static final String MTPLEASE_URL = "http://mtplease.herokuapp.com/";
 	private static final int CALL_FROM_CONDITIONAL_QUERY = 1;
 	private static final int CALL_FROM_PLAN = 2;
 	private static final int CALL_FROM_ADD_ITEM_TO_PLAN_DIALOG = 3;
@@ -293,7 +290,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			// end of the configuration of the actionbar
 
 			// configure the SlidingMenu
-			//setSlidingMenu();
+			setSlidingMenu();
 			// end of the configuration of the SlidingMenu
 
 			// configure the QueryHeader
@@ -864,7 +861,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 		getRequest.setContext(this);*/
 
-		JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, MTPLEASE_URL, null, new Response.Listener<JSONObject>() {
+		JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, getResources().getString(R.string.mtplease_url), null, new Response.Listener<JSONObject>() {
 			@Override
 			public void onResponse(JSONObject response) {
 				splashScreenLayout.setVisibility(View.GONE);
@@ -1302,7 +1299,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	}
 
 	public ConditionDataForRequest getUserInputData() throws NumberFormatException{
-		ConditionDataForRequest conditionDataForRequest = new ConditionDataForRequest();
+		ConditionDataForRequest conditionDataForRequest = new ConditionDataForRequest(this);
 
 		String regionName = (String) regionSelectSpinner.getSelectedItem();
 
@@ -1395,7 +1392,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				findViewById(R.id.progressBar_thumbnailImage_room_plan);
 
 		new ImageLoadingTask(roomThumbnailImageView, roomThumbnailImageLoadingProgressBar).
-				execute(roomInfoModelController.getRoomThumbnailImageURL());
+				execute(roomInfoModelController.getRoomThumbnailImageURL(getResources().getString(R.string.mtplease_url)));
 		// end of getting and setting of the thumbnail image
 
 		// set a room name of the added room view

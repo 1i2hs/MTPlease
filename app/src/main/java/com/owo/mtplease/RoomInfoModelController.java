@@ -7,8 +7,6 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.LinkedList;
 
 /**
@@ -29,7 +27,6 @@ public class RoomInfoModelController implements Parcelable {
 	};
 
 	private static final String TAG = "RoomInfoModelController";
-	private static final String MTPLEASE_URL = "http://mtplease.herokuapp.com/";
 
 	private LinkedList<String> roomRealImageURL;
 	private LinkedList<String> roomUnrealImageURL;
@@ -46,6 +43,7 @@ public class RoomInfoModelController implements Parcelable {
 	private int weekdays;
 	private int friday;
 	private int weekends;
+	private int room_id;
 	private int room_std_people;
 	private int room_max_people;
 	private String room_pyeong;
@@ -151,6 +149,14 @@ public class RoomInfoModelController implements Parcelable {
 
 	public void setFriday(int friday) {
 		this.friday = friday;
+	}
+
+	public void setRoom_id(int room_id) {
+		this.room_id = room_id;
+	}
+
+	public int getRoom_id() {
+		return room_id;
 	}
 
 	public int getWeekends() {
@@ -584,6 +590,7 @@ public class RoomInfoModelController implements Parcelable {
 		dest.writeInt(weekdays);
 		dest.writeInt(friday);
 		dest.writeInt(weekends);
+		dest.writeInt(room_id);
 		dest.writeInt(room_std_people);
 		dest.writeInt(room_max_people);
 		dest.writeString(room_pyeong);
@@ -673,6 +680,7 @@ public class RoomInfoModelController implements Parcelable {
 			period_start = in.readString();
 			period_end = in.readString();
 			weekdays = in.readInt();
+			room_id = in.readInt();
 			friday = in.readInt();
 			weekends = in.readInt();
 			room_std_people = in.readInt();
@@ -749,63 +757,26 @@ public class RoomInfoModelController implements Parcelable {
 
 
 
-	public String getRoomThumbnailImageURL() {
+	public String getRoomThumbnailImageURL(String mtPleaseUrl) {
 		String imageURL;
 
-		try {
-			imageURL = MTPLEASE_URL + "img/pensions/" + this.pen_id + "/"
-					+ URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20")
-					+ "/real/thumbnail.png";
+		/*imageURL = mtPleaseUrl + "img/pensions/" + this.pen_id + "/"
+				+ URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20")
+				+ "/real/thumbnail.png";*/
 
-			return imageURL;
+		imageURL =  mtPleaseUrl + "pensions/" + this.pen_id
+				+ "/" + this.room_id + "/real/thumbnail.png";
+
+		return imageURL;
 			/*if(roomRealThumbnailImageExists) {
-				imageURL = MTPLEASE_URL + "img/pensions/" + this.pen_id + "/"
+				imageURL = mtPleaseUrl + "img/pensions/" + this.pen_id + "/"
 						+ URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20")
 						+ "/real/thumbnail.png";
 			}
 			else {
-				imageURL = MTPLEASE_URL + "img/pensions/" + this.pen_id + "/"
+				imageURL = mtPleaseUrl + "img/pensions/" + this.pen_id + "/"
 						+ URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20")
 						+ "/unreal/thumbnail.png";
 			}*/
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	public String getRealRoomImageURL() {
-		String imageURL;
-
-		try {
-			// have to concatenate image file name to the back of the URL
-			imageURL = MTPLEASE_URL + "img/pensions/" + this.pen_id + "/"
-					+ URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20")
-					+ "/real/";
-
-			return imageURL;
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	public String getUnRealRoomImageURL() {
-		String imageURL;
-
-		try {
-			// have to concatenate image file name to the back of the URL
-			imageURL = MTPLEASE_URL + "img/pensions/" + this.pen_id + "/"
-					+ URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20")
-					+ "/unreal/";
-
-			return imageURL;
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-
-		return null;
 	}
 }

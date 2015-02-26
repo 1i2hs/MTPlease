@@ -1,5 +1,7 @@
 package com.owo.mtplease;
 
+import android.content.Context;
+
 /**
  * Created by In-Ho on 2015-01-26.
  */
@@ -10,12 +12,14 @@ public class ConditionDataForRequest {
 	private String dateWrittenLang;
 	private int people;
 	private int flag;
+	private Context mContext;
 
-	public ConditionDataForRequest() {
+	public ConditionDataForRequest(Context context) {
 		this.region = -1;
 		this.date = null;
 		this.people = -1;
 		this.flag = -1;
+		this.mContext = context;
 	}
 
 	public int getFlag() {
@@ -68,7 +72,7 @@ public class ConditionDataForRequest {
 
 	public String makeHttpGetURL() {
 		if (isVariableSet()) {
-			String httpGetURL = "http://mtplease.herokuapp.com/" + "pensions" + "?region=" + region + "&date="
+			String httpGetURL = mContext.getResources().getString(R.string.mtplease_url) + "pensions" + "?region=" + region + "&date="
 					+ date + "&people=" + people + "&flag=1";
 
 			return httpGetURL;
