@@ -9,7 +9,7 @@
             android:title="알림 띄우기"
             android:defaultValue="false" />
     </PreferenceCategory>-->
-    <PreferenceCategory
+    <!--<PreferenceCategory
         android:title="@string/login_setting_category_title"
         android:key="pref_login_settings">
 
@@ -29,6 +29,11 @@
             android:summary="@string/withdrawal_id_summary"
             android:title="@string/withdrawal_id"/>
 
-    </PreferenceCategory>
+    </PreferenceCategory>-->
+
+    <Preference
+        android:key="@string/pref_app_ver"
+        android:title="@string/version"/>
+
 
 </PreferenceScreen>

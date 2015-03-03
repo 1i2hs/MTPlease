@@ -24,6 +24,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by In-Ho on 2015-01-07.
  */
@@ -129,7 +131,8 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	private static class PostCard extends RecyclerView.ViewHolder implements View.OnClickListener {
 		private CardView postCard;
 		private LinearLayout postLayout;
-		private ImageView postImage;
+		//private ImageView postImage;
+		private final WeakReference<ImageView> imageViewReference;
 		private TextView postTitle;
 		private TextView postDate;
 		private String linkURL = null;
@@ -139,8 +142,9 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			super(cardView);
 			postCard = (CardView) cardView;
 			postLayout = (LinearLayout) cardView.findViewById(R.id.LinearLayout_card_timeline);
-			postImage = (ImageView) cardView.findViewById(R.id.image_post);
-			postImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+			//postImage = (ImageView) cardView.findViewById(R.id.image_post);
+			//postImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+			imageViewReference = new WeakReference<ImageView>((ImageView) cardView.findViewById(R.id.image_post));
 			postTitle = (TextView) cardView.findViewById(R.id.text_post_title);
 			postTitle.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
 			postDate = (TextView) cardView.findViewById(R.id.text_post_date);
@@ -152,6 +156,8 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			imageUrl = mContext.getResources().getString(R.string.mtplease_url) + "img/timeline/" + postData.optInt("timeline_id") + ".jpg";
 
 			Log.d(TAG, imageUrl);
+
+			final ImageView postImage = imageViewReference.get();
 
 			ServerCommunicationManager.getInstance(mContext).getImage(imageUrl, new ImageLoader.ImageListener() {
 						@Override
@@ -185,7 +191,6 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		public void onClick(View v) {
 			Uri webLink = Uri.parse(linkURL);
 			Intent webBrowseIntent = new Intent(Intent.ACTION_VIEW, webLink);
-			//mContext.startActivity(webBrowseIntent);
 			v.getContext().startActivity(webBrowseIntent);
 		}
 	}

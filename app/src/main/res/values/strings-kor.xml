@@ -2,7 +2,7 @@
 <resources>
 
     <!-- FOR GLOBAL USE-->
-    <string name="application_version">version 0.1.4 (beta)</string>
+    <string name="application_version">version 0.1.6 (beta)</string>
     <string name="mtplease_url">http://mtplease.herokuapp.com/</string>
     <string name="mtplease_url_temp">http://owo.naraeon.net/</string>
     <string name="pref_app_ver">pref_app_ver</string>
@@ -74,7 +74,10 @@
     <string name="notify_fail_loading_timeline">네트워크 문제로 인해 타임라인 읽어오기를 실패하였습니다.</string>
 
     <!-- For specific information page -->
-    <string name="call_phone">전화 걸기</string>
+    <string name="call_phone">연락하기</string>
+    <string name="call_mtplease">엠부에게 전화하기</string>
+    <string name="call_mtplease_explanation">(대성리로 물품을 마트가격보다 싸게 배달해드려요)</string>
+    <string name="call_pension">펜션에 전화하기</string>
     <string name="go_website">홈페이지</string>
     <string name="option">옵션</string>
     <string name="option_playground">운동장</string>

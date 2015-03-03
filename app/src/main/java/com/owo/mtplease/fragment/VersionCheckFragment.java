@@ -75,6 +75,8 @@ public class VersionCheckFragment extends Fragment {
 		if(mOnVersionCheckFragmentListener != null)
 			mOnVersionCheckFragmentListener.onCreateVersionCheckFragmentView();
 
+		versionCheckFragemntView.setClickable(true);
+
 		return versionCheckFragemntView;
 	}
 

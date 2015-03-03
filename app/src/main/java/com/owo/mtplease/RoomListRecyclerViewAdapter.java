@@ -29,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
 
 /**
@@ -90,9 +91,11 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 				//Log.i(TAG, imageUrl);
 
 				if(!ServerCommunicationManager.getInstance(mContext).containsImage(imageUrl)) {
+					Log.d(TAG, imageUrl + "does not exist");
 					ImageRequest imageRequest = new ImageRequest(imageUrl, new Response.Listener<Bitmap>() {
 						@Override
 						public void onResponse(Bitmap response) {
+							Log.d(TAG, "Memory allocated: " + response.getAllocationByteCount());
 							ServerCommunicationManager.getInstance(mContext).putBitmap(imageUrl, response);
 						}
 					}, 0, 0, null, new Response.ErrorListener() {
@@ -182,7 +185,8 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 	private static class RoomCard extends RecyclerView.ViewHolder implements View.OnClickListener {
 		private CardView roomCard;
 		private LinearLayout roomLayout;
-		private ImageView roomThumbnailImage;
+		//private ImageView roomThumbnailImage;
+		private final WeakReference<ImageView> imageViewReference;
 		//private NetworkImageView roomThumbnailImage;
 		private ImageView realPictureSticker;
 		private TextView roomName;
@@ -215,7 +219,8 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			this.roomArray = roomArray;
 
 			roomLayout = (LinearLayout) cardView.findViewById(R.id.LinearLayout_card_room);
-			roomThumbnailImage = (ImageView) cardView.findViewById(R.id.imageView_thumbnail_room);
+//			roomThumbnailImage = (ImageView) cardView.findViewById(R.id.imageView_thumbnail_room);
+			imageViewReference = new WeakReference<ImageView>((ImageView) cardView.findViewById(R.id.imageView_thumbnail_room));
 			realPictureSticker = (ImageView) cardView.findViewById(R.id.imageView_sticker_real);
 			realPictureSticker.setAlpha(0.0F);
 			roomName = (TextView) cardView.findViewById(R.id.textView_name_room_card);
@@ -250,6 +255,8 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
 			Log.i(TAG, imageUrl);
 
+			final ImageView roomThumbnailImage = imageViewReference.get();
+
 			ServerCommunicationManager.getInstance(mContext).getImage(imageUrl, new ImageLoader.ImageListener() {
 				@Override
 				public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
@@ -280,7 +287,8 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			this.pen_name = roomData.optString("pen_name");
 			pensionName.setText(this.pen_name);
 
-			rangeNumberOfPeople.setText(roomData.optString("room_std_people") + " / " + roomData.optString("room_max_people"));
+			rangeNumberOfPeople.setText(roomData.optString("room_std_people") + "~" + roomData.optString("room_max_people")
+					+ mContext.getResources().getString(R.string.people_unit));
 
 			if(roomData.optInt("room_aircon") != 1)
 				airConditionerIcon.setImageResource(R.drawable.ic_no_air_conditioner);

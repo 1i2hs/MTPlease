@@ -20,6 +20,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -461,21 +462,96 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	}
 
 	private static class PhoneAndWebsiteButtonsCard extends RecyclerView.ViewHolder {
-		private Button phoneCallButton;
-		private Button websiteButton;
+		private Button contactButton;
+		private RelativeLayout callMtpleaseButton;
+		private TextView callMtpleaseButtonTextView;
+		private TextView callMtpleaseButtonSubTextView;
+		private Button callPensionButton;
+		private Button callMtpleaseSpaceButton;
+		private Button callPensionSpaceButton;
+		private Button kakaoTalkButton;
 
 		private Context mContext;
 
+		private boolean isContactButtonClicked = false;
+
 		public void setComponents() {
-			phoneCallButton.setOnClickListener(new View.OnClickListener() {
+			contactButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					/*if(!isContactButtonClicked) {
+						callMtpleaseSpaceButton.setVisibility(View.VISIBLE);
+						callMtpleaseSpaceButton.setClickable(false);
+						callPensionSpaceButton.setVisibility(View.VISIBLE);
+						callPensionSpaceButton.setClickable(false);
+						callMtpleaseButton.animate().setListener(null);
+						callPensionButton.animate().setListener(null);
+						callMtpleaseButton.setAlpha(0.0F);
+						callMtpleaseButton.setVisibility(View.VISIBLE);
+						callMtpleaseButton.animate().alpha(1.0F);
+						callPensionButton.setAlpha(0.0F);
+						callPensionButton.setVisibility(View.VISIBLE);
+						callPensionButton.animate().alpha(1.0F);
+						callPensionButton.animate().translationYBy(convertDpToPx(50 + 4, mContext));
+
+						isContactButtonClicked = true;
+					} else {
+						callMtpleaseButton.animate().alpha(0.0F).
+								setListener(new Animator.AnimatorListener() {
+									@Override
+									public void onAnimationStart(Animator animation) {
+
+									}
+
+									@Override
+									public void onAnimationEnd(Animator animation) {
+										callMtpleaseSpaceButton.setVisibility(View.GONE);
+										callMtpleaseButton.setVisibility(View.GONE);
+									}
+
+									@Override
+									public void onAnimationCancel(Animator animation) {
+
+									}
+
+									@Override
+									public void onAnimationRepeat(Animator animation) {
+
+									}
+								});
+
+						callPensionButton.animate().alpha(0.0F);
+						callPensionButton.animate().translationYBy(-(convertDpToPx(50 + 4, mContext))).
+								setListener(new Animator.AnimatorListener() {
+									@Override
+									public void onAnimationStart(Animator animation) {
+
+									}
+
+									@Override
+									public void onAnimationEnd(Animator animation) {
+										callPensionSpaceButton.setVisibility(View.GONE);
+										callPensionButton.setVisibility(View.GONE);
+									}
+
+									@Override
+									public void onAnimationCancel(Animator animation) {
+
+									}
+
+									@Override
+									public void onAnimationRepeat(Animator animation) {
+
+									}
+								});
+						isContactButtonClicked = false;
+					}*/
 					Uri phoneNumber = Uri.parse("tel:" + mRoomInfoModelController.getPen_phone1());
-					Intent phoneCallIntent = new Intent(Intent.ACTION_DIAL, phoneNumber);
-					mContext.startActivity(phoneCallIntent);
+					Intent contactIntent = new Intent(Intent.ACTION_DIAL, phoneNumber);
+					mContext.startActivity(contactIntent);
 				}
 			});
-			websiteButton.setOnClickListener(new View.OnClickListener() {
+			kakaoTalkButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					Uri webLink = Uri.parse(mRoomInfoModelController.getPen_homepage());
@@ -483,13 +559,31 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 					mContext.startActivity(webBrowseIntent);
 				}
 			});
+
+			/*callPensionButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Uri phoneNumber = Uri.parse("tel:" + mRoomInfoModelController.getPen_phone1());
+					Intent contactIntent = new Intent(Intent.ACTION_DIAL, phoneNumber);
+					mContext.startActivity(contactIntent);
+				}
+			});*/
 		}
 		public PhoneAndWebsiteButtonsCard(View cardView, Context context) {
 			super(cardView);
-			phoneCallButton = (Button) cardView.findViewById(R.id.btn_call);
-			phoneCallButton.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
-			websiteButton = (Button) cardView.findViewById(R.id.btn_website);
-			websiteButton.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			contactButton = (Button) cardView.findViewById(R.id.btn_call);
+			contactButton.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			callMtpleaseButton = (RelativeLayout) cardView.findViewById(R.id.btn_call_mtplease);
+			callMtpleaseButtonTextView = (TextView) cardView.findViewById(R.id.textView_call_mtplease);
+			callMtpleaseButtonTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			callMtpleaseButtonSubTextView = (TextView) cardView.findViewById(R.id.textView_call_mtplease_sub);
+			callMtpleaseButtonSubTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			callPensionButton = (Button) cardView.findViewById(R.id.btn_call_pension);
+			callPensionButton.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			callMtpleaseSpaceButton = (Button) cardView.findViewById(R.id.btn_space_call_mtplease);
+			callPensionSpaceButton = (Button) cardView.findViewById(R.id.btn_space_call_pension);
+			kakaoTalkButton = (Button) cardView.findViewById(R.id.btn_website);
+			kakaoTalkButton.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 
 			mContext = context;
 		}
@@ -527,13 +621,14 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			if(!mRoomInfoModelController.getRoom_description().equals("null"))
 				structureRoomTextView.setText(mContext.getResources().getString(R.string.structure_of_room) + "  " + mRoomInfoModelController.getRoom_description());
 			else
-				structureRoomTextView.setText("-");
+				structureRoomTextView.setText(mContext.getResources().getString(R.string.structure_of_room) + " - ");
 
 			if(!mRoomInfoModelController.getRoom_pyeong().equals("null"))
 				sizeRoomTextView.setText(mContext.getResources().getString(R.string.size_of_room) + "  " + mRoomInfoModelController.getRoom_pyeong());
 			else
-				sizeRoomTextView.setText("-");
+				sizeRoomTextView.setText(mContext.getResources().getString(R.string.size_of_room) + " - ");
 		}
+
 		public BasicInfoCard(View cardView, Context context) {
 			super(cardView);
 			basicInfoTitleTextView = (TextView) cardView.findViewById(R.id.textView_info_basic);
@@ -796,17 +891,19 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			mapWebView.loadUrl(pensionLocationURL);
 
 			if(!mRoomInfoModelController.getPen_walk_station().equals("null"))
-				walkFromStationTimeTextView.setText(changeTimeStringIntoKoreanTimeFormat(mRoomInfoModelController.getPen_walk_station()));
+//				walkFromStationTimeTextView.setText(changeTimeStringIntoKoreanTimeFormat(mRoomInfoModelController.getPen_walk_station()));
+				walkFromStationTimeTextView.setText(mRoomInfoModelController.getPen_walk_station());
 			else
 				walkFromStationTimeTextView.setText("-");
 
 			if(!mRoomInfoModelController.getPen_walk_terminal().equals("null"))
-				walkFromTerminalTimeTextView.setText(changeTimeStringIntoKoreanTimeFormat(mRoomInfoModelController.getPen_walk_terminal()));
+//				walkFromTerminalTimeTextView.setText(changeTimeStringIntoKoreanTimeFormat(mRoomInfoModelController.getPen_walk_terminal()));
+				walkFromTerminalTimeTextView.setText(mRoomInfoModelController.getPen_walk_terminal());
 			else
 				walkFromTerminalTimeTextView.setText("-");
 		}
 
-		private String changeTimeStringIntoKoreanTimeFormat(String timeString) {
+		/*private String changeTimeStringIntoKoreanTimeFormat(String timeString) {
 			String timeStringChanged = "";
 
 			Log.d(TAG, timeString);
@@ -823,7 +920,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 				}
 			}
 			return new StringBuffer(timeStringChanged).reverse().toString();
-		}
+		}*/
 
 		public AddressAndRouteAndMapCard(View cardView, Context context) {
 			super(cardView);
@@ -1163,8 +1260,10 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 								if (j == 0 && k == 0)
 									serviceCell.setText(serviceName);
 								else if (k == 1) {
-									if(!serviceStringList[j].equals("null"))
+									if(!serviceStringList[j].equals("null")) {
+										Log.d(TAG, serviceStringList[j]);
 										serviceCell.setText(serviceStringList[j]);
+									}
 									else
 										serviceCell.setText("-");
 								}

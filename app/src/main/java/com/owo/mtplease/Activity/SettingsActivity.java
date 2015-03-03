@@ -1,26 +1,23 @@
 package com.owo.mtplease.Activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.kakao.APIErrorResult;
-import com.kakao.UnlinkResponseCallback;
-import com.kakao.UserManagement;
 import com.owo.mtplease.R;
+import com.owo.mtplease.fragment.VersionCheckFragment;
 
 
-public class SettingsActivity extends ActionBarActivity {
+public class SettingsActivity extends ActionBarActivity implements VersionCheckFragment.OnVersionCheckFragmentListener {
+
+	private static final String TAG = "SettingsActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,10 +25,12 @@ public class SettingsActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_settings);
 		if (savedInstanceState == null) {
 
+			getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
 			getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.mtplease_actionbar_color)));
 
 			getFragmentManager().beginTransaction()
-					.replace(R.id.container, new SettingsFragment())
+					.replace(R.id.body_background, new SettingsFragment())
 					.commit();
 		}
 	}
@@ -61,8 +60,9 @@ public class SettingsActivity extends ActionBarActivity {
 
 	public static class SettingsFragment extends PreferenceFragment {
 
-		private Preference idWithdrawalPreference;
-		private CheckBoxPreference autoLoginPreference;
+		private Preference _versionCheckPreference;
+		private Preference _idWithdrawalPreference;
+		private CheckBoxPreference _autoLoginPreference;
 
 		public SettingsFragment() {
 		}
@@ -74,13 +74,13 @@ public class SettingsActivity extends ActionBarActivity {
 			addPreferencesFromResource(R.xml.pref_general);
 
 
-			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
 			/*autoLoginPreference = (CheckBoxPreference) findPreference(getResources().getString(R.string.pref_auto_login_key));
 			autoLoginPreference.setChecked(sharedPreferences.getBoolean(getResources().getString(R.string.pref_auto_login_key), false));
 */
 
-			idWithdrawalPreference = (Preference) findPreference(getResources().getString(R.string.pref_withdrawal_id));
+			/*idWithdrawalPreference = (Preference) findPreference(getResources().getString(R.string.pref_withdrawal_id));
 			idWithdrawalPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 				@Override
 				public boolean onPreferenceClick(final Preference preference) {
@@ -119,7 +119,28 @@ public class SettingsActivity extends ActionBarActivity {
 									}).show();
 					return true;
 				}
-			});
+			});*/
 		}
+	}
+
+	@Override
+	public void onCreateVersionCheckFragmentView() {
+		getSupportActionBar().hide();
+	}
+
+	@Override
+	public void onDestroyVersionCheckFragmentView() {
+		getSupportActionBar().show();
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		Log.d(TAG, "onKeyDonwn");
+		if(keyCode == KeyEvent.KEYCODE_BACK) {
+				Log.d(TAG, "onBackKeyPressed");
+				getSupportFragmentManager().popBackStackImmediate();
+				return false;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

@@ -14,11 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.owo.mtplease.Activity.MainActivity;
 import com.owo.mtplease.R;
 import com.owo.mtplease.RoomInfoModelController;
 import com.owo.mtplease.RoomListRecyclerViewAdapter;
 import com.owo.mtplease.ScrollTabHolder;
-import com.owo.mtplease.Activity.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,7 +72,6 @@ public class ResultFragment extends Fragment {
 	 * @param mtDate Parameter 1.
 	 * @return A new instance of fragment MainFragment.
 	 */
-	// TODO: Rename and change types and number of parameters
 	public static ResultFragment newInstance(String jsonString, String mtDate) {
 		ResultFragment fragment = new ResultFragment();
 		Bundle args = new Bundle();
@@ -145,7 +144,7 @@ public class ResultFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		Log.d(TAG, "ResultFragmentView created");
+//		Log.d(TAG, "ResultFragmentView created");
 		View resultView = inflater.inflate(R.layout.fragment_result, container, false);
 		mRecyclerView = (RecyclerView) resultView.findViewById(R.id.list_room);
 
@@ -179,19 +178,18 @@ public class ResultFragment extends Fragment {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		Log.d(TAG, "ResultFragmentView detached");
+//		Log.d(TAG, "ResultFragmentView detached");
 		mOnResultFragmentListener = null;
 	}
 
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		Log.d(TAG, "ResultFragmentView destroyed");
+//		Log.d(TAG, "ResultFragmentView destroyed");
 		mOnResultFragmentListener.onDestroyResultFragmentView();
 	}
 
 	public interface OnResultFragmentListener {
-		// TODO: Update argument type and name
 		public void onCreateResultFragmentView(boolean noResults, int numRoom);
 		public void onPreLoadSpecificInfoFragment();
 		public void onLoadSpecificInfoFragment(RoomInfoModelController roomInfoModelController, JSONArray roomArray);

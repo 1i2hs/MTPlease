@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -51,9 +50,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.kakao.APIErrorResult;
-import com.kakao.LogoutResponseCallback;
-import com.kakao.UserManagement;
 import com.owo.mtplease.Analytics;
 import com.owo.mtplease.ConditionDataForRequest;
 import com.owo.mtplease.ImageLoadingTask;
@@ -69,6 +65,7 @@ import com.owo.mtplease.fragment.ChangeItemNumberInPlanDialogFragment;
 import com.owo.mtplease.fragment.GuideFragment;
 import com.owo.mtplease.fragment.MyPageFragment;
 import com.owo.mtplease.fragment.ResultFragment;
+import com.owo.mtplease.fragment.SettingsFragment;
 import com.owo.mtplease.fragment.ShoppingItemListFragment;
 import com.owo.mtplease.fragment.SpecificInfoFragment;
 import com.owo.mtplease.fragment.TimelineFragment;
@@ -97,10 +94,11 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		MyPageFragment.OnMyPageFragmentListener,
 		UserInfoModificationFragment.OnUserInfoModificationFragmentListener,
 		VersionCheckFragment.OnVersionCheckFragmentListener,
-		GuideFragment.OnGuideFragmentListener {
+		GuideFragment.OnGuideFragmentListener,
+		SettingsFragment.OnSettingsFragmentListener {
 
 	// String for application version
-	private static final int APPLICATION_VERSION = 14;
+	private static final int APPLICATION_VERSION = 16;
 
 	// Flags and Strings
 	public static final int TIMELINE_FRAGMENT_VISIBLE = 1;
@@ -117,6 +115,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	public static final int GUIDE_PAGE_STATE = 4;
 	public static final int VERSION_PAGE_STATE = 5;
 	public static final int SHOPPINGITEMLIST_PAGE_STATE = 6;
+	public static final int SETTINGS_PAGE_STATE = 7;
 
 	private static final int CONDITION_SEARCH_MODE = 1;
 	private static final int KEYWORD_SEARCH_MODE = 2;
@@ -135,24 +134,25 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	// End of the flags and strings
 
 	// Fragments
-	private FragmentManager mFragmentManager;
-	private TimelineFragment mTimelineFragment = null;
-	private ResultFragment mResultFragment = null;
-	private VersionCheckFragment mVersionCheckFragment = null;
-	private GuideFragment mGuideFragment = null;
-	private SpecificInfoFragment mSpecificInfoFragment = null;
-	private ShoppingItemListFragment mShoppingItemListFragment = null;
+	private FragmentManager _fragmentManager;
+	private TimelineFragment _timelineFragment = null;
+	private ResultFragment _resultFragment = null;
+	private VersionCheckFragment _versionCheckFragment = null;
+	private GuideFragment _guideFragment = null;
+	private SpecificInfoFragment _specificInfoFragment = null;
+	private ShoppingItemListFragment _shoppingItemListFragment = null;
+	private SettingsFragment _settingsFragment = null;
 	// End of the fragments
 
 	// Graphical transitions
-	private AlphaForegroundColorSpan mAlphaForegroundColorSpan;
-	private SpannableString mSpannableStringAppTitle;
-	private SpannableString mSpannableStringVariable;
-	private ColorDrawable actionBarBackgroundColor;
-	private int mMinHeaderHeightForTimelineFragment;
-	private int mMinHeaderHeightForResultFragment;
-	private int mHeaderHeight;
-	private int mMinHeaderTranslation;
+	private AlphaForegroundColorSpan _alphaForegroundColorSpan;
+	private SpannableString _spannableStringAppTitle;
+	private SpannableString _spannableStringVariable;
+	private ColorDrawable _actionBarBackgroundColor;
+	private int _minHeaderHeightForTimelineFragment;
+	private int _minHeaderHeightForResultFragment;
+	private int _headerHeight;
+	private int _minHeaderTranslation;
 	// End of the Graphical transitions
 
 	// User Interface Views
@@ -214,12 +214,12 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	// End of User Interface Views
 
 	// Model
-	private PlanModelController mPlanModelController = null;
+	private PlanModelController _planModelController = null;
 	// End of Model
 
 	// Controller
-	private UndoToastController mUndoToastController;
-	private TextWatcher editTextWatcherForNumberOfPeopleSelectPlan = new TextWatcher() {
+	private UndoToastController _undoToastController;
+	private TextWatcher _editTextWatcherForNumberOfPeopleSelectPlan = new TextWatcher() {
 
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -249,14 +249,14 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 
 	// Others
-	private boolean isBackButtonPressed = false;
-	private Calendar calendar = Calendar.getInstance();
-	private String modifiedDate;
-	private ConditionDataForRequest mConditionDataForRequest = null;
-	private float clampValue;
-	private int searchMode;
-	private LinkedList<ConditionDataForRequest> conditionDataStack = null;
-	private static int currentPage = -1;
+	private boolean _isBackButtonPressed = false;
+	private Calendar _calendar = Calendar.getInstance();
+	private String _modifiedDate;
+	private ConditionDataForRequest _conditionDataForRequest = null;
+	private float _clampValue;
+	private int _searchMode;
+	private LinkedList<ConditionDataForRequest> _conditionDataStack = null;
+	private static int _currentPage = -1;
 	// End of others
 
 
@@ -271,10 +271,10 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 		if (savedInstanceState == null) {
 
-			mFragmentManager = getSupportFragmentManager();
-			int fragmentManagerBackStackSize = mFragmentManager.getBackStackEntryCount();
+			_fragmentManager = getSupportFragmentManager();
+			int fragmentManagerBackStackSize = _fragmentManager.getBackStackEntryCount();
 			for (int i = 0; i < fragmentManagerBackStackSize; i++) {
-				mFragmentManager.popBackStack();
+				_fragmentManager.popBackStack();
 			}
 
 			// configure font type of the activity
@@ -298,7 +298,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			// end of the configuration of QueryHeader
 
 			// configure the side menu buttons
-			//setSideMenuButtons();
+			setSideMenuButtons();
 			// end of the configuration of the side menu buttons
 
 			// configure the conditional query UIs
@@ -312,11 +312,11 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			reconnectServerButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if(currentPage == TIMELINE_PAGE_STATE) {
+					if(_currentPage == TIMELINE_PAGE_STATE) {
 						Log.d(TAG, "load timeline");
 						loadTimelineFragment();
 					}/*
-					else if(currentPage == RESULT_PAGE_STATE) {
+					else if(_currentPage == RESULT_PAGE_STATE) {
 						Log.d(TAG, "load result page");
 						loadResultFragment();
 					}*/
@@ -337,7 +337,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			// end of the configuration of the loading animation
 
 			// configure mode of the search
-			searchMode = CONDITION_SEARCH_MODE;
+			_searchMode = CONDITION_SEARCH_MODE;
 			// end of the configuration of the mode of the search
 
 			// set ServerCommunicationManager
@@ -354,8 +354,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		if(mTypeface == null)
 			mTypeface = TypefaceLoader.getInstance(getApplicationContext()).getTypeface();
 
-		if(conditionDataStack == null)
-			conditionDataStack = new LinkedList();
+		if(_conditionDataStack == null)
+			_conditionDataStack = new LinkedList();
 	}
 
 	private void setActionBar() {
@@ -372,10 +372,17 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		actionBarSubtitleTextView = (TextView) actionBarView.findViewById(R.id.textView_subtitle_actionBar);
 		actionBarSubtitleTextView.setTypeface(mTypeface);
 
-		mActionBar.setCustomView(actionBarView/*, params*/);
-
+		mActionBar.setCustomView(actionBarView);
 
 		changeActionBarStyle(getResources().getColor(R.color.mtplease_actionbar_color), getResources().getString(R.string.actionbar_title), null);
+
+		ImageView drawerImageButton = (ImageView) actionBarView.findViewById(R.id.imageView_icon_drawer);
+		drawerImageButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				doubleSideSlidingMenu.showMenu(true);
+			}
+		});
 
 		mActionBar.hide();
 	}
@@ -398,30 +405,30 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	private void setSlidingMenu() {
 		doubleSideSlidingMenu = new SlidingMenu(this);
 		doubleSideSlidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-		doubleSideSlidingMenu.setMode(SlidingMenu.LEFT_RIGHT);
+		doubleSideSlidingMenu.setMode(SlidingMenu.LEFT);
 		doubleSideSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
 		doubleSideSlidingMenu.setShadowWidthRes(R.dimen.shadow_width);
-		doubleSideSlidingMenu.setSecondaryShadowDrawable(R.drawable.shadow_right);
+//		doubleSideSlidingMenu.setSecondaryShadowDrawable(R.drawable.shadow_right);
 		doubleSideSlidingMenu.setShadowDrawable(R.drawable.shadow);
 		doubleSideSlidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
 		doubleSideSlidingMenu.setFadeDegree(0.70f);
 		doubleSideSlidingMenu.setMenu(R.layout.menu_side);
-		doubleSideSlidingMenu.setSecondaryMenu(R.layout.plan_side);
+//		doubleSideSlidingMenu.setSecondaryMenu(R.layout.plan_side);
 	}
 
 	private void setPlan() {
 
 		// instantiate mPlanModel to store plan data inside it.
-		mPlanModelController = new PlanModelController();
+		_planModelController = new PlanModelController();
 		// end of instantiation
 
 		// configure a custom toast controller
 		mUndoToastView = (LinearLayout) findViewById(R.id.layout_toast_plan);
-		mUndoToastController = new UndoToastController(mUndoToastView, this);
+		_undoToastController = new UndoToastController(mUndoToastView, this);
 		// end of configuration
 
 		dateSelectPlanButton = (Button) findViewById(R.id.btn_select_date_plan);
-		dateSelectPlanButton.setText(modifiedDate);
+		dateSelectPlanButton.setText(_modifiedDate);
 		dateSelectPlanButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -437,7 +444,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		regionSelectPlanButton.setAdapter(regionSpinnerPlanAdapter);
 
 		numberOfPeopleSelectPlanEditText = (EditText) findViewById(R.id.editText_number_people_plan);
-		numberOfPeopleSelectPlanEditText.addTextChangedListener(editTextWatcherForNumberOfPeopleSelectPlan);
+		numberOfPeopleSelectPlanEditText.addTextChangedListener(_editTextWatcherForNumberOfPeopleSelectPlan);
 		numberOfPeopleSelectPlanEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
@@ -523,17 +530,17 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		clearRoomPlanButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(mPlanModelController.getRoomDataCount() > 0) {
-					for(int roomIndex = 0; roomIndex < mPlanModelController.getRoomDataCount(); roomIndex++)
+				if(_planModelController.getRoomDataCount() > 0) {
+					for(int roomIndex = 0; roomIndex < _planModelController.getRoomDataCount(); roomIndex++)
 						planItemFadeOut(roomPlanLinearLayout.getChildAt(roomIndex));
 
 					for(int directInputRoomIndex = 0;
-						directInputRoomIndex < mPlanModelController.getDirectInputRoomDataCount(); directInputRoomIndex++)
+						directInputRoomIndex < _planModelController.getDirectInputRoomDataCount(); directInputRoomIndex++)
 						planItemFadeOut(directInputRoomPlanLinearLayout.getChildAt(directInputRoomIndex));
 
-					/*mUndoToastController.showUndoBar(getResources().getString(R.string.added_rooms_cleared),
+					/*_undoToastController.showUndoBar(getResources().getString(R.string.added_rooms_cleared),
 							UndoToastController.CLEAR_ADDED_ROOMS_CASE);*/
-					mUndoToastController.showUndoBar(getResources().getString(R.string.added_rooms_cleared),
+					_undoToastController.showUndoBar(getResources().getString(R.string.added_rooms_cleared),
 							UndoToastController.CLEAR_ADDED_ROOMS_CASE, -1);
 				}
 			}
@@ -556,13 +563,13 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		clearMeatPlanButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(mPlanModelController.getItemDataCount(ShoppingItemListFragment.MEAT_ITEM) > 0) {
+				if(_planModelController.getItemDataCount(ShoppingItemListFragment.MEAT_ITEM) > 0) {
 					for(int meatIndex = 0;
-						meatIndex < mPlanModelController.getItemDataCount(ShoppingItemListFragment.MEAT_ITEM);
+						meatIndex < _planModelController.getItemDataCount(ShoppingItemListFragment.MEAT_ITEM);
 						meatIndex++)
 						planItemFadeOut(meatPlanLinearLayout.getChildAt(meatIndex));
 
-					mUndoToastController.showUndoBar(getResources().getString(R.string.added_meats_cleared),
+					_undoToastController.showUndoBar(getResources().getString(R.string.added_meats_cleared),
 							UndoToastController.CLEAR_ADDED_MEATS_CASE, -1);
 				}
 			}
@@ -585,13 +592,13 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		clearAlcoholPlanButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(mPlanModelController.getItemDataCount(ShoppingItemListFragment.ALCOHOL_ITEM) > 0) {
+				if(_planModelController.getItemDataCount(ShoppingItemListFragment.ALCOHOL_ITEM) > 0) {
 					for(int alcoholIndex = 0;
-						alcoholIndex < mPlanModelController.getItemDataCount(ShoppingItemListFragment.ALCOHOL_ITEM);
+						alcoholIndex < _planModelController.getItemDataCount(ShoppingItemListFragment.ALCOHOL_ITEM);
 						alcoholIndex++)
 						planItemFadeOut(alcoholPlanLinearLayout.getChildAt(alcoholIndex));
 
-					mUndoToastController.showUndoBar(getResources().getString(R.string.added_alcohols_cleared),
+					_undoToastController.showUndoBar(getResources().getString(R.string.added_alcohols_cleared),
 							UndoToastController.CLEAR_ADDED_ALCOHOLS_CASE, -1);
 				}
 			}
@@ -614,13 +621,13 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		clearOthersPlanButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(mPlanModelController.getItemDataCount(ShoppingItemListFragment.OTHERS_ITEM) > 0) {
+				if(_planModelController.getItemDataCount(ShoppingItemListFragment.OTHERS_ITEM) > 0) {
 					for(int othersIndex = 0;
-						othersIndex < mPlanModelController.getItemDataCount(ShoppingItemListFragment.OTHERS_ITEM);
+						othersIndex < _planModelController.getItemDataCount(ShoppingItemListFragment.OTHERS_ITEM);
 						othersIndex++)
 						planItemFadeOut(othersPlanLinearLayout.getChildAt(othersIndex));
 
-					mUndoToastController.showUndoBar(getResources().getString(R.string.added_others_cleared),
+					_undoToastController.showUndoBar(getResources().getString(R.string.added_others_cleared),
 							UndoToastController.CLEAR_ADDED_OTHERS_CASE, -1);
 				}
 			}
@@ -632,22 +639,22 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	private void showShoppingItemList(int stringResId, int shoppingItemType) {
 		Toast.makeText(this, stringResId, Toast.LENGTH_SHORT).show();
-		if(mShoppingItemListFragment == null) {
+		if(_shoppingItemListFragment == null) {
 			ShoppingItemListFragment shoppingItemListFragment = ShoppingItemListFragment.newInstance(shoppingItemType);
 			// commit the ShoppingItemListFragment to the current view
 			beginFragmentTransaction(shoppingItemListFragment, R.id.body_background);
 			// end of the comission
 		} else {
-			mShoppingItemListFragment.switchRecyclerViewAdpater(shoppingItemType);
+			_shoppingItemListFragment.switchRecyclerViewAdpater(shoppingItemType);
 		}
 		doubleSideSlidingMenu.toggle();
 	}
 
 	/*private void setAutoCompleteBasicInfoPlan() {
-		mConditionDataForRequest = getUserInputData();
-		dateSelectPlanButton.setText(mConditionDataForRequest.getDateWrittenLang());
-		regionSelectPlanButton.setSelection(mConditionDataForRequest.getRegion() - 1);
-		numberOfPeopleSelectPlanEditText.setText(String.valueOf(mConditionDataForRequest.getPeople()));
+		_conditionDataForRequest = getUserInputData();
+		dateSelectPlanButton.setText(_conditionDataForRequest.getDateWrittenLang());
+		regionSelectPlanButton.setSelection(_conditionDataForRequest.getRegion() - 1);
+		numberOfPeopleSelectPlanEditText.setText(String.valueOf(_conditionDataForRequest.getPeople()));
 	}
 
 	private void setAutoCompleteBasicInfoPlan(String mtDate, int regionOfMT, int numberOfPeople, int sexRatioProgress) {
@@ -658,12 +665,12 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	}*/
 
 	private void setQueryHeader() {
-		mMinHeaderHeightForTimelineFragment = getResources().getDimensionPixelSize(R.dimen.min_header_height);
-		mMinHeaderHeightForResultFragment = getResources().getDimensionPixelOffset(R.dimen.header_height);
-		mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.header_height);
+		_minHeaderHeightForTimelineFragment = getResources().getDimensionPixelSize(R.dimen.min_header_height);
+		_minHeaderHeightForResultFragment = getResources().getDimensionPixelOffset(R.dimen.header_height);
+		_headerHeight = getResources().getDimensionPixelSize(R.dimen.header_height);
 		mHeader = findViewById(R.id.header);
-		mSpannableStringAppTitle = new SpannableString(getString(R.string.actionbar_title));
-		mAlphaForegroundColorSpan = new AlphaForegroundColorSpan(0xffffffff);
+		_spannableStringAppTitle = new SpannableString(getString(R.string.actionbar_title));
+		_alphaForegroundColorSpan = new AlphaForegroundColorSpan(0xffffffff);
 	}
 
 	private void setSideMenuButtons() {
@@ -671,7 +678,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		homeButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				loadTimelineFragment();
+				doubleSideSlidingMenu.toggle();
 			}
 		});
 
@@ -681,10 +689,10 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		mypageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MyPageFragment myPageFragment = MyPageFragment.newInstance();
+				/*MyPageFragment myPageFragment = MyPageFragment.newInstance();
 				beginFragmentTransaction(myPageFragment, R.id.body_background);
 
-				doubleSideSlidingMenu.toggle();
+				doubleSideSlidingMenu.toggle();*/
 			}
 		});
 
@@ -692,8 +700,10 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		settingButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent settingsIntent = new Intent(v.getContext(), SettingsActivity.class);
-				startActivity(settingsIntent);
+				SettingsFragment settingsFragment = SettingsFragment.newInstance();
+				beginFragmentTransaction(settingsFragment, R.id.body_background);
+
+				doubleSideSlidingMenu.toggle();
 			}
 		});
 
@@ -701,11 +711,14 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		helpButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				GuideFragment guideFragment = GuideFragment.newInstance();
+				beginFragmentTransaction(guideFragment, R.id.body_background);
 
+				doubleSideSlidingMenu.toggle();
 			}
 		});
 
-		logoutButton = (Button) findViewById(R.id.btn_menu_logout);
+		/*logoutButton = (Button) findViewById(R.id.btn_menu_logout);
 		logoutButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -726,7 +739,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 					}
 				});
 			}
-		});
+		});*/
 	}
 
 	private void setConditionalQueryInput() {
@@ -744,9 +757,9 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		goMTTextView.setTypeface(mTypeface);
 
 		dateSelectButton = (Button) findViewById(R.id.btn_select_date);
-		modifiedDate = calendar.get(Calendar.YEAR) + "년 " + (calendar.get(Calendar.MONTH) + 1)
-				+ "월 " + calendar.get(Calendar.DATE) + "일";
-		dateSelectButton.setText(modifiedDate);
+		_modifiedDate = _calendar.get(Calendar.YEAR) + "년 " + (_calendar.get(Calendar.MONTH) + 1)
+				+ "월 " + _calendar.get(Calendar.DATE) + "일";
+		dateSelectButton.setText(_modifiedDate);
 		dateSelectButton.setTypeface(mTypeface);
 		dateSelectButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -779,13 +792,6 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		roomSearchButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String userQueryString = getUserInputData().getUserQueryString();
-				Tracker t = ((Analytics) getApplication()).getTracker();
-				t.send(new HitBuilders.EventBuilder()
-						.setCategory("User Interaction")
-						.setAction("Search Button Clicked")
-						.setLabel(userQueryString)
-						.build());
 				loadResultFragment();
 			}
 		});
@@ -818,7 +824,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	}
 
 	private void loadTimelineFragment() {
-		// get timeline data from the server and create the mTimelineFragment
+		// get timeline data from the server and create the _timelineFragment
 		/*MTPleaseJsonObjectRequest getRequest = new MTPleaseJsonObjectRequest(Request.Method.GET, MTPLEASE_URL, null, new Response.Listener<JSONObject>() {
 			@Override
 			public void onResponse(JSONObject response) {
@@ -826,7 +832,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				mActionBar.show();
 
 				endLoadingProgress();
-				// create the mTimelineFragment with the Interface ScrollTabHolder
+				// create the _timelineFragment with the Interface ScrollTabHolder
 				try {
 					Log.i(TAG, response.toString());
 					// redundant to code. needs to be refactored
@@ -835,7 +841,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 					roomCountText.setText(mJSONObject.getString("roomCount") + "개의 방");
 
 					TimelineFragment timelineFragment = TimelineFragment.newInstance(mJSONObject.toString());
-					// end of creation of the mTimelineFragment
+					// end of creation of the _timelineFragment
 
 					// commit the timelineFragment to the current view
 					beginFragmentTransaction(timelineFragment, R.id.body_background);
@@ -861,6 +867,12 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 		getRequest.setContext(this);*/
 
+		// clearing the backstack entries
+		int fragmentManagerBackStackSize = _fragmentManager.getBackStackEntryCount();
+		for (int i = 0; i < fragmentManagerBackStackSize; i++) {
+			_fragmentManager.popBackStack();
+		}
+
 		JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, getResources().getString(R.string.mtplease_url), null, new Response.Listener<JSONObject>() {
 			@Override
 			public void onResponse(JSONObject response) {
@@ -869,8 +881,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				reconnectServerButton.setVisibility(View.GONE);
 				endLoadingProgress();
 
-				currentPage = TIMELINE_PAGE_STATE;
-				// create the mTimelineFragment with the Interface ScrollTabHolder
+				_currentPage = TIMELINE_PAGE_STATE;
+				// create the _timelineFragment with the Interface ScrollTabHolder
 				try {
 					Log.i(TAG, response.toString());
 					// redundant to code. needs to be refactored
@@ -879,7 +891,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 					roomCountText.setText(mJSONObject.getString("roomCount") + "개의 방이 함께하고 있습니다.");
 
 					TimelineFragment timelineFragment = TimelineFragment.newInstance(mJSONObject.toString());
-					// end of creation of the mTimelineFragment
+					// end of creation of the _timelineFragment
 
 					// commit the timelineFragment to the current view
 					beginFragmentTransaction(timelineFragment, R.id.body_background);
@@ -903,7 +915,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 				endLoadingProgress();
 
-				currentPage = TIMELINE_PAGE_STATE;
+				_currentPage = TIMELINE_PAGE_STATE;
 				Log.d(TAG, error.toString());
 				Toast.makeText(MainActivity.this, R.string.network_error, Toast.LENGTH_SHORT).show();
 			}
@@ -916,30 +928,31 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	private void loadResultFragment() {
 		try {
-			mConditionDataForRequest = getUserInputData();
+
+			_conditionDataForRequest = getUserInputData();
 
 			numberOfPeopleSelectEditText.clearFocus();
-					/*if (mConditionDataForRequest.getFlag() == CONDITION_SEARCH_MODE) {
+					/*if (_conditionDataForRequest.getFlag() == CONDITION_SEARCH_MODE) {
 						setAutoCompleteBasicInfoPlan();
 					}*/
 
-			//new DataRequestTask(RESULT).execute(mConditionDataForRequest.makeHttpGetURL());
+			//new DataRequestTask(RESULT).execute(_conditionDataForRequest.makeHttpGetURL());
 
-					/*MTPleaseJsonObjectRequest getRequest = new MTPleaseJsonObjectRequest(Request.Method.GET, mConditionDataForRequest.makeHttpGetURL(), null, new Response.Listener<JSONObject>() {
+					/*MTPleaseJsonObjectRequest getRequest = new MTPleaseJsonObjectRequest(Request.Method.GET, _conditionDataForRequest.makeHttpGetURL(), null, new Response.Listener<JSONObject>() {
 						@Override
 						public void onResponse(JSONObject response) {
 							endLoadingProgress();
 							Log.i(TAG, response.toString());
-							mConditionDataForRequest = getUserInputData();
+							_conditionDataForRequest = getUserInputData();
 							// create the resultFragment with the Interface ScrollTabHolder
-							ResultFragment resultFragment = ResultFragment.newInstance(response.toString(), mConditionDataForRequest.getDate());
-							// end of creation of the mTimelineFragment
+							ResultFragment resultFragment = ResultFragment.newInstance(response.toString(), _conditionDataForRequest.getDate());
+							// end of creation of the _timelineFragment
 
 							// commit the resultFragment to the current view
 							beginFragmentTransaction(resultFragment, R.id.body_background);
 							// end of commission
 
-							conditionDataStack.push(mConditionDataForRequest);
+							_conditionDataStack.push(_conditionDataForRequest);
 						}
 					}, new Response.ErrorListener() {
 						@Override
@@ -952,25 +965,31 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 					getRequest.setContext(v.getContext());
 					*/
 
-			JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, mConditionDataForRequest.makeHttpGetURL(), null, new Response.Listener<JSONObject>() {
+			Tracker t = ((Analytics) getApplication()).getTracker();
+			t.send(new HitBuilders.EventBuilder()
+					.setCategory("User Interaction")
+					.setAction("Search Button Clicked")
+					.setLabel(_conditionDataForRequest.getUserQueryString())
+					.build());
+
+			JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, _conditionDataForRequest.makeHttpGetURL(), null, new Response.Listener<JSONObject>() {
 				@Override
 				public void onResponse(JSONObject response) {
 					reconnectServerButton.setVisibility(View.GONE);
 					Log.i(TAG, response.toString());
 					endLoadingProgress();
 
-					currentPage = RESULT_PAGE_STATE;
+					_currentPage = RESULT_PAGE_STATE;
 
-					mConditionDataForRequest = getUserInputData();
 					// create the resultFragment with the Interface ScrollTabHolder
-					ResultFragment resultFragment = ResultFragment.newInstance(response.toString(), mConditionDataForRequest.getDate());
-					// end of creation of the mTimelineFragment
+					ResultFragment resultFragment = ResultFragment.newInstance(response.toString(), _conditionDataForRequest.getDate());
+					// end of creation of the _timelineFragment
 
 					// commit the resultFragment to the current view
 					beginFragmentTransaction(resultFragment, R.id.body_background);
 					// end of commission
 
-					conditionDataStack.push(mConditionDataForRequest);
+					_conditionDataStack.push(_conditionDataForRequest);
 				}
 			}, new Response.ErrorListener() {
 				@Override
@@ -979,7 +998,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 					Log.d(TAG, error.toString());
 					endLoadingProgress();
 
-					currentPage = RESULT_PAGE_STATE;
+					_currentPage = RESULT_PAGE_STATE;
 					Toast.makeText(MainActivity.this, R.string.network_error, Toast.LENGTH_SHORT).show();
 				}
 			});
@@ -1017,15 +1036,15 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	}
 
 	private void callCalendarDialogFragment(int callerFlag) {
-		CalendarDialogFragment calendarDialogFragment = CalendarDialogFragment.newInstance(callerFlag);
-		calendarDialogFragment.show(mFragmentManager, "calendar_dialog_popped");
+		CalendarDialogFragment _calendarDialogFragment = CalendarDialogFragment.newInstance(callerFlag);
+		_calendarDialogFragment.show(_fragmentManager, "_calendar_dialog_popped");
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_main, menu);
-		return true;
+		//getMenuInflater().inflate(R.menu.menu_main, menu);
+		return false;
 	}
 
 	@Override
@@ -1037,8 +1056,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 		switch(id) {
 			case R.id.action_version_check:
-				VersionCheckFragment versionCheckFragment = VersionCheckFragment.newInstance();
-				beginFragmentTransaction(versionCheckFragment, R.id.body_background);
+				/*VersionCheckFragment versionCheckFragment = VersionCheckFragment.newInstance();
+				beginFragmentTransaction(versionCheckFragment, R.id.body_background);*/
 				break;
 			case R.id.action_help:
 				GuideFragment guideFragment = GuideFragment.newInstance();
@@ -1061,21 +1080,21 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	@Override
 	public void onCreateResultFragmentView(boolean noResults, int numRoom) {
 
-		currentPage = RESULT_PAGE_STATE;
+		_currentPage = RESULT_PAGE_STATE;
 
 		mHeader.setVisibility(View.VISIBLE);
 
 		subTabLinearLayout.setVisibility(View.VISIBLE);
 
-		/*if(!noResults && !isBackButtonPressed) {
-			mHeader.setTranslationY(-mMinHeaderHeightForResultFragment);
+		/*if(!noResults && !_isBackButtonPressed) {
+			mHeader.setTranslationY(-_minHeaderHeightForResultFragment);
 			subTabLinearLayout.setAlpha(1);
 			subTabLinearLayout.setBackgroundColor(getResources().getColor(R.color.mtplease_subtab_background_color));
 		} else {
 			mHeader.setTranslationY(0);
 			subTabLinearLayout.setAlpha(0);
 		}*/
-		mHeader.setTranslationY(-mMinHeaderHeightForResultFragment);
+		mHeader.setTranslationY(-_minHeaderHeightForResultFragment);
 		subTabLinearLayout.setAlpha(1);
 		subTabLinearLayout.setBackgroundColor(getResources().getColor(R.color.mtplease_subtab_background_color));
 
@@ -1083,24 +1102,24 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		if (noResults) {
 			changeActionBarStyle(getResources().getColor(R.color.mtplease_actionbar_color), getResources().getString(R.string.results), getResources().getString(R.string.no_results));
 		} else {
-			changeActionBarStyle(getResources().getColor(R.color.mtplease_actionbar_color), getResources().getString(R.string.results), String.valueOf(numRoom));
+			changeActionBarStyle(getResources().getColor(R.color.mtplease_actionbar_color), getResources().getString(R.string.results), String.valueOf(numRoom) + "개의 방");
 		}
 		// end of the configuration
 
 		// configure subtab for result page
-		if(isBackButtonPressed) {
+		if(_isBackButtonPressed) {
 			Log.d(TAG, "back button clicked");
-			mConditionDataForRequest = conditionDataStack.peekLast();
-			Log.d(TAG, mConditionDataForRequest.getPeople() + "people");
+			_conditionDataForRequest = _conditionDataStack.peekLast();
+			Log.d(TAG, _conditionDataForRequest.getPeople() + "people");
 		} else {
 			Log.d(TAG, "back button not clicked");
-			mConditionDataForRequest = getUserInputData();
+			_conditionDataForRequest = getUserInputData();
 		}
 
 		String queryString = getResources().getString(R.string.we) + " ";
-		queryString += mConditionDataForRequest.getDateWrittenLang() + getResources().getString(R.string.postposition_1);
-		dateSelectButton.setText(mConditionDataForRequest.getDateWrittenLang());
-		int regionCode = mConditionDataForRequest.getRegion();
+		queryString += _conditionDataForRequest.getDateWrittenLang() + getResources().getString(R.string.postposition_1);
+		dateSelectButton.setText(_conditionDataForRequest.getDateWrittenLang());
+		int regionCode = _conditionDataForRequest.getRegion();
 		switch (regionCode) {
 			case 1:
 				queryString += " " + getResources().getString(R.string.daesungri);
@@ -1115,20 +1134,20 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				regionSelectSpinner.setSelection(2);
 				break;
 		}
-		queryString += " " + mConditionDataForRequest.getPeople() + getResources().getString(R.string.postposition_2);
-		numberOfPeopleSelectEditText.setText(String.valueOf(mConditionDataForRequest.getPeople()));
+		queryString += " " + _conditionDataForRequest.getPeople() + getResources().getString(R.string.postposition_2);
+		numberOfPeopleSelectEditText.setText(String.valueOf(_conditionDataForRequest.getPeople()));
 
 		queryString += " " + getResources().getString(R.string.go_MT);
 		querySubTabText.setText(queryString);
 		// end of the configuration
 
-		Log.d(TAG, isBackButtonPressed + "");
+		Log.d(TAG, _isBackButtonPressed + "");
 	}
 
 	@Override
 	public void onDestroyResultFragmentView() {
-		if(isBackButtonPressed)
-			conditionDataStack.pop();
+		if(_isBackButtonPressed)
+			_conditionDataStack.pop();
 		mHeader.setVisibility(View.GONE);
 	}
 
@@ -1153,8 +1172,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	@Override
 	public void onResumeResultFragmentView(LinearLayoutManager layoutManager, int firstVisibleViewPosition, int defaultPosition) {
-		Log.d(TAG, "isBackButtonPressed: " + isBackButtonPressed);
-		if(isBackButtonPressed) {
+		Log.d(TAG, "_isBackButtonPressed: " + _isBackButtonPressed);
+		if(_isBackButtonPressed) {
 			Log.d(TAG, "firstVisibleItemPosition: "+ firstVisibleViewPosition);
 			if(firstVisibleViewPosition == 0) {
 				mHeader.setTranslationY(0);
@@ -1163,15 +1182,15 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		} else {
 			layoutManager.scrollToPosition(defaultPosition);
 		}
-		isBackButtonPressed = false;
+		_isBackButtonPressed = false;
 	}
 
 	@Override
 	public void onCreateTimelineFragmentView() {
 
-		currentPage = TIMELINE_PAGE_STATE;
+		_currentPage = TIMELINE_PAGE_STATE;
 
-		conditionDataStack.clear();
+		_conditionDataStack.clear();
 
 		mHeader.setVisibility(View.VISIBLE);
 
@@ -1182,7 +1201,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 		mHeader.setTranslationY(0);
 
-		isBackButtonPressed = false;
+		_isBackButtonPressed = false;
 	}
 
 	@Override
@@ -1200,16 +1219,16 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		float ratio;
 		switch (visibleFragment) {
 			case TIMELINE_FRAGMENT_VISIBLE:
-				clampValue = changeHeaderTranslation(scrollY, mMinHeaderHeightForTimelineFragment);
+				_clampValue = changeHeaderTranslation(scrollY, _minHeaderHeightForTimelineFragment);
 				return;
 			case RESULT_FRAGMENT_VISIBLE:
-				clampValue = changeHeaderTranslation(scrollY, mMinHeaderHeightForResultFragment);
-				subTabLinearLayout.setAlpha(clampValue);
-				//subTabBackgroundColor.setAlpha((int) (clampValue * 255));
+				_clampValue = changeHeaderTranslation(scrollY, _minHeaderHeightForResultFragment);
+				subTabLinearLayout.setAlpha(_clampValue);
+				//subTabBackgroundColor.setAlpha((int) (_clampValue * 255));
 				break;
 			/*case SPECIFIC_INFO_FRAGMENT_VISIBLE:
 				ratio = (float) getSupportActionBar().getHeight() / (float) (scrollY + 1);
-				clampValue = clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F);
+				_clampValue = clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F);
 				break;*/
 			case SPECIFIC_INFO_FRAGMENT_VISIBLE:
 			case SHOPPINGITEMLIST_FRAGMENT_VISIBLE:
@@ -1217,17 +1236,17 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				return;
 		}
 
-		//setTitleAlpha(clampValue, visibleFragment);
+		//setTitleAlpha(_clampValue, visibleFragment);
 	}
 
 	private float changeHeaderTranslation(int scrollY, int minHeaderHeight) {
-		mMinHeaderTranslation = -minHeaderHeight/* + getSupportActionBar().getHeight()*/;
+		_minHeaderTranslation = -minHeaderHeight/* + getSupportActionBar().getHeight()*/;
 
-		//Log.i(TAG, -scrollY + "dp / " + mMinHeaderTranslation + "dp");
+		//Log.i(TAG, -scrollY + "dp / " + _minHeaderTranslation + "dp");
 
-		mHeader.setTranslationY(Math.max(-scrollY, mMinHeaderTranslation));
+		mHeader.setTranslationY(Math.max(-scrollY, _minHeaderTranslation));
 
-		float ratio = clamp(mHeader.getTranslationY() / mMinHeaderTranslation, 0.0F, 1.0F);
+		float ratio = clamp(mHeader.getTranslationY() / _minHeaderTranslation, 0.0F, 1.0F);
 
 		return clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F);
 	}
@@ -1243,30 +1262,30 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 		int headerHeight = 0;
 		if (firstVisiblePosition >= 1) {
-			headerHeight = mHeaderHeight;
+			headerHeight = _headerHeight;
 		}
 
 		return -top + firstVisiblePosition * c.getHeight() + headerHeight;
 	}
 
 	private void setTitleAlpha(float alpha, int visibleFragment) {
-		mAlphaForegroundColorSpan.setAlpha(alpha);
+		_alphaForegroundColorSpan.setAlpha(alpha);
 
 		switch (visibleFragment) {
 			case TIMELINE_FRAGMENT_VISIBLE:
-				mSpannableStringAppTitle.setSpan(mAlphaForegroundColorSpan, 0, mSpannableStringAppTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				//mActionBar.setTitle(mSpannableStringAppTitle);
+				_spannableStringAppTitle.setSpan(_alphaForegroundColorSpan, 0, _spannableStringAppTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				//mActionBar.setTitle(_spannableStringAppTitle);
 				break;
 			case RESULT_FRAGMENT_VISIBLE:
 				break;
 			case SPECIFIC_INFO_FRAGMENT_VISIBLE:
-				/*mSpannableStringVariable = new SpannableString(getSupportActionBar().getTitle());
-				mSpannableStringVariable.setSpan(mAlphaForegroundColorSpan, 0, mSpannableStringVariable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				mActionBar.setTitle(mSpannableStringVariable);
-				mSpannableStringVariable = null;
-				mSpannableStringVariable = new SpannableString(getSupportActionBar().getSubtitle());
-				mSpannableStringVariable.setSpan(mAlphaForegroundColorSpan, 0, mSpannableStringVariable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				mActionBar.setSubtitle(mSpannableStringVariable);*/
+				/*_spannableStringVariable = new SpannableString(getSupportActionBar().getTitle());
+				_spannableStringVariable.setSpan(_alphaForegroundColorSpan, 0, _spannableStringVariable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				mActionBar.setTitle(_spannableStringVariable);
+				_spannableStringVariable = null;
+				_spannableStringVariable = new SpannableString(getSupportActionBar().getSubtitle());
+				_spannableStringVariable.setSpan(_alphaForegroundColorSpan, 0, _spannableStringVariable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				mActionBar.setSubtitle(_spannableStringVariable);*/
 				break;
 			case SHOPPINGITEMLIST_FRAGMENT_VISIBLE:
 				break;
@@ -1278,20 +1297,20 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	@Override
 	public void onDateConfirmButtonClicked(String dateSelected, int callerFlag) {
 		if (dateSelected != null) {
-			modifiedDate = dateSelected;
+			_modifiedDate = dateSelected;
 			switch (callerFlag) {
 				case CALL_FROM_CONDITIONAL_QUERY:
-					dateSelectButton.setText(modifiedDate);
+					dateSelectButton.setText(_modifiedDate);
 					break;
 				case CALL_FROM_PLAN:
-					dateSelectPlanButton.setText(modifiedDate);
+					dateSelectPlanButton.setText(_modifiedDate);
 					break;
 				/*case CALL_FROM_ADDTOPLANDIALOG:
 					AddToPlanDialogFragment mAddToPlanDialogFragment =
 							(AddToPlanDialogFragment) getSupportFragmentManager()
 									.findFragmentByTag("addtoplan_dialog_popped");
 					if (mAddToPlanDialogFragment != null) {
-						mAddToPlanDialogFragment.updateDate(modifiedDate);
+						mAddToPlanDialogFragment.updateDate(_modifiedDate);
 					}
 					break;*/
 			}
@@ -1316,14 +1335,14 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		Log.i(TAG, conditionDataForRequest.getPeople() + "");
 
 
-		conditionDataForRequest.setDateWrittenLang(modifiedDate);
+		conditionDataForRequest.setDateWrittenLang(_modifiedDate);
 
-		String[] tmp = modifiedDate.split(" ");
+		String[] tmp = _modifiedDate.split(" ");
 		conditionDataForRequest.setDate(tmp[0].substring(0, 4) + "-"
 				+ tmp[1].split("월")[0] + "-" + tmp[2].split("일")[0]);
 		Log.i(TAG, conditionDataForRequest.getDate());
 
-		if (searchMode == CONDITION_SEARCH_MODE) {
+		if (_searchMode == CONDITION_SEARCH_MODE) {
 			conditionDataForRequest.setFlag(CONDITION_SEARCH_MODE);
 		} else {
 			conditionDataForRequest.setFlag(KEYWORD_SEARCH_MODE);
@@ -1336,32 +1355,32 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	public void onCreateSpecificInfoFragmentView(String roomName, String pensionName) {
 		mHeader.setVisibility(View.GONE);
 
-		currentPage = SPECIFIC_INFO_PAGE_STATE;
+		_currentPage = SPECIFIC_INFO_PAGE_STATE;
 
 		// configure actionbar for specific info page
 		changeActionBarStyle(getResources().getColor(R.color.mtplease_actionbar_color), roomName, pensionName);
 		// end of the configuration
 		// **********************actionbar button issue...........
 
-		isBackButtonPressed = false;
+		_isBackButtonPressed = false;
 	}
 
 	@Override
 	public void onDestroySpecificInfoFragmentView() {
-		mSpecificInfoFragment = null;
+		_specificInfoFragment = null;
 	}
 
 	@Override
 	public void onClickAddRoomToPlanButton(final RoomInfoModelController roomInfoModelController) {
 
 		// check rather room has been added already in the plan or not
-		if(mPlanModelController.isRoomAddedAlready(roomInfoModelController.getPen_id(),
+		if(_planModelController.isRoomAddedAlready(roomInfoModelController.getPen_id(),
 				roomInfoModelController.getRoom_name(), roomInfoModelController.getRoom_cost())) {
 			Toast.makeText(this, R.string.room_already_added_before, Toast.LENGTH_LONG).show();
 			return;
 		}
 
-		int roomDataCount = mPlanModelController.getRoomDataCount();
+		int roomDataCount = _planModelController.getRoomDataCount();
 		final int roomPlanViewIndex = roomDataCount;
 		// "roomDataCount + FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN" -> used this notation, because
 		// there is a gap, between first index of the roomDataLinkedList(inside PlanModel class)
@@ -1378,9 +1397,9 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			public void onClick(View v) {
 				planItemFadeOut(roomPlanView);
 
-				mUndoToastController.showUndoBar(roomInfoModelController.getRoom_name() + " " + getResources().getString(R.string.deleted),
+				_undoToastController.showUndoBar(roomInfoModelController.getRoom_name() + " " + getResources().getString(R.string.deleted),
 						UndoToastController.DELETE_ADDED_ROOM_CASE, roomPlanViewIndex);
-//				mUndoToastController.setRoomViewAndData(roomPlanView, roomInfoModel.getPen_id(), roomInfoModel.getRoom_name(), roomInfoModel.getRoom_cost());
+//				_undoToastController.setRoomViewAndData(roomPlanView, roomInfoModel.getPen_id(), roomInfoModel.getRoom_name(), roomInfoModel.getRoom_cost());
 			}
 		});
 		// end of the configuration
@@ -1426,14 +1445,14 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		}
 
 		// store room data in the mPlanModel
-		mPlanModelController.addRoomData(roomInfoModelController.getPen_id(),
+		_planModelController.addRoomData(roomInfoModelController.getPen_id(),
 				roomInfoModelController.getRoom_name(), roomInfoModelController.getRoom_cost());
 
 		// calculate the total cost for the added rooms
-		totalRoomPrice.setText(castItemPriceToString(mPlanModelController.getTotalRoomCost()));
+		totalRoomPrice.setText(castItemPriceToString(_planModelController.getTotalRoomCost()));
 
 		// calculate the total cost for the whole plan
-		totalPlanCost.setText(castItemPriceToString(mPlanModelController.getPlanTotalCost()));
+		totalPlanCost.setText(castItemPriceToString(_planModelController.getPlanTotalCost()));
 
 		// notify room is added to the plan to the user
 		Toast.makeText(this, R.string.added_to_plan, Toast.LENGTH_LONG).show();
@@ -1441,13 +1460,13 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		// show plan
 		doubleSideSlidingMenu.showSecondaryMenu(true);
 
-		/*mConditionDataForRequest = getUserInputData();
+		/*_conditionDataForRequest = getUserInputData();
 
-		if (mConditionDataForRequest.getFlag() == CONDITION_SEARCH_MODE) {
+		if (_conditionDataForRequest.getFlag() == CONDITION_SEARCH_MODE) {
 			AddToPlanDialogFragment addToPlanDialogFragment =
-					AddToPlanDialogFragment.newInstance(mConditionDataForRequest.getDateWrittenLang(),
-							mConditionDataForRequest.getRegion() - 1,
-							mConditionDataForRequest.getPeople(), CONDITION_SEARCH_MODE);
+					AddToPlanDialogFragment.newInstance(_conditionDataForRequest.getDateWrittenLang(),
+							_conditionDataForRequest.getRegion() - 1,
+							_conditionDataForRequest.getPeople(), CONDITION_SEARCH_MODE);
 			addToPlanDialogFragment.show(getSupportFragmentManager(), "addtoplan_dialog_popped");
 		}*/
 	}
@@ -1458,7 +1477,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	private void addDirectInputRoomPriceToPlan(final int directInputRoomPrice) {
 
-		final int directInputRoomDataCount = mPlanModelController.getRoomDataCount();
+		final int directInputRoomDataCount = _planModelController.getRoomDataCount();
 		final int directInputRoomPlanViewIndex = directInputRoomDataCount;
 		// "directInputRoomDataCount + FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN" -> used this notation, because
 		// there is a gap, between first index of the roomDataLinkedList(inside PlanModel class)
@@ -1475,10 +1494,10 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			public void onClick(View v) {
 				planItemFadeOut(directInputRoomPlanView);
 
-				mUndoToastController.showUndoBar(getResources().getString(R.string.directly_added_room)
+				_undoToastController.showUndoBar(getResources().getString(R.string.directly_added_room)
 								+ getResources().getString(R.string.deleted), UndoToastController.DELETE_DIRECTLY_INPUT_ROOM_CASE,
 						directInputRoomPlanViewIndex);
-//				mUndoToastController.setDirectInputRoomViewAndData(directInputRoomPlanView, directInputRoomPrice);
+//				_undoToastController.setDirectInputRoomViewAndData(directInputRoomPlanView, directInputRoomPrice);
 			}
 		});
 		// end of the configuration
@@ -1494,13 +1513,13 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		// end of the setting
 
 		// store room data in the mPlanModel
-		mPlanModelController.addDirectInputRoomData(directInputRoomPrice);
+		_planModelController.addDirectInputRoomData(directInputRoomPrice);
 
 		// calculate the total cost for the added rooms
-		totalRoomPrice.setText(castItemPriceToString(mPlanModelController.getTotalRoomCost()));
+		totalRoomPrice.setText(castItemPriceToString(_planModelController.getTotalRoomCost()));
 
 		// calculate the total cost for the whole plan
-		totalPlanCost.setText(castItemPriceToString(mPlanModelController.getPlanTotalCost()));
+		totalPlanCost.setText(castItemPriceToString(_planModelController.getPlanTotalCost()));
 
 		// notify room is added to the plan to the user
 		Toast.makeText(this, R.string.added_to_plan, Toast.LENGTH_LONG).show();
@@ -1520,13 +1539,13 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				return false;
 			}
 
-			if(mShoppingItemListFragment != null && mShoppingItemListFragment.isVisible()) {
+			if(_shoppingItemListFragment != null && _shoppingItemListFragment.isVisible()) {
 				Log.d(TAG,"Visible");
-				Log.d(TAG,mFragmentManager.getBackStackEntryCount() + "ea");
+				Log.d(TAG,_fragmentManager.getBackStackEntryCount() + "ea");
 				doubleSideSlidingMenu.showSecondaryMenu(true);
 			}*/
 
-			if(currentPage == TIMELINE_PAGE_STATE) {
+			if(_currentPage == TIMELINE_PAGE_STATE) {
 				new AlertDialog.Builder(this)
 						.setMessage(R.string.do_you_want_end_the_app)
 						.setPositiveButton(R.string.yes,
@@ -1547,7 +1566,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				return false;
 			}
 
-			isBackButtonPressed = true;
+			_isBackButtonPressed = true;
 			Log.d(TAG, "onKeyDonwn");
 		}
 		return super.onKeyDown(keyCode, event);
@@ -1572,8 +1591,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	}
 
 	private void changeActionBarStyle(int color, String titleText, String subtitleText) {
-		actionBarBackgroundColor = new ColorDrawable(color);
-		mActionBar.setBackgroundDrawable(actionBarBackgroundColor);
+		_actionBarBackgroundColor = new ColorDrawable(color);
+		mActionBar.setBackgroundDrawable(_actionBarBackgroundColor);
 
 		//mActionBar.setTitle(titleText);
 		//mActionBar.setSubtitle(subtitleText);
@@ -1605,7 +1624,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	private void beginFragmentTransaction(Fragment targetFragment, int containerViewId) {
 
-		FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+		FragmentTransaction fragmentTransaction = _fragmentManager.beginTransaction();
 
 		if(targetFragment instanceof TimelineFragment) {
 			fragmentTransaction.replace(containerViewId, targetFragment);
@@ -1618,28 +1637,26 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		}
 
 		if(targetFragment instanceof TimelineFragment) {
-			currentPage = TIMELINE_PAGE_STATE;
-			mTimelineFragment = (TimelineFragment) targetFragment;
-		}
-		else if(targetFragment instanceof VersionCheckFragment) {
-			currentPage = VERSION_PAGE_STATE;
-			mVersionCheckFragment = (VersionCheckFragment) targetFragment;
-		}
-		else if(targetFragment instanceof  GuideFragment) {
-			currentPage = GUIDE_PAGE_STATE;
-			mGuideFragment = (GuideFragment) targetFragment;
-		}
-		else if(targetFragment instanceof ResultFragment) {
-			currentPage = RESULT_PAGE_STATE;
-			mResultFragment = (ResultFragment) targetFragment;
-		}
-		else if(targetFragment instanceof SpecificInfoFragment) {
-			currentPage = SPECIFIC_INFO_PAGE_STATE;
-			mSpecificInfoFragment = (SpecificInfoFragment) targetFragment;
-		}
-		else if(targetFragment instanceof ShoppingItemListFragment) {
-			currentPage = SHOPPINGITEMLIST_PAGE_STATE;
-			mShoppingItemListFragment = (ShoppingItemListFragment) targetFragment;
+			_currentPage = TIMELINE_PAGE_STATE;
+			_timelineFragment = (TimelineFragment) targetFragment;
+		} else if(targetFragment instanceof VersionCheckFragment) {
+			_currentPage = VERSION_PAGE_STATE;
+			_versionCheckFragment = (VersionCheckFragment) targetFragment;
+		} else if(targetFragment instanceof  GuideFragment) {
+			_currentPage = GUIDE_PAGE_STATE;
+			_guideFragment = (GuideFragment) targetFragment;
+		} else if(targetFragment instanceof SettingsFragment) {
+			_currentPage = SETTINGS_PAGE_STATE;
+			_settingsFragment = (SettingsFragment) targetFragment;
+		} else if(targetFragment instanceof ResultFragment) {
+			_currentPage = RESULT_PAGE_STATE;
+			_resultFragment = (ResultFragment) targetFragment;
+		} else if(targetFragment instanceof SpecificInfoFragment) {
+			_currentPage = SPECIFIC_INFO_PAGE_STATE;
+			_specificInfoFragment = (SpecificInfoFragment) targetFragment;
+		} else if(targetFragment instanceof ShoppingItemListFragment) {
+			_currentPage = SHOPPINGITEMLIST_PAGE_STATE;
+			_shoppingItemListFragment = (ShoppingItemListFragment) targetFragment;
 		}
 
 		fragmentTransaction.commit();
@@ -1665,12 +1682,12 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		changeActionBarStyle(getResources().getColor(R.color.mtplease_actionbar_color), itemTypeString, numRoom + getResources().getString(R.string.n_results));
 		// end of the configuration
 
-		isBackButtonPressed = false;
+		_isBackButtonPressed = false;
 	}
 
 	@Override
 	public void onDestroyShoppingItemListFragmentView() {
-		mShoppingItemListFragment = null;
+		_shoppingItemListFragment = null;
 	}
 
 	@Override
@@ -1679,7 +1696,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				AddItemToPlanDialogFragment.
 						newInstance(itemType, itemName, itemUnit, itemUnitCount, itemPrice, SHOPPING_ITEM_INPUT_MODE);
 
-		addItemToPlanDialogFragment.show(mFragmentManager, "addItemToPlanDialogFragment");
+		addItemToPlanDialogFragment.show(_fragmentManager, "addItemToPlanDialogFragment");
 	}
 
 	@Override
@@ -1687,7 +1704,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		AddItemToPlanDialogFragment addItemToPlanDialogFragment =
 				AddItemToPlanDialogFragment.newInstance(itemType, CUSTOM_SHOPPING_ITEM_INPUT_MODE);
 
-		addItemToPlanDialogFragment.show(mFragmentManager, "addItemToPlanDialogFragment");
+		addItemToPlanDialogFragment.show(_fragmentManager, "addItemToPlanDialogFragment");
 	}
 
 	@Override
@@ -1695,12 +1712,12 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 										   final int itemCount, final String itemUnit, final String itemCountUnit) {
 
 		// check rather room has been added already in the plan or not
-		if(mPlanModelController.isItemAddedAlready(itemType, itemName, itemUnitPrice)) {
+		if(_planModelController.isItemAddedAlready(itemType, itemName, itemUnitPrice)) {
 			Toast.makeText(this, R.string.item_already_added_before, Toast.LENGTH_LONG).show();
 			return;
 		}
 
-		int itemDataCount = mPlanModelController.getItemDataCount(itemType);
+		int itemDataCount = _planModelController.getItemDataCount(itemType);
 		final int itemPlanViewIndex = itemDataCount + FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN;
 		// "itemDataCount + FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN" -> used this notation, because
 		// there is a gap, between first index of the [itemData]LinkedList(inside PlanModel class)
@@ -1719,9 +1736,9 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 					public void onClick(View v) {
 						planItemFadeOut(itemPlanView);
 
-						mUndoToastController.showUndoBar(itemName + getResources().getString(R.string.deleted),
+						_undoToastController.showUndoBar(itemName + getResources().getString(R.string.deleted),
 								UndoToastController.DELETE_ADDED_MEAT_CASE, itemPlanViewIndex);
-//						mUndoToastController.setItemViewAndData(itemPlanView, itemType, itemName, itemUnitPrice);
+//						_undoToastController.setItemViewAndData(itemPlanView, itemType, itemName, itemUnitPrice);
 					}
 				});
 				break;
@@ -1732,9 +1749,9 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 					public void onClick(View v) {
 						planItemFadeOut(itemPlanView);
 
-						mUndoToastController.showUndoBar(itemName + getResources().getString(R.string.deleted),
+						_undoToastController.showUndoBar(itemName + getResources().getString(R.string.deleted),
 								UndoToastController.DELETE_ADDED_ALCOHOL_CASE, itemPlanViewIndex);
-//						mUndoToastController.setItemViewAndData(itemPlanView, itemType, itemName, itemUnitPrice);
+//						_undoToastController.setItemViewAndData(itemPlanView, itemType, itemName, itemUnitPrice);
 					}
 				});
 				break;
@@ -1745,9 +1762,9 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 					public void onClick(View v) {
 						planItemFadeOut(itemPlanView);
 
-						mUndoToastController.showUndoBar(itemName + getResources().getString(R.string.deleted),
+						_undoToastController.showUndoBar(itemName + getResources().getString(R.string.deleted),
 								UndoToastController.DELETE_ADDED_OTHERS_CASE, itemPlanViewIndex);
-//						mUndoToastController.setItemViewAndData(itemPlanView, itemType, itemName, itemUnitPrice);
+//						_undoToastController.setItemViewAndData(itemPlanView, itemType, itemName, itemUnitPrice);
 					}
 				});
 				break;
@@ -1785,29 +1802,29 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 						changeItemNumberInPlanDialogFragment =
 						ChangeItemNumberInPlanDialogFragment.
 								newInstance(itemType, itemName, itemUnit, itemUnitPrice,
-										mPlanModelController.getSingleItemCount(itemType, itemName, itemUnitPrice), itemCountUnit);
-				changeItemNumberInPlanDialogFragment.show(mFragmentManager, "changeItemNumberInPlanDialogFragment");
+										_planModelController.getSingleItemCount(itemType, itemName, itemUnitPrice), itemCountUnit);
+				changeItemNumberInPlanDialogFragment.show(_fragmentManager, "changeItemNumberInPlanDialogFragment");
 			}
 		});
 
 		// store item data in the mPlanModel
-		mPlanModelController.addItemData(itemType, itemName, itemUnitPrice, itemCount);
+		_planModelController.addItemData(itemType, itemName, itemUnitPrice, itemCount);
 
 		// calculate the total cost for the added rooms
 		switch(itemType) {
 			case ShoppingItemListFragment.MEAT_ITEM:
-				totalMeatPrice.setText(castItemPriceToString(mPlanModelController.getTotalItemCost(itemType)));
+				totalMeatPrice.setText(castItemPriceToString(_planModelController.getTotalItemCost(itemType)));
 				break;
 			case ShoppingItemListFragment.ALCOHOL_ITEM:
-				totalAlcoholPrice.setText(castItemPriceToString(mPlanModelController.getTotalItemCost(itemType)));
+				totalAlcoholPrice.setText(castItemPriceToString(_planModelController.getTotalItemCost(itemType)));
 				break;
 			case ShoppingItemListFragment.OTHERS_ITEM:
-				totalOthersPrice.setText(castItemPriceToString(mPlanModelController.getTotalItemCost(itemType)));
+				totalOthersPrice.setText(castItemPriceToString(_planModelController.getTotalItemCost(itemType)));
 				break;
 		}
 
 		// calculate the total cost for the whole plan
-		totalPlanCost.setText(castItemPriceToString(mPlanModelController.getPlanTotalCost()));
+		totalPlanCost.setText(castItemPriceToString(_planModelController.getPlanTotalCost()));
 
 		// notify room is added to the plan to the user
 		Toast.makeText(this, R.string.added_to_plan, Toast.LENGTH_SHORT).show();
@@ -1822,22 +1839,22 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		tempItemTotalPricePlanTextView.setText(castItemPriceToString(itemUnitPrice * newItemCount));
 		tempNumberPickerCallButton.setText(String.valueOf(newItemCount));
 
-		mPlanModelController.changeItemCount(itemType, itemName, itemUnitPrice, newItemCount);
+		_planModelController.changeItemCount(itemType, itemName, itemUnitPrice, newItemCount);
 
 		switch(itemType) {
 			case ShoppingItemListFragment.MEAT_ITEM:
-				totalMeatPrice.setText(castItemPriceToString(mPlanModelController.getTotalItemCost(itemType)));
+				totalMeatPrice.setText(castItemPriceToString(_planModelController.getTotalItemCost(itemType)));
 				break;
 			case ShoppingItemListFragment.ALCOHOL_ITEM:
-				totalAlcoholPrice.setText(castItemPriceToString(mPlanModelController.getTotalItemCost(itemType)));
+				totalAlcoholPrice.setText(castItemPriceToString(_planModelController.getTotalItemCost(itemType)));
 				break;
 			case ShoppingItemListFragment.OTHERS_ITEM:
-				totalOthersPrice.setText(castItemPriceToString(mPlanModelController.getTotalItemCost(itemType)));
+				totalOthersPrice.setText(castItemPriceToString(_planModelController.getTotalItemCost(itemType)));
 				break;
 		}
 
 		// calculate the total cost for the whole plan
-		totalPlanCost.setText(castItemPriceToString(mPlanModelController.getPlanTotalCost()));
+		totalPlanCost.setText(castItemPriceToString(_planModelController.getPlanTotalCost()));
 	}
 
 	/**
@@ -1854,7 +1871,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 		for(int itemType = 1; itemType < 4; itemType++) {
 			for (int singleItemIndex = FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN;
-				 singleItemIndex < FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN + mPlanModelController.getItemDataCount(itemType);
+				 singleItemIndex < FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN + _planModelController.getItemDataCount(itemType);
 				 singleItemIndex++) {
 				View singleShoppingItemLayout = null;
 				Button numberPickerButton;
@@ -1876,39 +1893,39 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 					numPeople *= rate;
 					Log.d(TAG, "result:" + numPeople);
 					numberPickerButton.setText(String.valueOf(numPeople));
-					mPlanModelController.changeItemCount(itemType, mPlanModelController.getItemName(itemType, singleItemIndex - FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN),
-							mPlanModelController.getItemUnitPrice(itemType, singleItemIndex - FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN), numPeople);
+					_planModelController.changeItemCount(itemType, _planModelController.getItemName(itemType, singleItemIndex - FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN),
+							_planModelController.getItemUnitPrice(itemType, singleItemIndex - FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN), numPeople);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		totalMeatPrice.setText(castItemPriceToString(mPlanModelController.getTotalItemCost(ShoppingItemListFragment.MEAT_ITEM)));
-		totalAlcoholPrice.setText(castItemPriceToString(mPlanModelController.getTotalItemCost(ShoppingItemListFragment.ALCOHOL_ITEM)));
-		totalOthersPrice.setText(castItemPriceToString(mPlanModelController.getTotalItemCost(ShoppingItemListFragment.OTHERS_ITEM)));
-		totalPlanCost.setText(castItemPriceToString(mPlanModelController.getPlanTotalCost()));
+		totalMeatPrice.setText(castItemPriceToString(_planModelController.getTotalItemCost(ShoppingItemListFragment.MEAT_ITEM)));
+		totalAlcoholPrice.setText(castItemPriceToString(_planModelController.getTotalItemCost(ShoppingItemListFragment.ALCOHOL_ITEM)));
+		totalOthersPrice.setText(castItemPriceToString(_planModelController.getTotalItemCost(ShoppingItemListFragment.OTHERS_ITEM)));
+		totalPlanCost.setText(castItemPriceToString(_planModelController.getPlanTotalCost()));
 	}
 
 	private void deleteAddedRoomInPlan(int viewIndex, LinearLayout roomPlanLinearLayout) {
 		roomPlanLinearLayout.removeViewAt(viewIndex);
 
 		if(roomPlanLinearLayout == this.roomPlanLinearLayout)
-			mPlanModelController.removeRoomData(viewIndex);
+			_planModelController.removeRoomData(viewIndex);
 		else
-			mPlanModelController.removeDirectInputRoomData(viewIndex);
+			_planModelController.removeDirectInputRoomData(viewIndex);
 	}
 
 	private void deleteAddedItemInPlan(int viewIndex, int itemType, LinearLayout itemPlanLinearLayout, TextView totalItemPrice) {
 
 		itemPlanLinearLayout.removeViewAt(viewIndex);
 
-		mPlanModelController.removeItemData(itemType, viewIndex);
+		_planModelController.removeItemData(itemType, viewIndex);
 
 		// calculate the total cost for the added rooms after deletion of one room
-		totalItemPrice.setText(castItemPriceToString(mPlanModelController.getTotalItemCost(itemType)));
+		totalItemPrice.setText(castItemPriceToString(_planModelController.getTotalItemCost(itemType)));
 
 		// calculate the total cost for the whole plan
-		totalPlanCost.setText(castItemPriceToString(mPlanModelController.getPlanTotalCost()));
+		totalPlanCost.setText(castItemPriceToString(_planModelController.getPlanTotalCost()));
 	}
 
 	@Override
@@ -1930,12 +1947,12 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				planItemFadeIn(othersPlanLinearLayout.getChildAt(viewIndex));
 				break;
 			case UndoToastController.CLEAR_ADDED_ROOMS_CASE:
-				for(int roomIndex = 0; roomIndex < mPlanModelController.getRoomDataCount(); roomIndex++) {
+				for(int roomIndex = 0; roomIndex < _planModelController.getRoomDataCount(); roomIndex++) {
 					planItemFadeIn(roomPlanLinearLayout.getChildAt(roomIndex));
 				}
 
 				for(int directInputRoomIndex = 0;
-					directInputRoomIndex < mPlanModelController.getDirectInputRoomDataCount(); directInputRoomIndex++) {
+					directInputRoomIndex < _planModelController.getDirectInputRoomDataCount(); directInputRoomIndex++) {
 					planItemFadeIn(directInputRoomPlanLinearLayout.getChildAt(directInputRoomIndex));
 				}
 				break;
@@ -1971,19 +1988,19 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				deleteAddedItemInPlan(viewIndex, ShoppingItemListFragment.OTHERS_ITEM, othersPlanLinearLayout, totalOthersPrice);
 				break;
 			case UndoToastController.CLEAR_ADDED_ROOMS_CASE:
-				for(int roomIndex = 0; roomIndex < mPlanModelController.getRoomDataCount(); roomIndex++)
+				for(int roomIndex = 0; roomIndex < _planModelController.getRoomDataCount(); roomIndex++)
 					roomPlanLinearLayout.removeViewAt(0);
 
 				for(int directInputRoomIndex = 0;
-					directInputRoomIndex < mPlanModelController.getDirectInputRoomDataCount(); directInputRoomIndex++)
+					directInputRoomIndex < _planModelController.getDirectInputRoomDataCount(); directInputRoomIndex++)
 					directInputRoomPlanLinearLayout.removeViewAt(0);
 
-				mPlanModelController.clearRoomData();
+				_planModelController.clearRoomData();
 
-				totalRoomPrice.setText(castItemPriceToString(mPlanModelController.getTotalRoomCost()));
+				totalRoomPrice.setText(castItemPriceToString(_planModelController.getTotalRoomCost()));
 
 				// calculate the total cost for the whole plan
-				totalPlanCost.setText(castItemPriceToString(mPlanModelController.getPlanTotalCost()));
+				totalPlanCost.setText(castItemPriceToString(_planModelController.getPlanTotalCost()));
 				break;
 			case UndoToastController.CLEAR_ADDED_MEATS_CASE:
 				clearAddedItemsInPlan(ShoppingItemListFragment.MEAT_ITEM, meatPlanLinearLayout, totalMeatPrice);
@@ -1999,7 +2016,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	private void makeClearedItemsInPlanVisible(int itemType, LinearLayout itemPlanLinearLayout) {
 		for(int itemIndex = 0;
-			itemIndex < mPlanModelController.getItemDataCount(itemType);
+			itemIndex < _planModelController.getItemDataCount(itemType);
 			itemIndex++) {
 			planItemFadeIn(itemPlanLinearLayout.getChildAt(itemIndex));
 		}
@@ -2007,16 +2024,16 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	private void clearAddedItemsInPlan(int itemType, LinearLayout itemPlanLinearLayout, TextView totalItemPrice) {
 		for(int itemIndex = 0;
-			itemIndex < mPlanModelController.getItemDataCount(itemType);
+			itemIndex < _planModelController.getItemDataCount(itemType);
 			itemIndex++)
 			itemPlanLinearLayout.removeViewAt(itemIndex);
 
-		mPlanModelController.clearItemData(itemType);
+		_planModelController.clearItemData(itemType);
 
-		totalItemPrice.setText(castItemPriceToString(mPlanModelController.getTotalItemCost(itemType)));
+		totalItemPrice.setText(castItemPriceToString(_planModelController.getTotalItemCost(itemType)));
 
 		// calculate the total cost for the whole plan
-		totalPlanCost.setText(castItemPriceToString(mPlanModelController.getPlanTotalCost()));
+		totalPlanCost.setText(castItemPriceToString(_planModelController.getPlanTotalCost()));
 	}
 
 	private void planItemFadeOut(final View targetView) {
@@ -2076,7 +2093,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		// end of the configuration
 		// **********************actionbar button issue...........
 
-		isBackButtonPressed = false;
+		_isBackButtonPressed = false;
 	}
 
 	@Override
@@ -2092,7 +2109,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		// end of the configuration
 		// **********************actionbar button issue...........
 
-		isBackButtonPressed = false;
+		_isBackButtonPressed = false;
 	}
 
 	@Override
@@ -2108,42 +2125,62 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	@Override
 	public void onCreateVersionCheckFragmentView() {
 		mActionBar.hide();
-		mHeader.setVisibility(View.GONE);
-		currentPage = VERSION_PAGE_STATE;
+		_currentPage = VERSION_PAGE_STATE;
 	}
 
 	@Override
 	public void onDestroyVersionCheckFragmentView() {
 		mActionBar.show();
-		if(mSpecificInfoFragment != null && mSpecificInfoFragment.isVisible())
-			mHeader.setVisibility(View.GONE);
-		else
-			mHeader.setVisibility(View.VISIBLE);
-		mVersionCheckFragment = null;
-		isBackButtonPressed = false;
+		_versionCheckFragment = null;
+		_isBackButtonPressed = false;
 	}
 
 	@Override
 	public void onCreateGuideFragmentView() {
 		mActionBar.hide();
 		mHeader.setVisibility(View.GONE);
-		currentPage = GUIDE_PAGE_STATE;
+		_currentPage = GUIDE_PAGE_STATE;
 	}
 
 	@Override
 	public void popGuideFragment() {
-		mFragmentManager.popBackStackImmediate();
+		_fragmentManager.popBackStackImmediate();
 	}
 
 	@Override
 	public void onDestroyGuideFragmentView() {
 		mActionBar.show();
-		if(mSpecificInfoFragment != null && mSpecificInfoFragment.isVisible())
+		if(_specificInfoFragment != null && _specificInfoFragment.isVisible())
+			mHeader.setVisibility(View.GONE);
+		else if(_settingsFragment != null && _settingsFragment.isVisible())
 			mHeader.setVisibility(View.GONE);
 		else
 			mHeader.setVisibility(View.VISIBLE);
-		mGuideFragment = null;
-		isBackButtonPressed = false;
+		_guideFragment = null;
+		_isBackButtonPressed = false;
+	}
+
+	@Override
+	public void onCreateSettingsFragmentView() {
+		setActionBarTitle(getResources().getString(R.string.action_settings), null);
+		mHeader.setVisibility(View.GONE);
+		_currentPage = SETTINGS_PAGE_STATE;
+	}
+
+	@Override
+	public void onLoadVersionCheckFragmentView() {
+		VersionCheckFragment versionCheckFragment = VersionCheckFragment.newInstance();
+		beginFragmentTransaction(versionCheckFragment, R.id.body_background);
+	}
+
+	@Override
+	public void onDestroySettingsFragmentView() {
+		if(_specificInfoFragment != null && _specificInfoFragment.isVisible())
+			mHeader.setVisibility(View.GONE);
+		else
+			mHeader.setVisibility(View.VISIBLE);
+		_settingsFragment = null;
+		_isBackButtonPressed = false;
 	}
 
 	private class SpinnerArrayAdapter extends ArrayAdapter<String> {

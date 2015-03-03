@@ -71,24 +71,6 @@ category#android.intent.category.LAUNCHER
 ADDED from AndroidManifest.xml:23:17
 	android:name
 		ADDED from AndroidManifest.xml:23:27
-activity#com.owo.mtplease.Activity.SettingsActivity
-ADDED from AndroidManifest.xml:26:9
-	android:screenOrientation
-		ADDED from AndroidManifest.xml:30:13
-	android:label
-		ADDED from AndroidManifest.xml:28:13
-	android:parentActivityName
-		ADDED from AndroidManifest.xml:29:13
-	android:theme
-		ADDED from AndroidManifest.xml:31:13
-	android:name
-		ADDED from AndroidManifest.xml:27:13
-meta-data#android.support.PARENT_ACTIVITY
-ADDED from AndroidManifest.xml:32:13
-	android:value
-		ADDED from AndroidManifest.xml:34:17
-	android:name
-		ADDED from AndroidManifest.xml:33:17
 activity#com.owo.mtplease.Activity.LoginActivity
 ADDED from AndroidManifest.xml:36:9
 	android:screenOrientation
