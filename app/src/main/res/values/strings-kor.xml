@@ -2,7 +2,7 @@
 <resources>
 
     <!-- FOR GLOBAL USE-->
-    <string name="application_version">version 0.1.6 (beta)</string>
+    <string name="application_version">version 0.2.0 (beta)</string>
     <string name="mtplease_url">http://mtplease.herokuapp.com/</string>
     <string name="mtplease_url_temp">http://owo.naraeon.net/</string>
     <string name="pref_app_ver">pref_app_ver</string>
@@ -37,6 +37,8 @@
     <string name="menu_btn_logout">로그아웃</string>
 
     <!-- For queries with conditions -->
+    <string name="conditional_search_mode">조건</string>
+    <string name="keyword_search_mode">키워드</string>
     <string name="we">우리는</string>
     <string name="postposition_1">에</string>
     <string name="where">어디로</string>
@@ -60,24 +62,31 @@
     <string name="cheongpyung">청평으로</string>
     <string name="gapyung">가평으로</string>
 
+    <!-- For queries with keyword -->
+    <string name="keyword_search_hint">펜션명</string>
+    <string name="please_type_keyword">키워드를 입력해주세요.</string>
+    <string name="results_for">에 대한 검색 결과</string>
+
     <!-- For room search results -->
     <string name="rooms_not_found">해당 조건에 만족하는 방이 없습니다.</string>
     <string name="fail_loading_room_results">네트워크 문제로 인해 검색 결과 읽어오기를 실패하였습니다.</string>
     <string name="image_loading_failed">방 이미지를 읽어오는데 실패하였습니다.</string>
     <string name="results">검색 결과</string>
-    <string name="no_results">0개의 방</string>
     <string name="no_results_found">조건에 해당되는 방이 존재하지 않습니다.</string>
     <string name="telephone_inquiry">전화 문의</string>
     <string name="fail_loading_room_info">방 정보를 읽어오는데 실패하였습니다.</string>
 
     <!-- For timeline postings -->
     <string name="notify_fail_loading_timeline">네트워크 문제로 인해 타임라인 읽어오기를 실패하였습니다.</string>
+    <string name="with_number_of_rooms">개의 방이 함께하고 있습니다</string>
 
     <!-- For specific information page -->
     <string name="call_phone">연락하기</string>
     <string name="call_mtplease">엠부에게 전화하기</string>
     <string name="call_mtplease_explanation">(대성리로 물품을 마트가격보다 싸게 배달해드려요)</string>
     <string name="call_pension">펜션에 전화하기</string>
+    <string name="please_say_mtplease">엠티를 부탁해에서 보고 왔어요"라고 사장님에게 꼭 말씀해주세용^^</string>
+    <string name="link_yellow_id">카카오톡 상담</string>
     <string name="go_website">홈페이지</string>
     <string name="option">옵션</string>
     <string name="option_playground">운동장</string>
@@ -206,8 +215,6 @@
 
     <!--For login page-->
     <string name="login">로그인</string>
-    <string name="kakao_app_key">5d4e15e81dab62c70631bb23655bc6bc</string>
-    <string name="facebook_app_id">776724729065175</string>
     <string name="new_comer">처음이신가요?</string>
     <string name="sign_up">가입하기</string>
     <string name="login_with_email">이메일로 로그인하기</string>
@@ -386,6 +393,9 @@
     <string name="withdrawal_id_warning_message">계정을 탈퇴하시겠습니까? 고객님의 모든 정보가 삭제됩니다.</string>
     <string name="yes">예</string>
     <string name="no">아니오</string>
+    <string name="clear_cache">임시파일(이미지) 삭제</string>
+    <string name="clear_cache_summary">저장공간을 확보하기 위해 임시파일을 삭제</string>
+    <string name="clear_cache_complete">임시파일(이미지)가 모두 삭제되었습니다.</string>
 
     <!-- For my page -->
     <string name="my_page">마이페이지</string>

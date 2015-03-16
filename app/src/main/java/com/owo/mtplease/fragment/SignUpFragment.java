@@ -55,39 +55,39 @@ public class SignUpFragment extends Fragment {
 	public static final int SECOND_SIGN_UP_PAGE = 2;
 	public static final int THIRD_SIGN_UP_PAGE = 3;
 
-	private int pageNumber;
+	private int _pageNumber;
 
 	// View instances for first page of the sign up process
-	private CheckBox agreeTermsOfUseCheckBox;
+	private CheckBox _agreeTermsOfUseCheckBox;
 	// end of the view instances
 
 	// View instances for second page of the sign up process
-	private EditText emailAddressEditText;
-	private Button authenticateEmailAddressButton;
-	private EditText emailAddressAuthenticationCodeEditText;
-	private Button confirmEmailAddressAuthenticationCodeButton;
-	private EditText passwordEditText;
-	private EditText passwordConfirmEditText;
+	private EditText __emailAddressEditText;
+	private Button _authenticateEmailAddressButton;
+	private EditText __emailAddressAuthenticationCodeEditText;
+	private Button _confirmEmailAddressAuthenticationCodeButton;
+	private EditText _passwordEditText;
+	private EditText _passwordConfirmEditText;
 	// end of the view instances
 
 	// View instances for third page of the sign up process
-	private EditText userNameEditText;
-	private EditText schoolNameEditText;
-	private EditText nicknameEditText;
-	private Button checkNicknameDuplicationButton;
-	private Button  signUpButton;
+	private EditText _userNameEditText;
+	private EditText _schoolNameEditText;
+	private EditText _nicknameEditText;
+	private Button _checkNicknameDuplicationButton;
+	private Button  _signUpButton;
 	// end of the view instances
 
 	// View instances for all pages of the sign up process
-	private Button goToNextPageButton;
-	private Button goToPreviousPageButton;
+	private Button _goToNextPageButton;
+	private Button _goToPreviousPageButton;
 	// end of the view instances
 
-	private String base64EncodedEmailAddressAuthenticationCode = "";
-	private String emailAddress;
-	private boolean isEmailAddressAuthenticated = false;
+	private String _base64EncodedEmailAddressAuthenticationCode = "";
+	private String _emailAddress;
+	private boolean _isEmailAddressAuthenticated = false;
 
-	private OnSignUpFragmentListener mSignUpFragmentListener;
+	private OnSignUpFragmentListener _mSignUpFragmentListener;
 
 	/**
 	 * Use this factory method to create a new instance of
@@ -95,12 +95,11 @@ public class SignUpFragment extends Fragment {
 	 *
 	 * @return A new instance of fragment SignUpFragment.
 	 */
-	// TODO: Rename and change types and number of parameters
-	public static SignUpFragment newInstance(int pageNumber) {
-		Log.d(TAG, "SignUpFragment" + pageNumber);
+	public static SignUpFragment newInstance(int _pageNumber) {
+		Log.d(TAG, "SignUpFragment" + _pageNumber);
 		SignUpFragment fragment = new SignUpFragment();
 		Bundle args = new Bundle();
-		args.putInt(ARG_PAGE_NUMBER, pageNumber);
+		args.putInt(ARG_PAGE_NUMBER, _pageNumber);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -113,37 +112,37 @@ public class SignUpFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if(getArguments() != null) {
-			pageNumber = getArguments().getInt(ARG_PAGE_NUMBER);
-			Log.d(TAG, "onCreate" + pageNumber);
+			_pageNumber = getArguments().getInt(ARG_PAGE_NUMBER);
+			Log.d(TAG, "onCreate" + _pageNumber);
 		}
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-		Log.d(TAG, "onCreateView" + pageNumber);
+		Log.d(TAG, "onCreateView" + _pageNumber);
 		View signUpFragmentView;
 
-		switch(pageNumber) {
+		switch(_pageNumber) {
 			case FIRST_SIGN_UP_PAGE:
 				signUpFragmentView = inflater.inflate(R.layout.fragment_sign_up_first, container, false);
 
-				agreeTermsOfUseCheckBox = (CheckBox) signUpFragmentView.findViewById(R.id.checkBox_agree_terms_of_use);
-				agreeTermsOfUseCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+				_agreeTermsOfUseCheckBox = (CheckBox) signUpFragmentView.findViewById(R.id.checkBox_agree_terms_of_use);
+				_agreeTermsOfUseCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 						if(isChecked)
-							goToNextPageButton.setEnabled(true);
+							_goToNextPageButton.setEnabled(true);
 					}
 				});
 
-				goToNextPageButton = (Button) signUpFragmentView.findViewById(R.id.btn_go_page_next);
-				goToNextPageButton.setEnabled(false);
-				goToNextPageButton.setOnClickListener(new View.OnClickListener() {
+				_goToNextPageButton = (Button) signUpFragmentView.findViewById(R.id.btn_go_page_next);
+				_goToNextPageButton.setEnabled(false);
+				_goToNextPageButton.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if(agreeTermsOfUseCheckBox.isChecked()) {
-							mSignUpFragmentListener.onClickGoToNextPageButton();
+						if(_agreeTermsOfUseCheckBox.isChecked()) {
+							_mSignUpFragmentListener.onClickGoToNextPageButton();
 						}
 					}
 				});
@@ -152,76 +151,76 @@ public class SignUpFragment extends Fragment {
 			case SECOND_SIGN_UP_PAGE:
 				signUpFragmentView = inflater.inflate(R.layout.fragment_sign_up_second, container, false);
 
-				emailAddressEditText = (EditText) signUpFragmentView.findViewById(R.id.editText_email_sign_up);
+				__emailAddressEditText = (EditText) signUpFragmentView.findViewById(R.id.editText_email_sign_up);
 
-				authenticateEmailAddressButton = (Button) signUpFragmentView.findViewById(R.id.btn_authenticate_email_address);
-				authenticateEmailAddressButton.setOnClickListener(new View.OnClickListener() {
+				_authenticateEmailAddressButton = (Button) signUpFragmentView.findViewById(R.id.btn_authenticate_email_address);
+				_authenticateEmailAddressButton.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if (!isValidEmail(emailAddressEditText.getText().toString()))
+						if (!isValidEmail(__emailAddressEditText.getText().toString()))
 							Toast.makeText(getActivity(), R.string.invalid_email_pattern, Toast.LENGTH_SHORT).show();
 						else {
 							// send email to user's email address
-							emailAddress = emailAddressEditText.getText().toString();
-							String temp[] = emailAddress.split("@");
-							base64EncodedEmailAddressAuthenticationCode = Base64.encodeToString(temp[0].getBytes(), Base64.NO_WRAP);
-							new HttpPostRequestTask(emailAddress).execute(MTPLEASE_URL + "member/");
+							_emailAddress = __emailAddressEditText.getText().toString();
+							String temp[] = _emailAddress.split("@");
+							_base64EncodedEmailAddressAuthenticationCode = Base64.encodeToString(temp[0].getBytes(), Base64.NO_WRAP);
+							new HttpPostRequestTask(_emailAddress).execute(MTPLEASE_URL + "member/");
 						}
 					}
 				});
 
-				emailAddressAuthenticationCodeEditText = (EditText) signUpFragmentView.findViewById(R.id.editText_email_authentication_code);
+				__emailAddressAuthenticationCodeEditText = (EditText) signUpFragmentView.findViewById(R.id.editText_email_authentication_code);
 
-				confirmEmailAddressAuthenticationCodeButton = (Button) signUpFragmentView.findViewById(R.id.btn_confirm_email_address_authentication_code);
-				confirmEmailAddressAuthenticationCodeButton.setOnClickListener(new View.OnClickListener() {
+				_confirmEmailAddressAuthenticationCodeButton = (Button) signUpFragmentView.findViewById(R.id.btn_confirm_email_address_authentication_code);
+				_confirmEmailAddressAuthenticationCodeButton.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if(base64EncodedEmailAddressAuthenticationCode.equals(emailAddressAuthenticationCodeEditText.getText().toString())) {
+						if(_base64EncodedEmailAddressAuthenticationCode.equals(__emailAddressAuthenticationCodeEditText.getText().toString())) {
 							Toast.makeText(getActivity(), R.string.email_address_authenticated, Toast.LENGTH_SHORT).show();
-							confirmEmailAddressAuthenticationCodeButton.setText(R.string.authentication_complete);
-							confirmEmailAddressAuthenticationCodeButton.setEnabled(false);
-							isEmailAddressAuthenticated = true;
+							_confirmEmailAddressAuthenticationCodeButton.setText(R.string.authentication_complete);
+							_confirmEmailAddressAuthenticationCodeButton.setEnabled(false);
+							_isEmailAddressAuthenticated = true;
 						}
 						else {
 							Toast.makeText(getActivity(), R.string.wrong_authentication_code, Toast.LENGTH_SHORT).show();
-							isEmailAddressAuthenticated = false;
+							_isEmailAddressAuthenticated = false;
 						}
 					}
 				});
 
-				passwordEditText = (EditText) signUpFragmentView.findViewById(R.id.editText_password_sign_up);
+				_passwordEditText = (EditText) signUpFragmentView.findViewById(R.id.editText_password_sign_up);
 
-				passwordConfirmEditText = (EditText) signUpFragmentView.findViewById(R.id.editText_confirm_password_sign_up);
+				_passwordConfirmEditText = (EditText) signUpFragmentView.findViewById(R.id.editText_confirm_password_sign_up);
 
-				goToNextPageButton = (Button) signUpFragmentView.findViewById(R.id.btn_go_page_next);
-				goToNextPageButton.setOnClickListener(new View.OnClickListener() {
+				_goToNextPageButton = (Button) signUpFragmentView.findViewById(R.id.btn_go_page_next);
+				_goToNextPageButton.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if (isEmailAddressAuthenticated) {
-							String password = passwordEditText.getText().toString();
-							String passwordConfirm = passwordConfirmEditText.getText().toString();
+						if (_isEmailAddressAuthenticated) {
+							String password = _passwordEditText.getText().toString();
+							String passwordConfirm = _passwordConfirmEditText.getText().toString();
 
 							if(password.equals(passwordConfirm)) {
-								mSignUpFragmentListener.onClickGoToNextPageButton(emailAddress, password);
+								_mSignUpFragmentListener.onClickGoToNextPageButton(_emailAddress, password);
 							}
 							else {
 								Toast.makeText(getActivity(), R.string.password_does_not_match, Toast.LENGTH_SHORT).show();
-								passwordEditText.requestFocus();
-								passwordEditText.setText("");
-								passwordConfirmEditText.setText("");
+								_passwordEditText.requestFocus();
+								_passwordEditText.setText("");
+								_passwordConfirmEditText.setText("");
 							}
 						} else {
 							Toast.makeText(getActivity(), R.string.email_address_is_not_authenticated, Toast.LENGTH_SHORT).show();
-							emailAddressEditText.requestFocus();
+							__emailAddressEditText.requestFocus();
 						}
 					}
 				});
 
-				goToPreviousPageButton = (Button) signUpFragmentView.findViewById(R.id.btn_go_page_previous);
-				goToPreviousPageButton.setOnClickListener(new View.OnClickListener() {
+				_goToPreviousPageButton = (Button) signUpFragmentView.findViewById(R.id.btn_go_page_previous);
+				_goToPreviousPageButton.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						mSignUpFragmentListener.onClickGoToPreviousPageButton(SECOND_SIGN_UP_PAGE);
+						_mSignUpFragmentListener.onClickGoToPreviousPageButton(SECOND_SIGN_UP_PAGE);
 					}
 				});
 
@@ -229,48 +228,48 @@ public class SignUpFragment extends Fragment {
 			case THIRD_SIGN_UP_PAGE:
 				signUpFragmentView = inflater.inflate(R.layout.fragment_sign_up_third, container, false);
 
-				userNameEditText = (EditText) signUpFragmentView.findViewById(R.id.editText_name_user);
+				_userNameEditText = (EditText) signUpFragmentView.findViewById(R.id.editText_name_user);
 
-				schoolNameEditText = (EditText) signUpFragmentView.findViewById(R.id.editText_name_school);
+				_schoolNameEditText = (EditText) signUpFragmentView.findViewById(R.id.editText_name_school);
 
-				nicknameEditText = (EditText) signUpFragmentView.findViewById(R.id.editText_nickname);
+				_nicknameEditText = (EditText) signUpFragmentView.findViewById(R.id.editText_nickname);
 
-				/*checkNicknameDuplicationButton = (Button) signUpFragmentView.findViewById(R.id.btn_check_duplication_nickname);
-				checkNicknameDuplicationButton.setOnClickListener(new View.OnClickListener() {
+				/*_checkNicknameDuplicationButton = (Button) signUpFragmentView.findViewById(R.id.btn_check_duplication_nickname);
+				_checkNicknameDuplicationButton.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 
 					}
 				});*/
 
-				signUpButton = (Button) signUpFragmentView.findViewById(R.id.btn_sign_up);
-				signUpButton.setOnClickListener(new View.OnClickListener() {
+				_signUpButton = (Button) signUpFragmentView.findViewById(R.id.btn_sign_up);
+				_signUpButton.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						String userName = userNameEditText.getText().toString();
-						String schoolName = schoolNameEditText.getText().toString();
-						String nickname = nicknameEditText.getText().toString();
+						String userName = _userNameEditText.getText().toString();
+						String schoolName = _schoolNameEditText.getText().toString();
+						String nickname = _nicknameEditText.getText().toString();
 
 						if(userName.equals("")) {
 							Toast.makeText(getActivity(), R.string.please_type_name, Toast.LENGTH_SHORT).show();
-							userNameEditText.requestFocus();
+							_userNameEditText.requestFocus();
 						} else if(schoolName.equals("")) {
 							Toast.makeText(getActivity(), R.string.please_type_school_name, Toast.LENGTH_SHORT).show();
-							schoolNameEditText.requestFocus();
+							_schoolNameEditText.requestFocus();
 						} else if(nickname.equals("")) {
 							Toast.makeText(getActivity(), R.string.please_type_nickname, Toast.LENGTH_SHORT).show();
-							nicknameEditText.requestFocus();
+							_nicknameEditText.requestFocus();
 						} else {
-							mSignUpFragmentListener.onClickSignUpButton(userName, schoolName, nickname);
+							_mSignUpFragmentListener.onClickSignUpButton(userName, schoolName, nickname);
 						}
 					}
 				});
 
-				goToPreviousPageButton = (Button) signUpFragmentView.findViewById(R.id.btn_go_page_previous);
-				goToPreviousPageButton.setOnClickListener(new View.OnClickListener() {
+				_goToPreviousPageButton = (Button) signUpFragmentView.findViewById(R.id.btn_go_page_previous);
+				_goToPreviousPageButton.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						mSignUpFragmentListener.onClickGoToPreviousPageButton(THIRD_SIGN_UP_PAGE);
+						_mSignUpFragmentListener.onClickGoToPreviousPageButton(THIRD_SIGN_UP_PAGE);
 					}
 				});
 
@@ -300,7 +299,7 @@ public class SignUpFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mSignUpFragmentListener = (OnSignUpFragmentListener) activity;
+			_mSignUpFragmentListener = (OnSignUpFragmentListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnFragmentListener");
@@ -310,7 +309,7 @@ public class SignUpFragment extends Fragment {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		mSignUpFragmentListener = null;
+		_mSignUpFragmentListener = null;
 	}
 
 	private class HttpPostRequestTask extends AsyncTask<String, Integer, String> {
@@ -325,7 +324,7 @@ public class SignUpFragment extends Fragment {
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			mSignUpFragmentListener.onStartSendingAuthenticationCode(authenticateEmailAddressButton);
+			_mSignUpFragmentListener.onStartSendingAuthenticationCode(_authenticateEmailAddressButton);
 		}
 
 		@Override
@@ -358,7 +357,7 @@ public class SignUpFragment extends Fragment {
 		protected void onPostExecute(String jsonString) {
 			super.onPostExecute(jsonString);
 
-			mSignUpFragmentListener.onEndSendingAuthenticationCode();
+			_mSignUpFragmentListener.onEndSendingAuthenticationCode();
 
 			try {
 				JSONObject responseJSONObject = new JSONObject(jsonString);
@@ -383,9 +382,9 @@ public class SignUpFragment extends Fragment {
 		public void onStartSendingAuthenticationCode(View view);
 		public void onEndSendingAuthenticationCode();
 		public void onClickGoToNextPageButton();
-		public void onClickGoToNextPageButton(String emailAddress, String password);
+		public void onClickGoToNextPageButton(String _emailAddress, String password);
 		public void onClickSignUpButton(String userName, String schoolName, String nickname);
-		public void onClickGoToPreviousPageButton(int pageNumber);
+		public void onClickGoToPreviousPageButton(int _pageNumber);
 	}
 
 }

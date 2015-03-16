@@ -95,7 +95,6 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 					ImageRequest imageRequest = new ImageRequest(imageUrl, new Response.Listener<Bitmap>() {
 						@Override
 						public void onResponse(Bitmap response) {
-							Log.d(TAG, "Memory allocated: " + response.getAllocationByteCount());
 							ServerCommunicationManager.getInstance(mContext).putBitmap(imageUrl, response);
 						}
 					}, 0, 0, null, new Response.ErrorListener() {

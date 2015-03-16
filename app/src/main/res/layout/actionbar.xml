@@ -5,41 +5,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:id="@+id/imageView_icon_drawer"
-        android:src="@drawable/ic_drawer"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="8dp"
-        android:clickable="true"/>
-
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:id="@+id/layout_title_actionbar"
-        android:layout_toRightOf="@+id/imageView_icon_drawer">
+        android:layout_height="match_parent"
+        >
 
-        <TextView
-            android:id="@+id/textView_title_actionBar"
+        <ImageView
+            android:id="@+id/imageView_icon_drawer"
             android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:src="@drawable/ic_drawer"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="16dp"/>
+
+        <LinearLayout
+            android:id="@+id/layout_title_actionbar"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="@string/actionbar_title"
-            android:textColor="@android:color/white"
-            android:textSize="24sp"
-            android:layout_gravity="left"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView_subtitle_actionBar"
-            android:textSize="14sp"
-            android:textColor="@android:color/white"
-            android:layout_gravity="left"/>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/textView_title_actionBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/actionbar_title"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"/>
+
+            <TextView
+                android:id="@+id/textView_subtitle_actionBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:gravity="center"/>
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>
 

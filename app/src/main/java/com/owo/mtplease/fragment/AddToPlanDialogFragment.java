@@ -34,30 +34,29 @@ public class AddToPlanDialogFragment extends DialogFragment {
 	private static final int CONDITION_SEARCH_MODE = 1;
 	private static final int KEYWORD_SEARCH_MODE = 2;
 
-	// TODO: Rename and change types of parameters
-	private String dateOfMT;
-	private int regionOfMT;
-	private int numberOfPeople;
-	private int searchMode;
+	private String _dateOfMT;
+	private int _regionOfMT;
+	private int _numberOfPeople;
+	private int _searchMode;
 
 	// User Interface Views
-	private Button dateSelectDialogButton;
-	private Spinner regionSelectDialogButton;
-	private EditText numberOfPeopleSelectDialogEditText;
-	private TextView numberOfMaleTextView;
-	private TextView numberOfFemaleTextView;
-	private SeekBar sexRatioDialogSeekBar;
-	private Button confirmButton;
-	private Button cancelButton;
+	private Button _dateSelectDialogButton;
+	private Spinner _regionSelectDialogButton;
+	private EditText _numberOfPeopleSelectDialogEditText;
+	private TextView _numberOfMaleTextView;
+	private TextView _numberOfFemaleTextView;
+	private SeekBar _sexRatioDialogSeekBar;
+	private Button _confirmButton;
+	private Button _cancelButton;
 	// End of the UI views
 
-	private OnAddToPlanDialogFragmentInteractionListener mOnAddToPlanDialogFragmentInteractionListener;
+	private OnAddToPlanDialogFragmentInteractionListener _mOnAddToPlanDialogFragmentInteractionListener;
 
-	private Calendar calendar = Calendar.getInstance();
+	private Calendar _calendar = Calendar.getInstance();
 
-	private int sexRatioProgress;
+	private int _sexRatioProgress;
 
-	private TextWatcher editTextWatcherForNumberOfPeopleSelectDialog = new TextWatcher() {
+	private TextWatcher _editTextWatcherForNumberOfPeopleSelectDialog = new TextWatcher() {
 
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -70,9 +69,9 @@ public class AddToPlanDialogFragment extends DialogFragment {
 		@Override
 		public void afterTextChanged(Editable s) throws NumberFormatException {
 			try {
-				sexRatioDialogSeekBar.setMax(Integer.parseInt(s.toString()));
+				_sexRatioDialogSeekBar.setMax(Integer.parseInt(s.toString()));
 			} catch (NumberFormatException e) {
-				sexRatioDialogSeekBar.setMax(0);
+				_sexRatioDialogSeekBar.setMax(0);
 				e.printStackTrace();
 			}
 		}
@@ -82,20 +81,19 @@ public class AddToPlanDialogFragment extends DialogFragment {
 	 * Use this factory method to create a new instance of
 	 * this fragment using the provided parameters.
 	 *
-	 * @param dateOfMT       Parameter 1.
-	 * @param regionOfMT     Parameter 2.
-	 * @param numberOfPeople Parameter 3.
-	 * @param searchMode     Parameter 4.
+	 * @param _dateOfMT       Parameter 1.
+	 * @param _regionOfMT     Parameter 2.
+	 * @param _numberOfPeople Parameter 3.
+	 * @param _searchMode     Parameter 4.
 	 * @return A new instance of fragment AddToPlanDialogFragment.
 	 */
-	// TODO: Rename and change types and number of parameters
-	public static AddToPlanDialogFragment newInstance(String dateOfMT, int regionOfMT, int numberOfPeople, int searchMode) {
+	public static AddToPlanDialogFragment newInstance(String _dateOfMT, int _regionOfMT, int _numberOfPeople, int _searchMode) {
 		AddToPlanDialogFragment fragment = new AddToPlanDialogFragment();
 		Bundle args = new Bundle();
-		args.putString(DATE_OF_MT, dateOfMT);
-		args.putInt(REGION_OF_MT, regionOfMT);
-		args.putInt(NUMBER_OF_PEOPLE, numberOfPeople);
-		args.putInt(SEARCH_MODE, searchMode);
+		args.putString(DATE_OF_MT, _dateOfMT);
+		args.putInt(REGION_OF_MT, _regionOfMT);
+		args.putInt(NUMBER_OF_PEOPLE, _numberOfPeople);
+		args.putInt(SEARCH_MODE, _searchMode);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -108,10 +106,10 @@ public class AddToPlanDialogFragment extends DialogFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			dateOfMT = getArguments().getString(DATE_OF_MT);
-			regionOfMT = getArguments().getInt(REGION_OF_MT);
-			numberOfPeople = getArguments().getInt(NUMBER_OF_PEOPLE);
-			searchMode = getArguments().getInt(SEARCH_MODE);
+			_dateOfMT = getArguments().getString(DATE_OF_MT);
+			_regionOfMT = getArguments().getInt(REGION_OF_MT);
+			_numberOfPeople = getArguments().getInt(NUMBER_OF_PEOPLE);
+			_searchMode = getArguments().getInt(SEARCH_MODE);
 		}
 	}
 
@@ -123,46 +121,46 @@ public class AddToPlanDialogFragment extends DialogFragment {
 
 		getDialog().setTitle(R.string.input_basic_data);
 
-		dateSelectDialogButton = (Button) addToPlanDialogFragmentView.findViewById(R.id.btn_select_date_dialog);
-		dateSelectDialogButton.setOnClickListener(new View.OnClickListener() {
+		_dateSelectDialogButton = (Button) addToPlanDialogFragmentView.findViewById(R.id.btn_select_date_dialog);
+		_dateSelectDialogButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				CalendarDialogFragment calendarDialogFragment =
+				CalendarDialogFragment _calendarDialogFragment =
 						CalendarDialogFragment.newInstance(CALL_FROM_ADDTOPLANDIALOG);
-				calendarDialogFragment
-						.show(getActivity().getSupportFragmentManager(), "calendar_dialog_popped");
+				_calendarDialogFragment
+						.show(getActivity().getSupportFragmentManager(), "_calendar_dialog_popped");
 			}
 		});
 
-		regionSelectDialogButton =
+		_regionSelectDialogButton =
 				(Spinner) addToPlanDialogFragmentView.findViewById(R.id.spinner_select_region_dialog);
 		ArrayAdapter<CharSequence> regionSpinnerDialogAdapter =
 				ArrayAdapter.createFromResource(getActivity(), R.array.array_region, R.layout.spinner_region);
 		regionSpinnerDialogAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		regionSelectDialogButton.setAdapter(regionSpinnerDialogAdapter);
+		_regionSelectDialogButton.setAdapter(regionSpinnerDialogAdapter);
 
-		numberOfPeopleSelectDialogEditText =
+		_numberOfPeopleSelectDialogEditText =
 				(EditText) addToPlanDialogFragmentView.findViewById(R.id.editText_number_people_dialog);
-		numberOfPeopleSelectDialogEditText.addTextChangedListener(editTextWatcherForNumberOfPeopleSelectDialog);
+		_numberOfPeopleSelectDialogEditText.addTextChangedListener(_editTextWatcherForNumberOfPeopleSelectDialog);
 
-		numberOfMaleTextView =
+		_numberOfMaleTextView =
 				(TextView) addToPlanDialogFragmentView.findViewById(R.id.textView_number_male_dialog);
-		numberOfMaleTextView.setText("0" + getResources().getString(R.string.people_unit));
-		numberOfFemaleTextView =
+		_numberOfMaleTextView.setText("0" + getResources().getString(R.string.people_unit));
+		_numberOfFemaleTextView =
 				(TextView) addToPlanDialogFragmentView.findViewById(R.id.textView_number_female_dialog);
-		numberOfFemaleTextView.setText("0" + getResources().getString(R.string.people_unit));
+		_numberOfFemaleTextView.setText("0" + getResources().getString(R.string.people_unit));
 
-		sexRatioDialogSeekBar = (SeekBar) addToPlanDialogFragmentView.findViewById(R.id.seekBar_ratio_sex_dialog);
-		sexRatioDialogSeekBar.setMax(0);
+		_sexRatioDialogSeekBar = (SeekBar) addToPlanDialogFragmentView.findViewById(R.id.seekBar_ratio_sex_dialog);
+		_sexRatioDialogSeekBar.setMax(0);
 
-		sexRatioDialogSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+		_sexRatioDialogSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				sexRatioProgress = progress;
+				_sexRatioProgress = progress;
 				// set number of male to the TextView
-				numberOfMaleTextView.setText(progress + getResources().getString(R.string.people_unit));
+				_numberOfMaleTextView.setText(progress + getResources().getString(R.string.people_unit));
 				// set number of female to the TextView
-				numberOfFemaleTextView.setText(seekBar.getMax() - progress + getResources().getString(R.string.people_unit));
+				_numberOfFemaleTextView.setText(seekBar.getMax() - progress + getResources().getString(R.string.people_unit));
 			}
 
 			@Override
@@ -174,33 +172,33 @@ public class AddToPlanDialogFragment extends DialogFragment {
 			}
 		});
 
-		if(searchMode == CONDITION_SEARCH_MODE) {
-			dateSelectDialogButton.setText(dateOfMT);
+		if(_searchMode == CONDITION_SEARCH_MODE) {
+			_dateSelectDialogButton.setText(_dateOfMT);
 
-			regionSelectDialogButton.setSelection(regionOfMT);
+			_regionSelectDialogButton.setSelection(_regionOfMT);
 
-			Log.d(TAG, numberOfPeople + "");
-			numberOfPeopleSelectDialogEditText.setText(String.valueOf(numberOfPeople));
+			Log.d(TAG, _numberOfPeople + "");
+			_numberOfPeopleSelectDialogEditText.setText(String.valueOf(_numberOfPeople));
 		} else {
-			dateSelectDialogButton.setText(calendar.get(Calendar.YEAR) + "년 " + (calendar.get(Calendar.MONTH) + 1)
-					+ "월 " + calendar.get(Calendar.DATE) + "일");
+			_dateSelectDialogButton.setText(_calendar.get(Calendar.YEAR) + "년 " + (_calendar.get(Calendar.MONTH) + 1)
+					+ "월 " + _calendar.get(Calendar.DATE) + "일");
 		}
 
 
-		confirmButton = (Button) addToPlanDialogFragmentView.findViewById(R.id.btn_confirm);
-		confirmButton.setOnClickListener(new View.OnClickListener() {
+		_confirmButton = (Button) addToPlanDialogFragmentView.findViewById(R.id.btn_confirm);
+		_confirmButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				/*mOnAddToPlanDialogFragmentInteractionListener.
-						onAddToPlanDialogFragmentViewDetached(dateOfMT,
-								regionSelectDialogButton.getSelectedItemPosition(),
-								sexRatioDialogSeekBar.getMax(), sexRatioProgress);*/
+				/*_mOnAddToPlanDialogFragmentInteractionListener.
+						onAddToPlanDialogFragmentViewDetached(_dateOfMT,
+								_regionSelectDialogButton.getSelectedItemPosition(),
+								_sexRatioDialogSeekBar.getMax(), _sexRatioProgress);*/
 				dismiss();
 			}
 		});
 
-		cancelButton = (Button) addToPlanDialogFragmentView.findViewById(R.id.btn_cancel);
-		cancelButton.setOnClickListener(new View.OnClickListener() {
+		_cancelButton = (Button) addToPlanDialogFragmentView.findViewById(R.id.btn_cancel);
+		_cancelButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				dismiss();
@@ -215,7 +213,7 @@ public class AddToPlanDialogFragment extends DialogFragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mOnAddToPlanDialogFragmentInteractionListener = (OnAddToPlanDialogFragmentInteractionListener) activity;
+			_mOnAddToPlanDialogFragmentInteractionListener = (OnAddToPlanDialogFragmentInteractionListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnFragmentInteractionListener");
@@ -225,17 +223,17 @@ public class AddToPlanDialogFragment extends DialogFragment {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		mOnAddToPlanDialogFragmentInteractionListener = null;
+		_mOnAddToPlanDialogFragmentInteractionListener = null;
 	}
 
 	public void updateDate(String dateChanged) {
-		dateSelectDialogButton.setText(dateChanged);
-		dateOfMT = dateChanged;
+		_dateSelectDialogButton.setText(dateChanged);
+		_dateOfMT = dateChanged;
 	}
 
 	public interface OnAddToPlanDialogFragmentInteractionListener {
 		// TODO: Update argument type and name
-//		public void onAddToPlanDialogFragmentViewDetached(String dateOfMT, int regionOfMT, int numberOfPeople, int sexRatioProgress);
+//		public void onAddToPlanDialogFragmentViewDetached(String _dateOfMT, int _regionOfMT, int _numberOfPeople, int _sexRatioProgress);
 	}
 
 }

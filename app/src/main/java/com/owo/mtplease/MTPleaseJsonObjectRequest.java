@@ -21,7 +21,7 @@ public class MTPleaseJsonObjectRequest extends JsonObjectRequest {
 
 	private static final String TAG = "MTPleaseJsonObjectRequest";
 
-	private Context mContext;
+	private Context _mContext;
 
 	public MTPleaseJsonObjectRequest(int method, String url, JSONObject jsonRequest,
 									  Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
@@ -34,7 +34,7 @@ public class MTPleaseJsonObjectRequest extends JsonObjectRequest {
 	}
 
 	public void setContext(Context context) {
-		mContext = context;
+		_mContext = context;
 	}
 
 	@Override
@@ -43,8 +43,8 @@ public class MTPleaseJsonObjectRequest extends JsonObjectRequest {
 		if (headers.containsKey("Set-Cookie")) {
 			Log.d(TAG , headers.toString());
 			Log.d(TAG + "[parseNetworkResponse()]", headers.get("Set-Cookie"));
-			PreferenceManager.getDefaultSharedPreferences(mContext).edit()
-					.putString(mContext.getResources().getString(R.string.pref_saved_cookie),
+			PreferenceManager.getDefaultSharedPreferences(_mContext).edit()
+					.putString(_mContext.getResources().getString(R.string.pref_saved_cookie),
 							headers.get("Set-Cookie")).commit();
 		}
 		return super.parseNetworkResponse(response);
@@ -55,8 +55,8 @@ public class MTPleaseJsonObjectRequest extends JsonObjectRequest {
 		Map<String, String> customHeaders = super.getHeaders();
 		Map<String, String> newHeaders = new HashMap<String, String>();
 		newHeaders.putAll(customHeaders);
-		String cookieString = PreferenceManager.getDefaultSharedPreferences(mContext)
-				.getString(mContext.getResources().getString(R.string.pref_saved_cookie), "");
+		String cookieString = PreferenceManager.getDefaultSharedPreferences(_mContext)
+				.getString(_mContext.getResources().getString(R.string.pref_saved_cookie), "");
 		Log.d(TAG + "[getHeaders()]", cookieString);
 		if (cookieString.length() > 0) {
 			newHeaders.put("cookie", cookieString);

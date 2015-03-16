@@ -1,28 +1,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:background="@color/mtplease_main_background_color">
+              android:background="@color/mtplease_main_background_color"
+              android:orientation="vertical">
 
     <RelativeLayout
+        android:layout_marginTop="?android:attr/actionBarSize"
+        android:id="@+id/layout_ver_app"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:id="@+id/layout_ver_app"
-        android:clickable="true"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        >
+        android:clickable="true">
 
         <TextView
+            android:id="@+id/textView_ver_app"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView_ver_app"
-            android:textSize="16sp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:textColor="@color/mtplease_main_text_color"
             android:text="@string/version"
+            android:textColor="@color/mtplease_main_text_color"
+            android:textSize="16sp"
             android:textStyle="bold"/>
 
         <ImageView
@@ -30,18 +28,18 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_action_goto"
-            android:layout_marginRight="8dp"/>
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_action_goto"/>
 
     </RelativeLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="5dp"
-        android:background="@drawable/shape_cell_bottom_line"
         android:layout_below="@+id/layout_btn_home"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"/>
+        android:layout_marginRight="16dp"
+        android:background="@drawable/shape_cell_bottom_line"/>
 
 
 </LinearLayout>

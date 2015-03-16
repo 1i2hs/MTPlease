@@ -26,8 +26,8 @@ public class UserInfoModificationFragment extends Fragment {
 	private static final String ARG_PARAM1 = "param1";
 	private static final String ARG_PARAM2 = "param2";
 
-	private String mParam1;
-	private String mParam2;
+	private String _mParam1;
+	private String _mParam2;
 	
 	private TextView _userIdTextView;
 	private EditText _currentPasswordEditText;
@@ -44,7 +44,6 @@ public class UserInfoModificationFragment extends Fragment {
 
 	 * @return A new instance of fragment UserInfoModificationFragment.
 	 */
-	// TODO: Rename and change types and number of parameters
 	public static UserInfoModificationFragment newInstance(/*String param1, String param2*/) {
 		UserInfoModificationFragment fragment = new UserInfoModificationFragment();
 		/*Bundle args = new Bundle();
@@ -62,8 +61,8 @@ public class UserInfoModificationFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		/*if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
+			_mParam1 = getArguments().getString(ARG_PARAM1);
+			_mParam2 = getArguments().getString(ARG_PARAM2);
 		}*/
 		if(_mOnUserInfoModificationFragmentListener != null)
 			_mOnUserInfoModificationFragmentListener.onCreateUserInfoModificationFragmentView();

@@ -6,8 +6,11 @@
     </style>
 
     <style name="MTPleaseTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/ActionBarStyle.MTPlease</item>
-        <item name="actionBarStyle">@style/ActionBarStyle.MTPlease</item>
+        <!--<item name="android:actionBarStyle">@style/ActionBarStyle.MTPlease</item>
+        <item name="actionBarStyle">@style/ActionBarStyle.MTPlease</item>-->
+        <item name="windowActionBar">false</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowActionBarOverlay">false</item>
     </style>
 
     <style name="ActionBarStyle.MTPlease" parent="@style/Widget.AppCompat.Light.ActionBar">

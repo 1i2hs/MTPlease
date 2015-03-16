@@ -3,6 +3,7 @@ package com.owo.mtplease;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -106,6 +107,7 @@ public class ServerCommunicationManager {
 	public void clearCache() {
 //		Log.d(TAG, "Clearing cached imgs inside the cached img directory");
 		mImageCache.clearCache();
+		Toast.makeText(mContext, R.string.clear_cache_complete, Toast.LENGTH_SHORT).show();
 	}
 
 	public File getCacheFolder() {

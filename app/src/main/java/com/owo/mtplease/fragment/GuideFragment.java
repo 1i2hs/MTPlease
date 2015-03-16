@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -26,9 +27,10 @@ import com.owo.mtplease.R;
  */
 public class GuideFragment extends Fragment {
 
-	private ViewPager guideImageViewPager;
-	private GuideImageAdapter mGuideImageAdapter;
-
+	private ViewPager _guideImageViewPager;
+	private LinearLayout _guideIndicatorLinearLayout;
+	private ImageView _closeButton;
+	private GuideImageAdapter _mGuideImageAdapter;
 	private OnGuideFragmentListener mOnGuideFragmentListener;
 
 	public static GuideFragment newInstance() {
@@ -51,9 +53,67 @@ public class GuideFragment extends Fragment {
 		// Inflate the layout for this fragment
 		View guideFragmentView = inflater.inflate(R.layout.fragment_guide, container, false);
 
-		guideImageViewPager = (ViewPager) guideFragmentView.findViewById(R.id.viewpager_image_guide);
-		mGuideImageAdapter = new GuideImageAdapter(getActivity());
-		guideImageViewPager.setAdapter(mGuideImageAdapter);
+		_guideIndicatorLinearLayout = (LinearLayout) guideFragmentView.findViewById(R.id.layout_indicators_guide);
+
+		_closeButton = (ImageView) guideFragmentView.findViewById(R.id.imageView_close);
+		_closeButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mOnGuideFragmentListener.popGuideFragment();
+			}
+		});
+
+		for (int i = 0; i < 5; i++) {
+			ImageView guideIndicator = new ImageView(getActivity());
+			if (i == 0)
+				guideIndicator.setImageResource(R.drawable.ic_indicator_selected);
+			else
+				guideIndicator.setImageResource(R.drawable.ic_indicator_not_selected);
+
+			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			params.setMargins(0, 0, convertDpToPx(4, getActivity()), 0);
+
+			guideIndicator.setLayoutParams(params);
+
+			_guideIndicatorLinearLayout.addView(guideIndicator);
+		}
+
+		_guideImageViewPager = (ViewPager) guideFragmentView.findViewById(R.id.viewpager_image_guide);
+		_mGuideImageAdapter = new GuideImageAdapter(getActivity());
+		_guideImageViewPager.setAdapter(_mGuideImageAdapter);
+		_guideImageViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+			}
+
+			@Override
+			public void onPageSelected(int position) {
+				View currentPictureIndicator = _guideIndicatorLinearLayout.getChildAt(position);
+				((ImageView) currentPictureIndicator).setImageResource(R.drawable.ic_indicator_selected);
+
+				if (position - 1 >= 0) {
+					View leftPictureIndicator = _guideIndicatorLinearLayout.getChildAt(position - 1);
+					((ImageView) leftPictureIndicator).setImageResource(R.drawable.ic_indicator_not_selected);
+				}
+
+				if (position + 1 < 5) {
+					View leftPictureIndicator = _guideIndicatorLinearLayout.getChildAt(position + 1);
+					((ImageView) leftPictureIndicator).setImageResource(R.drawable.ic_indicator_not_selected);
+				}
+
+				if(position == 4) {
+					_closeButton.setVisibility(View.VISIBLE);
+				} else {
+					_closeButton.setVisibility(View.INVISIBLE);
+				}
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {
+
+			}
+		});
 
 		if(mOnGuideFragmentListener != null)
 			mOnGuideFragmentListener.onCreateGuideFragmentView();
@@ -127,13 +187,6 @@ public class GuideFragment extends Fragment {
 			imageView.setImageResource(GuideImages[position]);
 			imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-			if(position == 4)
-				imageView.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						mOnGuideFragmentListener.popGuideFragment();
-					}
-				});
 
 			((ViewPager) container).addView(imageView, 0);
 
@@ -144,6 +197,12 @@ public class GuideFragment extends Fragment {
 		public void destroyItem(ViewGroup container, int position, Object object) {
 			((ViewPager) container).removeView((ImageView) object);
 		}
+	}
+
+	private static int convertDpToPx(int dp, Context context) {
+		float screenDensity = context.getResources().getDisplayMetrics().density;
+		int px = (int)(dp * screenDensity);
+		return px;
 	}
 
 }

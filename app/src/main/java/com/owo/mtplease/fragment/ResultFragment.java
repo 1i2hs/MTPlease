@@ -35,18 +35,18 @@ public class ResultFragment extends Fragment {
 	private static final int DEFAULT_FIRST_ITEM_POSITION = 1;
 
 	// View: User Interface Views
-	private RecyclerView mRecyclerView;
-	private LinearLayoutManager mLayoutManager;
+	private RecyclerView _mRecyclerView;
+	private LinearLayoutManager _mLayoutManager;
 	// End of User Interface Views
 
 	// Controller: Adapters for User Interface Views
-	private RecyclerView.Adapter mAdapter;
+	private RecyclerView.Adapter _mAdapter;
 	// End of Controller;
 
 	// Model: Data variables for User Interface Views
-	private String jsonStringRoomList;
-	private JSONArray roomArray;
-	private String mtDate;
+	private String _jsonStringRoomList;
+	private JSONArray _roomArray;
+	private String _mtDate;
 	// End of the Model
 
 	// Flags
@@ -54,14 +54,13 @@ public class ResultFragment extends Fragment {
 	// Counters
 
 	// Listeners
-	private OnResultFragmentListener mOnResultFragmentListener;
+	private OnResultFragmentListener _mOnResultFragmentListener;
 	protected ScrollTabHolder mScrollTabHolder;
 	// End of the Listeners
 
 	// Others
-	private ActionBarActivity actionBarActivity;
+	private ActionBarActivity _actionBarActivity;
 	//private FragmentManager mFragmentManager;
-	private boolean noResults;
 	// End of the Others
 
 	/**
@@ -69,14 +68,14 @@ public class ResultFragment extends Fragment {
 	 * this fragment using the provided parameters.
 	 *
 	 * @param jsonString Parameter 1.
-	 * @param mtDate Parameter 1.
+	 * @param _mtDate Parameter 1.
 	 * @return A new instance of fragment MainFragment.
 	 */
-	public static ResultFragment newInstance(String jsonString, String mtDate) {
+	public static ResultFragment newInstance(String jsonString, String _mtDate) {
 		ResultFragment fragment = new ResultFragment();
 		Bundle args = new Bundle();
 		args.putString(ARG_JSONSTRING_OF_ROOMS, jsonString);
-		args.putString(ARG_DATE_OF_MET, mtDate);
+		args.putString(ARG_DATE_OF_MET, _mtDate);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -87,16 +86,16 @@ public class ResultFragment extends Fragment {
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		mLayoutManager = new LinearLayoutManager(getActivity());
-		mRecyclerView.setLayoutManager(mLayoutManager);
-		mRecyclerView.setHasFixedSize(true);
-		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+		_mLayoutManager = new LinearLayoutManager(getActivity());
+		_mRecyclerView.setLayoutManager(_mLayoutManager);
+		_mRecyclerView.setHasFixedSize(true);
+		_mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-		mAdapter = new RoomListRecyclerViewAdapter(getActivity(),
-				roomArray, mtDate, mOnResultFragmentListener);
-		mRecyclerView.setAdapter(mAdapter);
+		_mAdapter = new RoomListRecyclerViewAdapter(getActivity(),
+				_roomArray, _mtDate, _mOnResultFragmentListener);
+		_mRecyclerView.setAdapter(_mAdapter);
 
-		mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+		_mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
 			@Override
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -107,8 +106,7 @@ public class ResultFragment extends Fragment {
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
 				if(mScrollTabHolder != null) {
-					int position = mLayoutManager.findFirstVisibleItemPosition();
-					mScrollTabHolder.onScroll(recyclerView, mLayoutManager.findFirstVisibleItemPosition(), 0, MainActivity.RESULT_FRAGMENT_VISIBLE);
+					mScrollTabHolder.onScroll(recyclerView, _mLayoutManager.findFirstVisibleItemPosition(), 0, MainActivity.RESULT_FRAGMENT_VISIBLE);
 				}
 			}
 		});
@@ -121,19 +119,14 @@ public class ResultFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			jsonStringRoomList = getArguments().getString(ARG_JSONSTRING_OF_ROOMS);
-			mtDate = getArguments().getString(ARG_DATE_OF_MET);
-			Log.i(TAG, jsonStringRoomList);
+			_jsonStringRoomList = getArguments().getString(ARG_JSONSTRING_OF_ROOMS);
+			_mtDate = getArguments().getString(ARG_DATE_OF_MET);
+			Log.i(TAG, _jsonStringRoomList);
 
 			try {
-				JSONObject roomObject = new JSONObject(jsonStringRoomList);
-				roomArray = new JSONArray(roomObject.getString("roomResultList"));
-				if(roomArray.length() > 0)
-					noResults = false;
-				else
-					noResults = true;
+				JSONObject roomObject = new JSONObject(_jsonStringRoomList);
+				_roomArray = new JSONArray(roomObject.getString("roomResultList"));
 			} catch(JSONException e) {
-				noResults = true;
 				Toast.makeText(getActivity(), R.string.fail_loading_room_results, Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			}
@@ -146,10 +139,10 @@ public class ResultFragment extends Fragment {
 		// Inflate the layout for this fragment
 //		Log.d(TAG, "ResultFragmentView created");
 		View resultView = inflater.inflate(R.layout.fragment_result, container, false);
-		mRecyclerView = (RecyclerView) resultView.findViewById(R.id.list_room);
+		_mRecyclerView = (RecyclerView) resultView.findViewById(R.id.list_room);
 
-		if(mOnResultFragmentListener != null && roomArray != null)
-			mOnResultFragmentListener.onCreateResultFragmentView(noResults, roomArray.length());
+		if(_mOnResultFragmentListener != null && _roomArray != null)
+			_mOnResultFragmentListener.onCreateResultFragmentView(_roomArray.length());
 
 		return resultView;
 	}
@@ -157,18 +150,16 @@ public class ResultFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		//mRecyclerView.scrollToPosition(1);
-		mOnResultFragmentListener.onResumeResultFragmentView(mLayoutManager,
-				mLayoutManager.findFirstVisibleItemPosition(), DEFAULT_FIRST_ITEM_POSITION);
+		_mOnResultFragmentListener.onResumeResultFragmentView(_mLayoutManager, DEFAULT_FIRST_ITEM_POSITION);
 	}
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			actionBarActivity = (ActionBarActivity) activity;
+			_actionBarActivity = (ActionBarActivity) activity;
 			mScrollTabHolder = (ScrollTabHolder) activity;
-			mOnResultFragmentListener = (OnResultFragmentListener) activity;
+			_mOnResultFragmentListener = (OnResultFragmentListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnFragmentListener");
@@ -179,22 +170,22 @@ public class ResultFragment extends Fragment {
 	public void onDetach() {
 		super.onDetach();
 //		Log.d(TAG, "ResultFragmentView detached");
-		mOnResultFragmentListener = null;
+		_mOnResultFragmentListener = null;
 	}
 
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
 //		Log.d(TAG, "ResultFragmentView destroyed");
-		mOnResultFragmentListener.onDestroyResultFragmentView();
+		_mOnResultFragmentListener.onDestroyResultFragmentView();
 	}
 
 	public interface OnResultFragmentListener {
-		public void onCreateResultFragmentView(boolean noResults, int numRoom);
+		public void onCreateResultFragmentView(int numRoom);
 		public void onPreLoadSpecificInfoFragment();
-		public void onLoadSpecificInfoFragment(RoomInfoModelController roomInfoModelController, JSONArray roomArray);
+		public void onLoadSpecificInfoFragment(RoomInfoModelController roomInfoModelController, JSONArray _roomArray);
 		public void onPostLoadSpecificInfoFragment();
 		public void onDestroyResultFragmentView();
-		public void onResumeResultFragmentView(LinearLayoutManager linearLayoutManager, int firstVisibleViewPosition, int defaultPosition);
+		public void onResumeResultFragmentView(LinearLayoutManager linearLayoutManager, int defaultPosition);
 	}
 }

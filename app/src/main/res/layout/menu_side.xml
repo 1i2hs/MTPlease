@@ -8,44 +8,46 @@
     >
 
     <RelativeLayout
+        android:id="@+id/layout_menu_side_top"
         android:layout_width="match_parent"
         android:layout_height="110dp"
-        android:background="@color/mtplease_actionbar_color"
-        android:id="@+id/layout_menu_side_top">
+        android:background="@color/mtplease_actionbar_color">
 
         <ImageView
+            android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView"
-            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:src="@drawable/ic_app_title"
-            android:layout_marginLeft="32dp"/>
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="32dp"
+            android:src="@drawable/ic_app_title"/>
 
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/layout_btn_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/layout_btn_menu"
         android:layout_below="@+id/layout_menu_side_top"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="48dp"
-        android:layout_marginLeft="16dp">
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/layout_btn_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/ic_action_home"
-                android:layout_marginLeft="48dp"/>
+                android:layout_marginLeft="48dp"
+                android:src="@drawable/ic_action_home"/>
 
             <Button
                 android:id="@+id/btn_menu_home"
@@ -53,10 +55,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="8dp"
-                android:clickable="true"
+                android:background="@android:color/transparent"
+                android:clickable="false"
                 android:text="@string/menu_btn_home"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:background="@android:color/transparent"
                 android:textColor="@color/mtplease_main_text_color"/>
 
         </LinearLayout>
@@ -64,8 +66,8 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="5dp"
-            android:background="@drawable/shape_cell_bottom_line"
             android:layout_below="@+id/layout_btn_home"
+            android:background="@drawable/shape_cell_bottom_line"
             >
         </FrameLayout>
 
@@ -99,16 +101,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_btn_home"
-            android:orientation="horizontal"
             android:layout_marginBottom="16dp"
             android:layout_marginTop="16dp"
+            android:orientation="horizontal"
             android:visibility="gone">
 
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/ic_action_mypage"
-                android:layout_marginLeft="48dp"/>
+                android:layout_marginLeft="48dp"
+                android:src="@drawable/ic_action_mypage"/>
 
             <Button
                 android:id="@+id/btn_menu_mypage"
@@ -116,19 +118,19 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="8dp"
+                android:background="@android:color/transparent"
                 android:clickable="true"
                 android:text="@string/menu_btn_mypage"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/mtplease_main_text_color"
-                android:background="@android:color/transparent"/>
+                android:textColor="@color/mtplease_main_text_color"/>
 
         </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="5dp"
-            android:background="@drawable/shape_cell_bottom_line"
             android:layout_below="@+id/layout_btn_mypage"
+            android:background="@drawable/shape_cell_bottom_line"
             android:visibility="gone">
         </FrameLayout>
 
@@ -137,15 +139,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_btn_mypage"
-            android:orientation="horizontal"
             android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/ic_action_setting"
-                android:layout_marginLeft="48dp"/>
+                android:layout_marginLeft="48dp"
+                android:src="@drawable/ic_action_setting"/>
 
             <Button
                 android:id="@+id/btn_menu_setting"
@@ -153,19 +157,19 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="8dp"
-                android:clickable="true"
+                android:background="@android:color/transparent"
+                android:clickable="false"
                 android:text="@string/menu_btn_setting"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/mtplease_main_text_color"
-                android:background="@android:color/transparent"/>
+                android:textColor="@color/mtplease_main_text_color"/>
 
         </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="5dp"
-            android:background="@drawable/shape_cell_bottom_line"
             android:layout_below="@+id/layout_btn_setting"
+            android:background="@drawable/shape_cell_bottom_line"
             >
         </FrameLayout>
 
@@ -174,15 +178,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_btn_setting"
-            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp">
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/ic_action_guide"
-                android:layout_marginLeft="48dp"/>
+                android:layout_marginLeft="48dp"
+                android:src="@drawable/ic_action_guide"/>
 
             <Button
                 android:id="@+id/btn_menu_help"
@@ -190,11 +196,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="8dp"
-                android:clickable="true"
+                android:background="@android:color/transparent"
+                android:clickable="false"
                 android:text="@string/menu_btn_help"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/mtplease_main_text_color"
-                android:background="@android:color/transparent"/>
+                android:textColor="@color/mtplease_main_text_color"/>
 
         </LinearLayout>
 
@@ -206,14 +212,14 @@
         android:id="@+id/btn_menu_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:text="@string/menu_btn_logout"
+        android:layout_above="@+id/layout_btn_menu"
+        android:layout_alignLeft="@+id/layout_btn_menu"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_alignLeft="@+id/layout_btn_menu"
-        android:textColor="@color/mtplease_main_text_color"
+        android:layout_marginBottom="40dp"
         android:background="@android:color/transparent"
-        android:layout_above="@+id/layout_btn_menu"
+        android:text="@string/menu_btn_logout"
+        android:textColor="@color/mtplease_main_text_color"
         android:visibility="gone"/>
 
 </RelativeLayout>

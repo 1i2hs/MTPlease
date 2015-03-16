@@ -7,4 +7,6 @@
     <color name="mtplease_main_text_color">#707070</color>
     <color name="mtplease_table_cell_color">#FFEDC0</color>
     <color name="mtplease_date_select_button_color">#FFFCA1</color>
+    <color name="kakao_button_color">#FFE600</color>
+    <color name="mtplease_call_subbutton_color">#FF8B7B</color>
 </resources>

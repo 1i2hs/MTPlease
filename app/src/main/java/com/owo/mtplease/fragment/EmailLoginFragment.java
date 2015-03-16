@@ -56,7 +56,7 @@ public class EmailLoginFragment extends Fragment {
 	private SharedPreferences _mSharedPreferences;
 	private SharedPreferences.Editor _mSharedPreferencesEditor;
 
-	private boolean isAutoLoginChecked;
+	private boolean _isAutoLoginChecked;
 
 	/**
 	 * Use this factory method to create a new instance of
@@ -88,24 +88,24 @@ public class EmailLoginFragment extends Fragment {
 
 		_mSharedPreferencesEditor = _mSharedPreferences.edit();
 
-		isAutoLoginChecked = _mSharedPreferences.getBoolean(getResources().getString(R.string.pref_auto_login_key), false);
+		_isAutoLoginChecked = _mSharedPreferences.getBoolean(getResources().getString(R.string.pref_auto_login_key), false);
 
 		_emailInputEditText = (EditText) emailLoginFragmentView.findViewById(R.id.editText_login_email);
-		if(isAutoLoginChecked)
+		if(_isAutoLoginChecked)
 			_emailInputEditText.setText(_mSharedPreferences.getString(getResources().getString(R.string.pref_user_id_key), ""));
 
 		_passwordInputEditText = (EditText) emailLoginFragmentView.findViewById(R.id.editText_login_email_password);
-		if(isAutoLoginChecked)
+		if(_isAutoLoginChecked)
 			_passwordInputEditText.setText(_mSharedPreferences.getString(getResources().getString(R.string.pref_user_password_key), ""));
 
 		_autoLoginCheckBox = (CheckBox) emailLoginFragmentView.findViewById(R.id.checkBox_login_auto);
-		if(isAutoLoginChecked)
-			_autoLoginCheckBox.setChecked(isAutoLoginChecked);
+		if(_isAutoLoginChecked)
+			_autoLoginCheckBox.setChecked(_isAutoLoginChecked);
 
 		_autoLoginCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				isAutoLoginChecked = isChecked;
+				_isAutoLoginChecked = isChecked;
 
 				_mSharedPreferencesEditor.putBoolean(getResources().getString(R.string.pref_auto_login_key), isChecked);
 				_mSharedPreferencesEditor.commit();
@@ -206,18 +206,7 @@ public class EmailLoginFragment extends Fragment {
 		super.onStop();
 	}
 
-	/**
-	 * This interface must be implemented by activities that contain this
-	 * fragment to allow an interaction in this fragment to be communicated
-	 * to the activity and potentially other fragments contained in that
-	 * activity.
-	 * <p/>
-	 * See the Android Training lesson <a href=
-	 * "http://developer.android.com/training/basics/fragments/communicating.html"
-	 * >Communicating with Other Fragments</a> for more information.
-	 */
 	public interface OnEmailLoginFragmentListener {
-		// TODO: Update argument type and name
 		public void onStartLogin();
 		public void onEmailLoginSuccess();
 		public void onEmailLoginFailed();

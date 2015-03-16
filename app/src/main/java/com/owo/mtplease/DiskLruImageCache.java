@@ -3,7 +3,6 @@ package com.owo.mtplease;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Environment;
 import android.util.Log;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -12,7 +11,6 @@ import com.jakewharton.disklrucache.DiskLruCache;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,31 +23,31 @@ public class DiskLruImageCache implements ImageLoader.ImageCache {
 
 	private static final String TAG = "DiskLruImageCache";
 
-	private DiskLruCache mDiskCache;
-	private Bitmap.CompressFormat mCompressFormat = Bitmap.CompressFormat.JPEG;
+	private DiskLruCache _mDiskCache;
+	private Bitmap.CompressFormat _mCompressFormat = Bitmap.CompressFormat.JPEG;
 	private static int IO_BUFFER_SIZE = 8 * 1024;
-	private int mCompressQuality = 70;
+	private int _mCompressQuality = 70;
 	private static final int APP_VERSION = 1;
 	private static final int VALUE_COUNT = 1;
 
 	public DiskLruImageCache(Context context, String uniqueName, int diskCacheSize,
 							 Bitmap.CompressFormat compressFormat, int quality) {
 		try {
-			final File diskCacheDir = getDiskCacheDir(context, uniqueName);
-			mDiskCache = DiskLruCache.open(diskCacheDir, APP_VERSION, VALUE_COUNT, diskCacheSize);
-			mCompressFormat = compressFormat;
-			mCompressQuality = quality;
+			final File diskCacheDir = _getDiskCacheDir(context, uniqueName);
+			_mDiskCache = DiskLruCache.open(diskCacheDir, APP_VERSION, VALUE_COUNT, diskCacheSize);
+			_mCompressFormat = compressFormat;
+			_mCompressQuality = quality;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private boolean writeBitmapToFile(Bitmap bitmap, DiskLruCache.Editor editor)
+	private boolean _writeBitmapToFile(Bitmap bitmap, DiskLruCache.Editor editor)
 			throws IOException {
 		OutputStream out = null;
 		try {
 			out = new BufferedOutputStream(editor.newOutputStream(0), IO_BUFFER_SIZE);
-			return bitmap.compress(mCompressFormat, mCompressQuality, out);
+			return bitmap.compress(_mCompressFormat, _mCompressQuality, out);
 		} finally {
 			if (out != null) {
 				out.close();
@@ -57,7 +55,7 @@ public class DiskLruImageCache implements ImageLoader.ImageCache {
 		}
 	}
 
-	private File getDiskCacheDir(Context context, String uniqueName) {
+	private File _getDiskCacheDir(Context context, String uniqueName) {
 
 		final String cachePath = context.getExternalFilesDir(null).getPath();
 		File imageFile = new File(cachePath + File.separator + uniqueName);
@@ -70,18 +68,18 @@ public class DiskLruImageCache implements ImageLoader.ImageCache {
 	@Override
 	public void putBitmap(String key, Bitmap data) {
 
-		key = createKey(key);
+		key = _createKey(key);
 //		Log.d(TAG, "putBitmap() called with " + key);
 
 		DiskLruCache.Editor editor = null;
 		try {
-			editor = mDiskCache.edit(key);
+			editor = _mDiskCache.edit(key);
 			if (editor == null) {
 				return;
 			}
 
-			if (writeBitmapToFile(data, editor)) {
-				mDiskCache.flush();
+			if (_writeBitmapToFile(data, editor)) {
+				_mDiskCache.flush();
 				editor.commit();
 				if (BuildConfig.DEBUG) {
 					Log.d("cache_test_DISK_", "image put on disk cache " + key);
@@ -109,14 +107,14 @@ public class DiskLruImageCache implements ImageLoader.ImageCache {
 	@Override
 	public Bitmap getBitmap(String key) {
 
-		key = createKey(key);
+		key = _createKey(key);
 //		Log.d(TAG, "getBitmap() called with " + key);
 
 		Bitmap bitmap = null;
 		DiskLruCache.Snapshot snapshot = null;
 		try {
 
-			snapshot = mDiskCache.get(key);
+			snapshot = _mDiskCache.get(key);
 			if (snapshot == null) {
 				return null;
 			}
@@ -144,13 +142,13 @@ public class DiskLruImageCache implements ImageLoader.ImageCache {
 
 	public boolean containsKey(String key) {
 
-		key = createKey(key);
+		key = _createKey(key);
 //		Log.d(TAG, "containsKey() called with " + key);
 
 		boolean contained = false;
 		DiskLruCache.Snapshot snapshot = null;
 		try {
-			snapshot = mDiskCache.get(key);
+			snapshot = _mDiskCache.get(key);
 			contained = snapshot != null;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -169,14 +167,14 @@ public class DiskLruImageCache implements ImageLoader.ImageCache {
 			Log.d("cache_test_DISK_", "disk cache CLEARED");
 		}
 		try {
-			mDiskCache.delete();
+			_mDiskCache.delete();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public File getCacheFolder() {
-		return mDiskCache.getDirectory();
+		return _mDiskCache.getDirectory();
 	}
 
 	/**
@@ -185,7 +183,7 @@ public class DiskLruImageCache implements ImageLoader.ImageCache {
 	 * @param url url to be used in key creation
 	 * @return cache key value
 	 */
-	private String createKey(String url) {
+	private String _createKey(String url) {
 		Log.d(TAG, "creating unique key for each img file");
 		return String.valueOf(url.hashCode());
 	}

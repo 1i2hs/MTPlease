@@ -17,18 +17,18 @@ public class Analytics extends Application {
 	// The following line should be changed to include the correct property id.
 	private static final String PROPERTY_ID = "UA-59976665-1";
 
-	private Tracker mTracker;
+	private Tracker _mTracker;
 
 	public Analytics() {
 		super();
 	}
 
 	public synchronized Tracker getTracker() {
-		if (mTracker == null) {
+		if (_mTracker == null) {
 			GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
 			analytics.getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
-			mTracker = analytics.newTracker(PROPERTY_ID);
+			_mTracker = analytics.newTracker(PROPERTY_ID);
 		}
-		return mTracker;
+		return _mTracker;
 	}
 }

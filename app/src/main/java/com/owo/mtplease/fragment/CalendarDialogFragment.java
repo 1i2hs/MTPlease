@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.TextView;
 
 import com.owo.mtplease.R;
@@ -24,17 +23,17 @@ public class CalendarDialogFragment extends DialogFragment {
 	private static final String TAG = "CalendarDialogFragment";
 	private static final String DIALOG_CALLER_FLAG = "param1";
 
-	private OnDateConfirmedListener mOnDateConfirmedListener;
+	private OnDateConfirmedListener _mOnDateConfirmedListener;
 
 	// flag that defines which of two callers call this fragment
 	// two callers are distinguished with two int type variable:
 	// CALL_FROM_CONDITIONAL_QUERY = 1; CALL_FROM_PLAN = 2;
-	private int callerFlag;
+	private int _callerFlag;
 
-	public static CalendarDialogFragment newInstance(int callerFlag) {
+	public static CalendarDialogFragment newInstance(int _callerFlag) {
 		CalendarDialogFragment fragment = new CalendarDialogFragment();
 		Bundle args = new Bundle();
-		args.putInt(DIALOG_CALLER_FLAG, callerFlag);
+		args.putInt(DIALOG_CALLER_FLAG, _callerFlag);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -45,14 +44,14 @@ public class CalendarDialogFragment extends DialogFragment {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		mOnDateConfirmedListener = null;
+		_mOnDateConfirmedListener = null;
 	}
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mOnDateConfirmedListener = (OnDateConfirmedListener) activity;
+			_mOnDateConfirmedListener = (OnDateConfirmedListener) activity;
 		} catch(ClassCastException e) {
 			throw new ClassCastException(activity.toString() + "must implement OnDateConfirmedListener");
 		}
@@ -62,7 +61,7 @@ public class CalendarDialogFragment extends DialogFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null)
-			callerFlag = getArguments().getInt(DIALOG_CALLER_FLAG);
+			_callerFlag = getArguments().getInt(DIALOG_CALLER_FLAG);
 	}
 
 	@Override
@@ -71,31 +70,6 @@ public class CalendarDialogFragment extends DialogFragment {
 		// Inflate the layout for this fragment
 		View calendarDialogView = inflater.inflate(R.layout.dialogfragment_calendar, container, false);
 		getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-		/*getDialog().setTitle(R.string.select_date);
-
-		CalendarView cal = (CalendarView) calendarDialogView
-				.findViewById(R.id.calendarView);
-		cal.setShowWeekNumber(false);
-
-		// 달력 날짜 출력 범위 설정
-//		long mindate = System.currentTimeMillis() - 24 * 60 * 60 * 1000;
-		long maxdate = System.currentTimeMillis() + 31536000000L;
-		cal.setMinDate(System.currentTimeMillis());
-		cal.setMaxDate(maxdate);
-
-		cal.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-
-			@Override
-			public void onSelectedDayChange(CalendarView view, int year,
-											int month, int dayOfMonth) {
-				modifiedDate = year + "년 " + (month + 1) + "월 " + dayOfMonth
-						+ "일";
-			}
-		});
-
-
-
-		return calendarDialogView;*/
 
 		TextView dialogTitle = (TextView) calendarDialogView.findViewById(R.id.textView_title_dialog_calendar);
 		dialogTitle.setTypeface(TypefaceLoader.getInstance(getActivity()).getTypeface());
@@ -119,7 +93,7 @@ public class CalendarDialogFragment extends DialogFragment {
 						+ (selectedDateCalendar.get(Calendar.MONTH) + 1) + "월 "
 						+ selectedDateCalendar.get(Calendar.DATE) + "일";
 				Log.d(TAG, modifiedDate);
-				mOnDateConfirmedListener.onDateConfirmButtonClicked(modifiedDate, callerFlag);
+				_mOnDateConfirmedListener.onDateConfirmButtonClicked(modifiedDate, _callerFlag);
 				dismiss();
 			}
 
@@ -129,6 +103,6 @@ public class CalendarDialogFragment extends DialogFragment {
 	}
 
 	public interface OnDateConfirmedListener {
-		public void onDateConfirmButtonClicked(String dateSelected, int callerFlag);
+		public void onDateConfirmButtonClicked(String dateSelected, int _callerFlag);
 	}
 }

@@ -28,28 +28,28 @@ public class ImageLoadingTask extends AsyncTask<String, Integer, Bitmap> {
 
 	private static final int IMAGE_LOADING_SUCCEEDED = 1;
 	private static final int IMAGE_LOADING_FAILED = -1;
-	private final WeakReference imageViewReference;
-	private ProgressBar imageLoadingProgressBar;
-	private int isImageLoaded;
+	private final WeakReference _imageViewReference;
+	private ProgressBar _imageLoadingProgressBar;
+	private int _isImageLoaded;
 
 	public ImageLoadingTask(ImageView roomImageView, ProgressBar loadingProgressBar) {
-		imageViewReference = new WeakReference(roomImageView);
-		this.imageLoadingProgressBar = loadingProgressBar;
+		_imageViewReference = new WeakReference(roomImageView);
+		this._imageLoadingProgressBar = loadingProgressBar;
 	}
 
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
 		// configure progress bar
-		imageLoadingProgressBar.setVisibility(View.VISIBLE);
-		imageLoadingProgressBar.setProgress(0);
+		_imageLoadingProgressBar.setVisibility(View.VISIBLE);
+		_imageLoadingProgressBar.setProgress(0);
 		// end of the configuration of the progress bar
 	}
 
 	@Override
 	protected Bitmap doInBackground(String... urls) {
 		try {
-			isImageLoaded = IMAGE_LOADING_FAILED;
+			_isImageLoaded = IMAGE_LOADING_FAILED;
 
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpGet httpGet = new HttpGet(urls[0]);
@@ -63,7 +63,7 @@ public class ImageLoadingTask extends AsyncTask<String, Integer, Bitmap> {
 				try {
 					inputStream = resEntityGet.getContent();
 					final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-					isImageLoaded = IMAGE_LOADING_SUCCEEDED;
+					_isImageLoaded = IMAGE_LOADING_SUCCEEDED;
 					return bitmap;
 				} finally {
 					if (inputStream != null) {
@@ -85,12 +85,12 @@ public class ImageLoadingTask extends AsyncTask<String, Integer, Bitmap> {
 	@Override
 	protected void onPostExecute(Bitmap roomImage) {
 		super.onPostExecute(roomImage);
-		if(isImageLoaded == IMAGE_LOADING_FAILED) {
+		if(_isImageLoaded == IMAGE_LOADING_FAILED) {
 			roomImage = null;
 		}
 
-		if(imageViewReference != null) {
-			ImageView roomImageView = (ImageView) imageViewReference.get();
+		if(_imageViewReference != null) {
+			ImageView roomImageView = (ImageView) _imageViewReference.get();
 
 			if(roomImageView != null) {
 				if(roomImage != null) {
@@ -106,8 +106,8 @@ public class ImageLoadingTask extends AsyncTask<String, Integer, Bitmap> {
 		}
 
 		// configure progress bar
-		imageLoadingProgressBar.setVisibility(View.GONE);
-		imageLoadingProgressBar.setProgress(100);
+		_imageLoadingProgressBar.setVisibility(View.GONE);
+		_imageLoadingProgressBar.setProgress(100);
 		// end of the configuration of the progress bar
 	}
 

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/layout_buttons"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginTop="4dp"
+    android:gravity="top|center_horizontal">
+
+    <LinearLayout
+        android:id="@+id/layout_call_and_kakaotalk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/btn_contact"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginRight="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_button_big">
+
+            <ImageView
+                android:id="@+id/imageView_contact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/text_contact"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/btn_kakaotalk_yellow_id"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_button_big_2"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:id="@+id/imageView_link_yellow_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/text_kakaotalk_yellow_id"/>
+        </FrameLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/btn_call_mtplease"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_below="@+id/layout_call_and_kakaotalk"
+        android:background="@drawable/shape_button_big_3"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageView_call_mtplease"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/text_call_mtplease"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/btn_call_pension"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/layout_call_and_kakaotalk"
+        android:background="@drawable/shape_button_big_3"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageView_call_pension"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/text_call_pension"/>
+    </FrameLayout>
+
+</RelativeLayout>

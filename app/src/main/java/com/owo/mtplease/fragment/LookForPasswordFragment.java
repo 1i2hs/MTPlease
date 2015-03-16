@@ -26,10 +26,10 @@ import java.util.regex.Pattern;
  */
 public class LookForPasswordFragment extends Fragment {
 
-	private EditText emailAddressEditText;
-	private FrameLayout sendTempPasswordButton;
+	private EditText _emailAddressEditText;
+	private FrameLayout _sendTempPasswordButton;
 
-	private OnLookForPasswordFragmentListener mOnLookForPasswordFragmentListener;
+	private OnLookForPasswordFragmentListener _mOnLookForPasswordFragmentListener;
 
 	/**
 	 * Use this factory method to create a new instance of
@@ -57,14 +57,14 @@ public class LookForPasswordFragment extends Fragment {
 							 Bundle savedInstanceState) {
 		View lookForPasswordFragmentView = inflater.inflate(R.layout.fragment_look_for_password, container, false);
 
-		emailAddressEditText = (EditText) lookForPasswordFragmentView.findViewById(R.id.editText_input_email_for_looking_for_password);
+		_emailAddressEditText = (EditText) lookForPasswordFragmentView.findViewById(R.id.editText_input_email_for_looking_for_password);
 
-		sendTempPasswordButton = (FrameLayout) lookForPasswordFragmentView.findViewById(R.id.frameLayout_btn_send_password_temporary);
-		sendTempPasswordButton.setOnClickListener(new View.OnClickListener() {
+		_sendTempPasswordButton = (FrameLayout) lookForPasswordFragmentView.findViewById(R.id.frameLayout_btn_send_password_temporary);
+		_sendTempPasswordButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (isValidEmail(emailAddressEditText.getText().toString()))
-					mOnLookForPasswordFragmentListener.onEndSendingTemporaryPassword();
+				if (isValidEmail(_emailAddressEditText.getText().toString()))
+					_mOnLookForPasswordFragmentListener.onEndSendingTemporaryPassword();
 				else {
 					Toast.makeText(getActivity(), R.string.temporary_password_sent, Toast.LENGTH_SHORT).show();
 				}
@@ -78,7 +78,7 @@ public class LookForPasswordFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mOnLookForPasswordFragmentListener = (OnLookForPasswordFragmentListener) activity;
+			_mOnLookForPasswordFragmentListener = (OnLookForPasswordFragmentListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnLookForPasswordFragmentListener");
@@ -88,7 +88,7 @@ public class LookForPasswordFragment extends Fragment {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		mOnLookForPasswordFragmentListener = null;
+		_mOnLookForPasswordFragmentListener = null;
 	}
 
 	public static boolean isValidEmail(String email) {
@@ -102,16 +102,6 @@ public class LookForPasswordFragment extends Fragment {
 		return err;
 	}
 
-	/**
-	 * This interface must be implemented by activities that contain this
-	 * fragment to allow an interaction in this fragment to be communicated
-	 * to the activity and potentially other fragments contained in that
-	 * activity.
-	 * <p/>
-	 * See the Android Training lesson <a href=
-	 * "http://developer.android.com/training/basics/fragments/communicating.html"
-	 * >Communicating with Other Fragments</a> for more information.
-	 */
 	public interface OnLookForPasswordFragmentListener {
 		public void onEndSendingTemporaryPassword();
 	}

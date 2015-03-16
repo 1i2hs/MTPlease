@@ -16,31 +16,31 @@ public class PlanModelController {
 	private static final String TAG = "PlanModel";
 
 	// Basic Info written in the plan
-	private String date;
-	private int region;
-	private int numPeople;
-	private int numMale;
-	private int numFemale;
+	private String _date;
+	private int _region;
+	private int _numPeople;
+	private int _numMale;
+	private int _numFemale;
 	// End of the basic info
 
 	// Room info
-	private LinkedList<String> roomDataLinkedList;
-	private LinkedList<Integer> directInputRoomDataLinkedList;
+	private LinkedList<String> _roomDataLinkedList;
+	private LinkedList<Integer> _directInputRoomDataLinkedList;
 	// End of the room info
 
 	// Meat info
-	private LinkedList<String> meatDataLinkedList;
-	private LinkedList<Integer> meatCountLinkedList;
+	private LinkedList<String> _meatDataLinkedList;
+	private LinkedList<Integer> _meatCountLinkedList;
 	// End of the meat info
 
 	// Alcohol info
-	private LinkedList<String> alcoholDataLinkedList;
-	private LinkedList<Integer> alcoholCountLinkedList;
+	private LinkedList<String> _alcoholDataLinkedList;
+	private LinkedList<Integer> _alcoholCountLinkedList;
 	// End of the alcohol info
 
 	// Others Info
-	private LinkedList<String> othersDataLinkedList;
-	private LinkedList<Integer> othersCountLinkedList;
+	private LinkedList<String> _othersDataLinkedList;
+	private LinkedList<Integer> _othersCountLinkedList;
 	// End of the alcohol info
 
 	public PlanModelController() {
@@ -48,110 +48,110 @@ public class PlanModelController {
 	}
 
 	public void initPlanModel() {
-		date = "";
-		region = 0;
-		numPeople = 0;
-		numMale = 0;
-		numFemale = 0;
+		_date = "";
+		_region = 0;
+		_numPeople = 0;
+		_numMale = 0;
+		_numFemale = 0;
 
-		roomDataLinkedList = new LinkedList();
-		directInputRoomDataLinkedList = new LinkedList();
-		meatDataLinkedList = new LinkedList();
-		meatCountLinkedList = new LinkedList();
-		alcoholDataLinkedList = new LinkedList();
-		alcoholCountLinkedList = new LinkedList();
-		othersDataLinkedList = new LinkedList();
-		othersCountLinkedList = new LinkedList();
+		_roomDataLinkedList = new LinkedList();
+		_directInputRoomDataLinkedList = new LinkedList();
+		_meatDataLinkedList = new LinkedList();
+		_meatCountLinkedList = new LinkedList();
+		_alcoholDataLinkedList = new LinkedList();
+		_alcoholCountLinkedList = new LinkedList();
+		_othersDataLinkedList = new LinkedList();
+		_othersCountLinkedList = new LinkedList();
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setDate(String _date) {
+		this._date = _date;
 	}
 
-	public void setRegion(int region) {
-		this.region = region;
+	public void setRegion(int _region) {
+		this._region = _region;
 	}
 
-	public void setNumPeople(int numPeople) {
-		this.numPeople = numPeople;
+	public void setNumPeople(int _numPeople) {
+		this._numPeople = _numPeople;
 	}
 
-	public void setNumMale(int numMale) {
-		this.numMale = numMale;
+	public void setNumMale(int _numMale) {
+		this._numMale = _numMale;
 	}
 
-	public void setNumFemale(int numFemale) {
-		this.numFemale = numFemale;
+	public void setNumFemale(int _numFemale) {
+		this._numFemale = _numFemale;
 	}
 
 	public void addRoomData(int penId, String roomName, int roomPrice) {
-		roomDataLinkedList.add(penId + "!" + roomName + "!" + roomPrice);
-		Log.d(TAG, roomDataLinkedList.toString());
+		_roomDataLinkedList.add(penId + "!" + roomName + "!" + roomPrice);
+		Log.d(TAG, _roomDataLinkedList.toString());
 	}
 
 	public void addDirectInputRoomData(int roomPrice) {
-		directInputRoomDataLinkedList.add((Integer)roomPrice);
-		Log.d(TAG, directInputRoomDataLinkedList.toString());
+		_directInputRoomDataLinkedList.add((Integer)roomPrice);
+		Log.d(TAG, _directInputRoomDataLinkedList.toString());
 	}
 
 	public void removeRoomData(int penId, String roomName, int roomPrice) {
-		if(roomDataLinkedList.size() > 0) {
-			roomDataLinkedList.remove(penId + "!" + roomName + "!" + roomPrice);
-			Log.d(TAG, roomDataLinkedList.toString());
+		if(_roomDataLinkedList.size() > 0) {
+			_roomDataLinkedList.remove(penId + "!" + roomName + "!" + roomPrice);
+			Log.d(TAG, _roomDataLinkedList.toString());
 		}
 	}
 
 	public void removeRoomData(int roomIndex) {
-		if(roomDataLinkedList.size() > 0) {
-			roomDataLinkedList.remove(roomIndex);
-			Log.d(TAG, roomDataLinkedList.toString());
+		if(_roomDataLinkedList.size() > 0) {
+			_roomDataLinkedList.remove(roomIndex);
+			Log.d(TAG, _roomDataLinkedList.toString());
 		}
 	}
 
 /*	public void removeDirectInputRoomData(int roomPrice) {
-		if(directInputRoomDataLinkedList.size() > 0) {
-			directInputRoomDataLinkedList.remove((Integer)roomPrice);
-			Log.d(TAG, directInputRoomDataLinkedList.toString());
+		if(_directInputRoomDataLinkedList.size() > 0) {
+			_directInputRoomDataLinkedList.remove((Integer)roomPrice);
+			Log.d(TAG, _directInputRoomDataLinkedList.toString());
 		}
 	}*/
 
 	public void removeDirectInputRoomData(int roomIndex) {
-		if(directInputRoomDataLinkedList.size() > 0) {
-			directInputRoomDataLinkedList.remove(roomIndex);
-			Log.d(TAG, directInputRoomDataLinkedList.toString());
+		if(_directInputRoomDataLinkedList.size() > 0) {
+			_directInputRoomDataLinkedList.remove(roomIndex);
+			Log.d(TAG, _directInputRoomDataLinkedList.toString());
 		}
 	}
 
 	public void clearRoomData() {
-		if(roomDataLinkedList.size() > 0)
-			roomDataLinkedList.clear();
+		if(_roomDataLinkedList.size() > 0)
+			_roomDataLinkedList.clear();
 
-		if(directInputRoomDataLinkedList.size() > 0)
-			directInputRoomDataLinkedList.clear();
+		if(_directInputRoomDataLinkedList.size() > 0)
+			_directInputRoomDataLinkedList.clear();
 	}
 
 	public int getRoomDataCount() {
-		return roomDataLinkedList.size();
+		return _roomDataLinkedList.size();
 	}
 
 	public int getDirectInputRoomDataCount() {
-		return directInputRoomDataLinkedList.size();
+		return _directInputRoomDataLinkedList.size();
 	}
 
 	public boolean isRoomAddedAlready(int penId, String roomName, int roomPrice) {
-		return roomDataLinkedList.contains(penId + "!" + roomName + "!" + roomPrice);
+		return _roomDataLinkedList.contains(penId + "!" + roomName + "!" + roomPrice);
 	}
 
 	public int getTotalRoomCost() {
 		int totalRoomCost = 0;
 		for(int i = 0; i < getRoomDataCount(); i++) {
-			String roomData = roomDataLinkedList.get(i);
+			String roomData = _roomDataLinkedList.get(i);
 			String temp[] = roomData.split("!");
 			totalRoomCost += Integer.parseInt(temp[2]);
 		}
 
 		for(int i = 0; i< getDirectInputRoomDataCount(); i++) {
-			totalRoomCost += directInputRoomDataLinkedList.get(i);
+			totalRoomCost += _directInputRoomDataLinkedList.get(i);
 		}
 
 		return totalRoomCost;
@@ -162,22 +162,22 @@ public class PlanModelController {
 
 		switch(itemType) {
 			case ShoppingItemListFragment.MEAT_ITEM:
-				meatDataLinkedList.add(itemDataString);
-				meatCountLinkedList.add(itemCount);
-				Log.d(TAG, meatDataLinkedList.toString());
-				Log.d(TAG, meatCountLinkedList.toString());
+				_meatDataLinkedList.add(itemDataString);
+				_meatCountLinkedList.add(itemCount);
+				Log.d(TAG, _meatDataLinkedList.toString());
+				Log.d(TAG, _meatCountLinkedList.toString());
 				break;
 			case ShoppingItemListFragment.ALCOHOL_ITEM:
-				alcoholDataLinkedList.add(itemDataString);
-				alcoholCountLinkedList.add(itemCount);
-				Log.d(TAG, alcoholDataLinkedList.toString());
-				Log.d(TAG, alcoholCountLinkedList.toString());
+				_alcoholDataLinkedList.add(itemDataString);
+				_alcoholCountLinkedList.add(itemCount);
+				Log.d(TAG, _alcoholDataLinkedList.toString());
+				Log.d(TAG, _alcoholCountLinkedList.toString());
 				break;
 			case ShoppingItemListFragment.OTHERS_ITEM:
-				othersDataLinkedList.add(itemDataString);
-				othersCountLinkedList.add(itemCount);
-				Log.d(TAG, othersDataLinkedList.toString());
-				Log.d(TAG, othersCountLinkedList.toString());
+				_othersDataLinkedList.add(itemDataString);
+				_othersCountLinkedList.add(itemCount);
+				Log.d(TAG, _othersDataLinkedList.toString());
+				Log.d(TAG, _othersCountLinkedList.toString());
 				break;
 		}
 	}
@@ -188,33 +188,33 @@ public class PlanModelController {
 
 		switch(itemType) {
 			case ShoppingItemListFragment.MEAT_ITEM:
-				if(meatDataLinkedList.size() > 0) {
-					itemIndex = meatDataLinkedList.indexOf(itemDataString);
-					meatDataLinkedList.remove(itemIndex);
-					meatCountLinkedList.remove(itemIndex);
+				if(_meatDataLinkedList.size() > 0) {
+					itemIndex = _meatDataLinkedList.indexOf(itemDataString);
+					_meatDataLinkedList.remove(itemIndex);
+					_meatCountLinkedList.remove(itemIndex);
 
-					Log.d(TAG, meatDataLinkedList.toString());
-					Log.d(TAG, meatCountLinkedList.toString());
+					Log.d(TAG, _meatDataLinkedList.toString());
+					Log.d(TAG, _meatCountLinkedList.toString());
 				}
 				break;
 			case ShoppingItemListFragment.ALCOHOL_ITEM:
-				if(alcoholDataLinkedList.size() > 0) {
-					itemIndex = alcoholDataLinkedList.indexOf(itemDataString);
-					alcoholDataLinkedList.remove(itemIndex);
-					alcoholCountLinkedList.remove(itemIndex);
+				if(_alcoholDataLinkedList.size() > 0) {
+					itemIndex = _alcoholDataLinkedList.indexOf(itemDataString);
+					_alcoholDataLinkedList.remove(itemIndex);
+					_alcoholCountLinkedList.remove(itemIndex);
 
-					Log.d(TAG, alcoholDataLinkedList.toString());
-					Log.d(TAG, alcoholCountLinkedList.toString());
+					Log.d(TAG, _alcoholDataLinkedList.toString());
+					Log.d(TAG, _alcoholCountLinkedList.toString());
 				}
 				break;
 			case ShoppingItemListFragment.OTHERS_ITEM:
-				if(othersDataLinkedList.size() > 0) {
-					itemIndex = othersDataLinkedList.indexOf(itemDataString);
-					othersDataLinkedList.remove(itemIndex);
-					othersCountLinkedList.remove(itemIndex);
+				if(_othersDataLinkedList.size() > 0) {
+					itemIndex = _othersDataLinkedList.indexOf(itemDataString);
+					_othersDataLinkedList.remove(itemIndex);
+					_othersCountLinkedList.remove(itemIndex);
 
-					Log.d(TAG, othersDataLinkedList.toString());
-					Log.d(TAG, othersCountLinkedList.toString());
+					Log.d(TAG, _othersDataLinkedList.toString());
+					Log.d(TAG, _othersCountLinkedList.toString());
 				}
 				break;
 		}
@@ -223,30 +223,30 @@ public class PlanModelController {
 	public void removeItemData(int itemType, int itemIndex) {
 		switch(itemType) {
 			case ShoppingItemListFragment.MEAT_ITEM:
-				if(meatDataLinkedList.size() > 0) {
-					meatDataLinkedList.remove(itemIndex);
-					meatCountLinkedList.remove(itemIndex);
+				if(_meatDataLinkedList.size() > 0) {
+					_meatDataLinkedList.remove(itemIndex);
+					_meatCountLinkedList.remove(itemIndex);
 
-					Log.d(TAG, meatDataLinkedList.toString());
-					Log.d(TAG, meatCountLinkedList.toString());
+					Log.d(TAG, _meatDataLinkedList.toString());
+					Log.d(TAG, _meatCountLinkedList.toString());
 				}
 				break;
 			case ShoppingItemListFragment.ALCOHOL_ITEM:
-				if(alcoholDataLinkedList.size() > 0) {
-					alcoholDataLinkedList.remove(itemIndex);
-					alcoholCountLinkedList.remove(itemIndex);
+				if(_alcoholDataLinkedList.size() > 0) {
+					_alcoholDataLinkedList.remove(itemIndex);
+					_alcoholCountLinkedList.remove(itemIndex);
 
-					Log.d(TAG, alcoholDataLinkedList.toString());
-					Log.d(TAG, alcoholCountLinkedList.toString());
+					Log.d(TAG, _alcoholDataLinkedList.toString());
+					Log.d(TAG, _alcoholCountLinkedList.toString());
 				}
 				break;
 			case ShoppingItemListFragment.OTHERS_ITEM:
-				if(othersDataLinkedList.size() > 0) {
-					othersDataLinkedList.remove(itemIndex);
-					othersCountLinkedList.remove(itemIndex);
+				if(_othersDataLinkedList.size() > 0) {
+					_othersDataLinkedList.remove(itemIndex);
+					_othersCountLinkedList.remove(itemIndex);
 
-					Log.d(TAG, othersDataLinkedList.toString());
-					Log.d(TAG, othersCountLinkedList.toString());
+					Log.d(TAG, _othersDataLinkedList.toString());
+					Log.d(TAG, _othersCountLinkedList.toString());
 				}
 				break;
 		}
@@ -255,21 +255,21 @@ public class PlanModelController {
 	public void clearItemData(int itemType) {
 		switch(itemType) {
 			case ShoppingItemListFragment.MEAT_ITEM:
-				if(meatDataLinkedList.size() > 0) {
-					meatDataLinkedList.clear();
-					meatCountLinkedList.clear();
+				if(_meatDataLinkedList.size() > 0) {
+					_meatDataLinkedList.clear();
+					_meatCountLinkedList.clear();
 				}
 				break;
 			case ShoppingItemListFragment.ALCOHOL_ITEM:
-				if(alcoholDataLinkedList.size() > 0) {
-					alcoholDataLinkedList.clear();
-					alcoholCountLinkedList.clear();
+				if(_alcoholDataLinkedList.size() > 0) {
+					_alcoholDataLinkedList.clear();
+					_alcoholCountLinkedList.clear();
 				}
 				break;
 			case ShoppingItemListFragment.OTHERS_ITEM:
-				if(othersDataLinkedList.size() > 0) {
-					othersDataLinkedList.clear();
-					othersCountLinkedList.clear();
+				if(_othersDataLinkedList.size() > 0) {
+					_othersDataLinkedList.clear();
+					_othersCountLinkedList.clear();
 				}
 				break;
 		}
@@ -278,11 +278,11 @@ public class PlanModelController {
 	public int getItemDataCount(int itemType) {
 		switch(itemType) {
 			case ShoppingItemListFragment.MEAT_ITEM:
-				return meatDataLinkedList.size();
+				return _meatDataLinkedList.size();
 			case ShoppingItemListFragment.ALCOHOL_ITEM:
-				return alcoholDataLinkedList.size();
+				return _alcoholDataLinkedList.size();
 			case ShoppingItemListFragment.OTHERS_ITEM:
-				return othersDataLinkedList.size();
+				return _othersDataLinkedList.size();
 			default:
 				return -1;
 		}
@@ -292,13 +292,13 @@ public class PlanModelController {
 		String itemData[];
 		switch(itemType) {
 			case ShoppingItemListFragment.MEAT_ITEM:
-				itemData = meatDataLinkedList.get(itemIndex).split("!");
+				itemData = _meatDataLinkedList.get(itemIndex).split("!");
 				break;
 			case ShoppingItemListFragment.ALCOHOL_ITEM:
-				itemData = alcoholDataLinkedList.get(itemIndex).split("!");
+				itemData = _alcoholDataLinkedList.get(itemIndex).split("!");
 				break;
 			case ShoppingItemListFragment.OTHERS_ITEM:
-				itemData = othersDataLinkedList.get(itemIndex).split("!");
+				itemData = _othersDataLinkedList.get(itemIndex).split("!");
 				break;
 			default:
 				return null;
@@ -310,13 +310,13 @@ public class PlanModelController {
 		String itemData[];
 		switch(itemType) {
 			case ShoppingItemListFragment.MEAT_ITEM:
-				itemData = meatDataLinkedList.get(itemIndex).split("!");
+				itemData = _meatDataLinkedList.get(itemIndex).split("!");
 				break;
 			case ShoppingItemListFragment.ALCOHOL_ITEM:
-				itemData = alcoholDataLinkedList.get(itemIndex).split("!");
+				itemData = _alcoholDataLinkedList.get(itemIndex).split("!");
 				break;
 			case ShoppingItemListFragment.OTHERS_ITEM:
-				itemData = othersDataLinkedList.get(itemIndex).split("!");
+				itemData = _othersDataLinkedList.get(itemIndex).split("!");
 				break;
 			default:
 				return 0;
@@ -337,11 +337,11 @@ public class PlanModelController {
 
 		switch (itemType) {
 			case ShoppingItemListFragment.MEAT_ITEM:
-				return meatDataLinkedList.contains(itemDataString);
+				return _meatDataLinkedList.contains(itemDataString);
 			case ShoppingItemListFragment.ALCOHOL_ITEM:
-				return alcoholDataLinkedList.contains(itemDataString);
+				return _alcoholDataLinkedList.contains(itemDataString);
 			case ShoppingItemListFragment.OTHERS_ITEM:
-				return othersDataLinkedList.contains(itemDataString);
+				return _othersDataLinkedList.contains(itemDataString);
 			default:
 				return false;
 		}
@@ -353,16 +353,16 @@ public class PlanModelController {
 
 		switch (itemType) {
 			case ShoppingItemListFragment.MEAT_ITEM:
-				itemIndex = meatDataLinkedList.indexOf(itemDataString);
-				meatCountLinkedList.set(itemIndex, newItemCount);
+				itemIndex = _meatDataLinkedList.indexOf(itemDataString);
+				_meatCountLinkedList.set(itemIndex, newItemCount);
 				break;
 			case ShoppingItemListFragment.ALCOHOL_ITEM:
-				itemIndex = alcoholDataLinkedList.indexOf(itemDataString);
-				alcoholCountLinkedList.set(itemIndex, newItemCount);
+				itemIndex = _alcoholDataLinkedList.indexOf(itemDataString);
+				_alcoholCountLinkedList.set(itemIndex, newItemCount);
 				break;
 			case ShoppingItemListFragment.OTHERS_ITEM:
-				itemIndex = othersDataLinkedList.indexOf(itemDataString);
-				othersCountLinkedList.set(itemIndex, newItemCount);
+				itemIndex = _othersDataLinkedList.indexOf(itemDataString);
+				_othersCountLinkedList.set(itemIndex, newItemCount);
 				break;
 		}
 	}
@@ -373,14 +373,14 @@ public class PlanModelController {
 
 		switch(itemType) {
 			case ShoppingItemListFragment.MEAT_ITEM:
-				itemIndex = meatDataLinkedList.indexOf(itemDataString);
-				return meatCountLinkedList.get(itemIndex);
+				itemIndex = _meatDataLinkedList.indexOf(itemDataString);
+				return _meatCountLinkedList.get(itemIndex);
 			case ShoppingItemListFragment.ALCOHOL_ITEM:
-				itemIndex = alcoholDataLinkedList.indexOf(itemDataString);
-				return alcoholCountLinkedList.get(itemIndex);
+				itemIndex = _alcoholDataLinkedList.indexOf(itemDataString);
+				return _alcoholCountLinkedList.get(itemIndex);
 			case ShoppingItemListFragment.OTHERS_ITEM:
-				itemIndex = othersDataLinkedList.indexOf(itemDataString);
-				return othersCountLinkedList.get(itemIndex);
+				itemIndex = _othersDataLinkedList.indexOf(itemDataString);
+				return _othersCountLinkedList.get(itemIndex);
 		}
 
 		return 0;
@@ -393,16 +393,16 @@ public class PlanModelController {
 			int itemCount;
 			switch(itemType) {
 				case ShoppingItemListFragment.MEAT_ITEM:
-					itemData = meatDataLinkedList.get(i);
-					itemCount = meatCountLinkedList.get(i);
+					itemData = _meatDataLinkedList.get(i);
+					itemCount = _meatCountLinkedList.get(i);
 					break;
 				case ShoppingItemListFragment.ALCOHOL_ITEM:
-					itemData = alcoholDataLinkedList.get(i);
-					itemCount = alcoholCountLinkedList.get(i);
+					itemData = _alcoholDataLinkedList.get(i);
+					itemCount = _alcoholCountLinkedList.get(i);
 					break;
 				case ShoppingItemListFragment.OTHERS_ITEM:
-					itemData = othersDataLinkedList.get(i);
-					itemCount = othersCountLinkedList.get(i);
+					itemData = _othersDataLinkedList.get(i);
+					itemCount = _othersCountLinkedList.get(i);
 					break;
 				default:
 					return 0;

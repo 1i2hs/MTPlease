@@ -14,13 +14,14 @@ import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.owo.mtplease.Activity.MainActivity;
 import com.owo.mtplease.Analytics;
 import com.owo.mtplease.R;
 import com.owo.mtplease.ScrollTabHolder;
 import com.owo.mtplease.TimelinePostListRecyclerViewAdapter;
-import com.owo.mtplease.Activity.MainActivity;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class TimelineFragment extends Fragment {
@@ -30,22 +31,22 @@ public class TimelineFragment extends Fragment {
 	private static final String ARG_JSONSTRING_POST_LIST = "param1";
 
 	// View: User Interface Views
-	private RecyclerView mRecyclerView;
-	private LinearLayoutManager mLayoutManager;
+	private RecyclerView _mRecyclerView;
+	private LinearLayoutManager _mLayoutManager;
 	// End of User Interface Views
 
 	// Controller: Adapters for User Interface Views
-	private TimelinePostListRecyclerViewAdapter mAdapter;
+	private TimelinePostListRecyclerViewAdapter _mAdapter;
 	// End of User Interface Views;
 
 	// Model: Data variables for User Interface Views
-	private String jsonStringPostList;
-	private JSONObject postObject;
-	private JSONArray postArray;
+	private String _jsonStringPostList;
+	private JSONObject _postObject;
+	private JSONArray _postArray;
 
 	// Listeners
-	private OnTimelineFragmentListener mTimelineFragmentListener;
-	protected ScrollTabHolder mScrollTabHolder;
+	private OnTimelineFragmentListener _mTimelineFragmentListener;
+	protected ScrollTabHolder _mScrollTabHolder;
 
 	/**
 	 * Use this factory method to create a new instance of
@@ -54,7 +55,6 @@ public class TimelineFragment extends Fragment {
 	 * @param jsonString Parameter 1.
 	 * @return A new instance of fragment TimelineFragement.
 	 */
-	// TODO: Rename and change types and number of parameters
 	public static TimelineFragment newInstance(String jsonString) {
 		TimelineFragment fragment = new TimelineFragment();
 		Bundle args = new Bundle();
@@ -69,14 +69,14 @@ public class TimelineFragment extends Fragment {
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		mLayoutManager = new LinearLayoutManager(getActivity());
-		mRecyclerView.setLayoutManager(mLayoutManager);
-		mRecyclerView.setHasFixedSize(true);
-		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+		_mLayoutManager = new LinearLayoutManager(getActivity());
+		_mRecyclerView.setLayoutManager(_mLayoutManager);
+		_mRecyclerView.setHasFixedSize(true);
+		_mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-		mAdapter = new TimelinePostListRecyclerViewAdapter(getActivity(), postArray);
-		mRecyclerView.setAdapter(mAdapter);
-		mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+		_mAdapter = new TimelinePostListRecyclerViewAdapter(getActivity(), _postArray);
+		_mRecyclerView.setAdapter(_mAdapter);
+		_mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
 			@Override
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -86,8 +86,8 @@ public class TimelineFragment extends Fragment {
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
-				if(mScrollTabHolder != null)
-					mScrollTabHolder.onScroll(recyclerView, mLayoutManager.findFirstVisibleItemPosition(), 0, MainActivity.TIMELINE_FRAGMENT_VISIBLE);
+				if(_mScrollTabHolder != null)
+					_mScrollTabHolder.onScroll(recyclerView, _mLayoutManager.findFirstVisibleItemPosition(), 0, MainActivity.TIMELINE_FRAGMENT_VISIBLE);
 			}
 		});
 
@@ -98,12 +98,12 @@ public class TimelineFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			jsonStringPostList = getArguments().getString(ARG_JSONSTRING_POST_LIST);
-			Log.i(TAG, jsonStringPostList + "");
+			_jsonStringPostList = getArguments().getString(ARG_JSONSTRING_POST_LIST);
+			Log.i(TAG, _jsonStringPostList + "");
 
 			try {
-				postObject = new JSONObject(jsonStringPostList);
-				postArray = new JSONArray(postObject.getString("timeline"));
+				_postObject = new JSONObject(_jsonStringPostList);
+				_postArray = new JSONArray(_postObject.getString("timeline"));
 			} catch(Exception e) {
 				Toast.makeText(getActivity(), R.string.notify_fail_loading_timeline, Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
@@ -117,10 +117,15 @@ public class TimelineFragment extends Fragment {
 		// Inflate the layout for this fragment
 		Log.d(TAG, "TimelineFragmentView created");
 		View timelineView = inflater.inflate(R.layout.fragment_timeline, container, false);
-		mRecyclerView = (RecyclerView) timelineView.findViewById(R.id.list_timeline);
+		_mRecyclerView = (RecyclerView) timelineView.findViewById(R.id.list_timeline);
 
-		if(mTimelineFragmentListener != null)
-			mTimelineFragmentListener.onCreateTimelineFragmentView();
+		if(_mTimelineFragmentListener != null) {
+			try {
+				_mTimelineFragmentListener.onCreateTimelineFragmentView(_postObject.getString("roomCount"));
+			} catch(JSONException e) {
+				e.printStackTrace();
+			}
+		}
 
 		return timelineView;
 	}
@@ -130,8 +135,8 @@ public class TimelineFragment extends Fragment {
 		super.onAttach(activity);
 		Log.d(TAG, "onAttach()");
 		try {
-			mScrollTabHolder = (ScrollTabHolder) activity;
-			mTimelineFragmentListener = (OnTimelineFragmentListener) activity;
+			_mScrollTabHolder = (ScrollTabHolder) activity;
+			_mTimelineFragmentListener = (OnTimelineFragmentListener) activity;
 
 			Tracker t = ((Analytics) getActivity().getApplication()).getTracker();
 			t.setScreenName("Timeline Page View");
@@ -147,7 +152,7 @@ public class TimelineFragment extends Fragment {
 	public void onDetach() {
 		super.onDetach();
 		Log.d(TAG, "onDetach()");
-		mTimelineFragmentListener = null;
+		_mTimelineFragmentListener = null;
 	}
 
 	@Override
@@ -160,12 +165,11 @@ public class TimelineFragment extends Fragment {
 	public void onDestroyView() {
 		super.onDestroyView();
 		Log.d(TAG, "TimelineFragmentView destroyed");
-		mTimelineFragmentListener.onDestroyTimelineFragmentView();
+		_mTimelineFragmentListener.onDestroyTimelineFragmentView();
 	}
 
 	public interface OnTimelineFragmentListener {
-		// TODO: Update argument type and name
-		public void onCreateTimelineFragmentView();
+		public void onCreateTimelineFragmentView(String roomCount);
 		public void onDestroyTimelineFragmentView();
 	}
 }

@@ -1,46 +1,68 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.owo.mtplease.fragment.VersionCheckFragment"
-             android:gravity="center_horizontal">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/mtplease_main_background_color"
+                android:gravity="center_horizontal"
+                tools:context="com.owo.mtplease.fragment.VersionCheckFragment">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/scrn_version"
-        android:scaleType="centerCrop"/>
-
-    <ImageButton
+        android:id="@+id/imageView_logo_mtplease"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageButton_go_facebook"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="64dp"
-        android:src="@drawable/btn_mtplease_facebook"
-        android:background="@android:color/transparent"/>
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageButton_send_decision"
-        android:layout_above="@+id/imageButton_go_facebook"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="24dp"
-        android:src="@drawable/btn_mtplease_contact"
-        android:background="@android:color/transparent"/>
+        android:layout_marginTop="80dp"
+        android:src="@drawable/logo_splash"/>
 
     <TextView
+        android:id="@+id/textView_version_application"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/textView_version_application"
+        android:layout_below="@+id/imageView_logo_mtplease"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="36dp"
-        android:layout_above="@+id/imageButton_send_decision"
-        android:textSize="20sp"
+        android:layout_marginTop="4dp"
+        android:text="New Text"
         android:textColor="@color/mtplease_actionbar_color"
+        android:textSize="20sp"
         android:textStyle="bold"/>
+
+    <ImageButton
+        android:id="@+id/imageButton_send_decision"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_version_application"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/btn_mtplease_contact"/>
+
+    <ImageButton
+        android:id="@+id/imageButton_go_facebook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageButton_send_decision"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/btn_mtplease_facebook"/>
+
+    <ImageButton
+        android:id="@+id/imageButton_kakaotalk_yellow_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageButton_go_facebook"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/btn_mtplease_kakao"/>
+
+    <ImageView
+        android:id="@+id/imageView_logo_team"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/text_team_name"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="24dp"/>
 
 </RelativeLayout>

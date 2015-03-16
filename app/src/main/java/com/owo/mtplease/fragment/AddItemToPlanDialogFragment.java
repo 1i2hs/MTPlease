@@ -37,23 +37,23 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 	private int itemUnitPrice;
 
 	// User Interface Views
-	private TextView itemNameTextView;
-	private TextView itemUnitTextView;
-	private NumberPicker itemNumberPicker;
-	private TextView itemUnitPriceTextView;
-	private TextView itemCountUnitTextView;
-	private TextView itemTotalPriceTextView;
-	private Button addItemButton;
-	private Button cancelItemButton;
-	private EditText customItemNameEditText;
-	private EditText customItemUnitEditText;
-	private EditText customItemUnitPriceEditText;
-	private EditText customItemCountUnitEditText;
-	private TextView customItemTotalPriceTextView;
+	private TextView _itemNameTextView;
+	private TextView _itemUnitTextView;
+	private NumberPicker _itemNumberPicker;
+	private TextView _itemUnitPriceTextView;
+	private TextView _itemCountUnitTextView;
+	private TextView _itemTotalPriceTextView;
+	private Button _addItemButton;
+	private Button _cancelItemButton;
+	private EditText _customItemNameEditText;
+	private EditText _customItemUnitEditText;
+	private EditText _customItemUnitPriceEditText;
+	private EditText _customItemCountUnitEditText;
+	private TextView _customItemTotalPriceTextView;
 	// End of the UI views
 
 	// Controllers
-	private TextWatcher editTextWatcherForCustomItemPrice = new TextWatcher() {
+	private TextWatcher _editTextWatcherForCustomItemPrice = new TextWatcher() {
 
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -68,17 +68,17 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 			try {
 				if(!s.toString().equals("")) {
 					itemUnitPrice = Integer.parseInt(s.toString());
-					customItemTotalPriceTextView.setText(castItemPriceToString(itemNumberPicker.getValue() * itemUnitPrice));
+					_customItemTotalPriceTextView.setText(_castItemPriceToString(_itemNumberPicker.getValue() * itemUnitPrice));
 				} else {
 					switch(itemType) {
 						case MEAT_ITEM:
-							customItemTotalPriceTextView.setHint(R.string.meat_price_hint);
+							_customItemTotalPriceTextView.setHint(R.string.meat_price_hint);
 							break;
 						case ALCOHOL_ITEM:
-							customItemTotalPriceTextView.setHint(R.string.alcohol_price_hint);
+							_customItemTotalPriceTextView.setHint(R.string.alcohol_price_hint);
 							break;
 						case OTHERS_ITEM:
-							customItemTotalPriceTextView.setHint(R.string.others_price_hint);
+							_customItemTotalPriceTextView.setHint(R.string.others_price_hint);
 							break;
 					}
 				}
@@ -86,13 +86,13 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 				Toast.makeText(getActivity(), R.string.please_type_only_number_for_price, Toast.LENGTH_SHORT).show();
 				switch(itemType) {
 					case MEAT_ITEM:
-						customItemTotalPriceTextView.setHint(R.string.meat_price_hint);
+						_customItemTotalPriceTextView.setHint(R.string.meat_price_hint);
 						break;
 					case ALCOHOL_ITEM:
-						customItemTotalPriceTextView.setHint(R.string.alcohol_price_hint);
+						_customItemTotalPriceTextView.setHint(R.string.alcohol_price_hint);
 						break;
 					case OTHERS_ITEM:
-						customItemTotalPriceTextView.setHint(R.string.others_price_hint);
+						_customItemTotalPriceTextView.setHint(R.string.others_price_hint);
 						break;
 				}
 				e.printStackTrace();
@@ -102,7 +102,7 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 	// End of the controllers
 
 	// Listeners
-	private OnAddItemToPlanDialogFragmentListener mOnAddItemToPlanDialogFragmentListener;
+	private OnAddItemToPlanDialogFragmentListener _mOnAddItemToPlanDialogFragmentListener;
 	// End of the listeners
 
 	// Flags
@@ -114,7 +114,7 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 	// End of the flags
 
 	// Others
-	private int inputMode;
+	private int _inputMode;
 	// End of the others
 	/**
 	 * Use this factory method to create a new instance of
@@ -125,11 +125,11 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 	 * @param itemUnit       Parameter 3.
 	 * @param itemCountUnit  Parameter 4.
 	 * @param itemUnitPrice      Parameter 5.
-	 * @param inputMode      Parameter 6.
+	 * @param _inputMode      Parameter 6.
 	 * @return A new instance of fragment AddItemToPlanDialogFragment.
 	 */
 	// TODO: Rename and change types and number of parameters
-	public static AddItemToPlanDialogFragment newInstance(int itemType, String itemName, String itemUnit, String itemCountUnit, int itemUnitPrice, int inputMode) {
+	public static AddItemToPlanDialogFragment newInstance(int itemType, String itemName, String itemUnit, String itemCountUnit, int itemUnitPrice, int _inputMode) {
 		AddItemToPlanDialogFragment fragment = new AddItemToPlanDialogFragment();
 		Bundle args = new Bundle();
 		args.putInt(ARG_SHOPPING_ITEM_TYPE, itemType);
@@ -137,7 +137,7 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 		args.putString(ARG_UNIT_OF_ITEM, itemUnit);
 		args.putString(ARG_COUNT_UNIT_OF_ITEM, itemCountUnit);
 		args.putInt(ARG_PRICE_OF_ITEM, itemUnitPrice);
-		args.putInt(ARG_INPUT_MODE, inputMode);
+		args.putInt(ARG_INPUT_MODE, _inputMode);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -145,15 +145,15 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 	 * Use this factory method to create a new instance of
 	 * this fragment using the provided parameters.
 	 *
-	 * @param inputMode    Parameter 1.
+	 * @param _inputMode    Parameter 1.
 	 * @return A new instance of fragment AddToPlanDialogFragment.
 	 */
 	// TODO: Rename and change types and number of parameters
-	public static AddItemToPlanDialogFragment newInstance(int itemType, int inputMode) {
+	public static AddItemToPlanDialogFragment newInstance(int itemType, int _inputMode) {
 		AddItemToPlanDialogFragment fragment = new AddItemToPlanDialogFragment();
 		Bundle args = new Bundle();
 		args.putInt(ARG_SHOPPING_ITEM_TYPE, itemType);
-		args.putInt(ARG_INPUT_MODE, inputMode);
+		args.putInt(ARG_INPUT_MODE, _inputMode);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -171,10 +171,10 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 			itemUnit = getArguments().getString(ARG_UNIT_OF_ITEM);
 			itemCountUnit = getArguments().getString(ARG_COUNT_UNIT_OF_ITEM);
 			itemUnitPrice = getArguments().getInt(ARG_PRICE_OF_ITEM);
-			inputMode = getArguments().getInt(ARG_INPUT_MODE);
+			_inputMode = getArguments().getInt(ARG_INPUT_MODE);
 		} else {
 			itemType = getArguments().getInt(ARG_SHOPPING_ITEM_TYPE);
-			inputMode = getArguments().getInt(ARG_INPUT_MODE);
+			_inputMode = getArguments().getInt(ARG_INPUT_MODE);
 		}
 	}
 
@@ -183,54 +183,54 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 							 Bundle savedInstanceState) {
 		View addItemToPlanDialogFragmentView;
 
-		if(inputMode == SHOPPING_ITEM_ARG_INPUT_MODE) {
+		if(_inputMode == SHOPPING_ITEM_ARG_INPUT_MODE) {
 			// Inflate the layout for this fragment
 			addItemToPlanDialogFragmentView = inflater.
 					inflate(R.layout.fragment_add_item_to_plan_dialog, container, false);
 
 			getDialog().setTitle(R.string.please_configure_number_of_item);
 
-			itemNameTextView = (TextView) addItemToPlanDialogFragmentView.
+			_itemNameTextView = (TextView) addItemToPlanDialogFragmentView.
 					findViewById(R.id.textView_name_item_dialog);
-			itemNameTextView.setText(itemName);
+			_itemNameTextView.setText(itemName);
 
-			itemUnitTextView = (TextView) addItemToPlanDialogFragmentView.
+			_itemUnitTextView = (TextView) addItemToPlanDialogFragmentView.
 					findViewById(R.id.textView_unit_item_dialog);
-			itemUnitTextView.setText("(" + itemUnit + ")");
+			_itemUnitTextView.setText("(" + itemUnit + ")");
 
-			itemUnitPriceTextView = (TextView) addItemToPlanDialogFragmentView.
+			_itemUnitPriceTextView = (TextView) addItemToPlanDialogFragmentView.
 					findViewById(R.id.textView_unit_price_item_dialog);
-			itemUnitPriceTextView.setText(castItemPriceToString(itemUnitPrice));
+			_itemUnitPriceTextView.setText(_castItemPriceToString(itemUnitPrice));
 
-			itemTotalPriceTextView = (TextView) addItemToPlanDialogFragmentView.
+			_itemTotalPriceTextView = (TextView) addItemToPlanDialogFragmentView.
 					findViewById(R.id.textView_price_total_item_dialog);
-			itemTotalPriceTextView.setText(castItemPriceToString(0));
+			_itemTotalPriceTextView.setText(_castItemPriceToString(0));
 
-			itemNumberPicker = (NumberPicker) addItemToPlanDialogFragmentView.
+			_itemNumberPicker = (NumberPicker) addItemToPlanDialogFragmentView.
 					findViewById(R.id.numberPicker_number_item_dialog);
-			itemNumberPicker.setMaxValue(500);
-			itemNumberPicker.setMinValue(0);
-			itemNumberPicker.setWrapSelectorWheel(true);
-			itemNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+			_itemNumberPicker.setMaxValue(500);
+			_itemNumberPicker.setMinValue(0);
+			_itemNumberPicker.setWrapSelectorWheel(true);
+			_itemNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 				@Override
 				public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-					itemTotalPriceTextView.setText(castItemPriceToString(itemUnitPrice * newVal));
+					_itemTotalPriceTextView.setText(_castItemPriceToString(itemUnitPrice * newVal));
 					itemCount = newVal;
 				}
 			});
-			itemNumberPicker.setValue(0);
+			_itemNumberPicker.setValue(0);
 
-			itemCountUnitTextView = (TextView) addItemToPlanDialogFragmentView.
+			_itemCountUnitTextView = (TextView) addItemToPlanDialogFragmentView.
 					findViewById(R.id.textView_count_unit_item_dialog);
-			itemCountUnitTextView.setText(itemCountUnit);
+			_itemCountUnitTextView.setText(itemCountUnit);
 
-			addItemButton = (Button) addItemToPlanDialogFragmentView.
+			_addItemButton = (Button) addItemToPlanDialogFragmentView.
 					findViewById(R.id.btn_add_item_dialog);
-			addItemButton.setOnClickListener(new View.OnClickListener() {
+			_addItemButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					if(itemCount > 0) {
-						mOnAddItemToPlanDialogFragmentListener.
+						_mOnAddItemToPlanDialogFragmentListener.
 								onClickAddItemToPlanButton(itemType, itemName, itemUnitPrice, itemCount, itemUnit, itemCountUnit);
 						dismiss();
 					} else {
@@ -239,8 +239,8 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 				}
 			});
 
-			cancelItemButton = (Button) addItemToPlanDialogFragmentView.findViewById(R.id.btn_cancel_item_dialog);
-			cancelItemButton.setOnClickListener(new View.OnClickListener() {
+			_cancelItemButton = (Button) addItemToPlanDialogFragmentView.findViewById(R.id.btn_cancel_item_dialog);
+			_cancelItemButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					dismiss();
@@ -253,29 +253,29 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 
 			getDialog().setTitle(R.string.please_type_by_yourself);
 
-			customItemNameEditText = (EditText) addItemToPlanDialogFragmentView.
+			_customItemNameEditText = (EditText) addItemToPlanDialogFragmentView.
 					findViewById(R.id.editText_name_custom_item_dialog);
-			customItemNameEditText.setNextFocusDownId(R.id.editText_unit_custom_item_dialog);
+			_customItemNameEditText.setNextFocusDownId(R.id.editText_unit_custom_item_dialog);
 
-			customItemUnitEditText = (EditText) addItemToPlanDialogFragmentView.
+			_customItemUnitEditText = (EditText) addItemToPlanDialogFragmentView.
 					findViewById(R.id.editText_unit_custom_item_dialog);
-			customItemUnitEditText.setNextFocusDownId(R.id.editText_price_custom_dialog);
+			_customItemUnitEditText.setNextFocusDownId(R.id.editText_price_custom_dialog);
 
-			customItemTotalPriceTextView = (TextView) addItemToPlanDialogFragmentView.
+			_customItemTotalPriceTextView = (TextView) addItemToPlanDialogFragmentView.
 					findViewById(R.id.textView_price_total_item_custom_dialog);
-			customItemTotalPriceTextView.setText(castItemPriceToString(0));
+			_customItemTotalPriceTextView.setText(_castItemPriceToString(0));
 
-			itemNumberPicker = (NumberPicker) addItemToPlanDialogFragmentView.
+			_itemNumberPicker = (NumberPicker) addItemToPlanDialogFragmentView.
 					findViewById(R.id.numberPicker_number_custom_item_dialog);
-			itemNumberPicker.setMaxValue(500);
-			itemNumberPicker.setMinValue(0);
-			itemNumberPicker.setWrapSelectorWheel(true);
-			itemNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+			_itemNumberPicker.setMaxValue(500);
+			_itemNumberPicker.setMinValue(0);
+			_itemNumberPicker.setWrapSelectorWheel(true);
+			_itemNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 				@Override
 				public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 					try {
-						customItemTotalPriceTextView.setText(
-								castItemPriceToString(Integer.parseInt(customItemUnitPriceEditText.getText().toString()) * newVal));
+						_customItemTotalPriceTextView.setText(
+								_castItemPriceToString(Integer.parseInt(_customItemUnitPriceEditText.getText().toString()) * newVal));
 						itemCount = newVal;
 					} catch (NumberFormatException e) {
 						Toast.makeText(getActivity(), R.string.please_type_price_first, Toast.LENGTH_SHORT).show();
@@ -283,44 +283,44 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 					}
 				}
 			});
-			itemNumberPicker.setValue(0);
+			_itemNumberPicker.setValue(0);
 
-			customItemUnitPriceEditText = (EditText) addItemToPlanDialogFragmentView.
+			_customItemUnitPriceEditText = (EditText) addItemToPlanDialogFragmentView.
 					findViewById(R.id.editText_price_custom_dialog);
-			customItemUnitPriceEditText.addTextChangedListener(editTextWatcherForCustomItemPrice);
-			customItemUnitPriceEditText.setNextFocusDownId(R.id.editText_count_unit_custom_item_dialog);
+			_customItemUnitPriceEditText.addTextChangedListener(_editTextWatcherForCustomItemPrice);
+			_customItemUnitPriceEditText.setNextFocusDownId(R.id.editText_count_unit_custom_item_dialog);
 
-			customItemCountUnitEditText = (EditText) addItemToPlanDialogFragmentView.
+			_customItemCountUnitEditText = (EditText) addItemToPlanDialogFragmentView.
 					findViewById(R.id.editText_count_unit_custom_item_dialog);
 
 			switch(itemType) {
 				case MEAT_ITEM:
-					setHintsForEditText(R.string.meat_name_hint, R.string.meat_unit_hint,
+					_setHintsForEditText(R.string.meat_name_hint, R.string.meat_unit_hint,
 							R.string.meat_unit_count_hint, R.string.meat_price_hint);
 					break;
 				case ALCOHOL_ITEM:
-					setHintsForEditText(R.string.alcohol_name_hint, R.string.alcohol_unit_hint,
+					_setHintsForEditText(R.string.alcohol_name_hint, R.string.alcohol_unit_hint,
 							R.string.alcohol_unit_count_hint, R.string.alcohol_price_hint);
 					break;
 				case OTHERS_ITEM:
-					setHintsForEditText(R.string.others_name_hint, R.string.others_unit_hint,
+					_setHintsForEditText(R.string.others_name_hint, R.string.others_unit_hint,
 							R.string.others_unit_count_hint, R.string.others_price_hint);
 					break;
 			}
 
-			addItemButton = (Button) addItemToPlanDialogFragmentView.findViewById(R.id.btn_add_custom_item_dialog);
-			addItemButton.setOnClickListener(new View.OnClickListener() {
+			_addItemButton = (Button) addItemToPlanDialogFragmentView.findViewById(R.id.btn_add_custom_item_dialog);
+			_addItemButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					if(itemCount > 0) {
-						itemName = customItemNameEditText.getText().toString();
-						itemUnit = customItemUnitEditText.getText().toString();
-						itemCountUnit = customItemCountUnitEditText.getText().toString();
-						String tempPrice = customItemUnitPriceEditText.getText().toString();
+						itemName = _customItemNameEditText.getText().toString();
+						itemUnit = _customItemUnitEditText.getText().toString();
+						itemCountUnit = _customItemCountUnitEditText.getText().toString();
+						String tempPrice = _customItemUnitPriceEditText.getText().toString();
 
 						if (!itemName.equals("") && !itemUnit.equals("") && !itemCountUnit.equals("")
 								&& !tempPrice.equals("")) {
-							mOnAddItemToPlanDialogFragmentListener.onClickAddItemToPlanButton(itemType, itemName,
+							_mOnAddItemToPlanDialogFragmentListener.onClickAddItemToPlanButton(itemType, itemName,
 									itemUnitPrice, itemCount, itemUnit, itemCountUnit);
 							dismiss();
 						} else {
@@ -332,8 +332,8 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 				}
 			});
 
-			cancelItemButton = (Button) addItemToPlanDialogFragmentView.findViewById(R.id.btn_cancel_custom_item_dialog);
-			cancelItemButton.setOnClickListener(new View.OnClickListener() {
+			_cancelItemButton = (Button) addItemToPlanDialogFragmentView.findViewById(R.id.btn_cancel_custom_item_dialog);
+			_cancelItemButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					dismiss();
@@ -345,7 +345,7 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 		return addItemToPlanDialogFragmentView;
 	}
 
-	private String castItemPriceToString(int itemPrice) {
+	private String _castItemPriceToString(int itemPrice) {
 		String itemPriceString = String.valueOf(itemPrice);
 		String itemPriceStringChanged = "";
 		if(itemPriceString.length() > 0) {
@@ -361,19 +361,19 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 		return (getResources().getString(R.string.currency_unit) + new StringBuffer(itemPriceStringChanged).reverse().toString());
 	}
 
-	private void setHintsForEditText(int itemNameHintStringResId, int itemUnitHintStringResId,
+	private void _setHintsForEditText(int itemNameHintStringResId, int itemUnitHintStringResId,
 									 int itemCountUnitHintStringResId, int itemPriceHintStringResId) {
-		customItemNameEditText.setHint(itemNameHintStringResId);
-		customItemUnitEditText.setHint(itemUnitHintStringResId);
-		customItemCountUnitEditText.setHint(itemCountUnitHintStringResId);
-		customItemUnitPriceEditText.setHint(itemPriceHintStringResId);
+		_customItemNameEditText.setHint(itemNameHintStringResId);
+		_customItemUnitEditText.setHint(itemUnitHintStringResId);
+		_customItemCountUnitEditText.setHint(itemCountUnitHintStringResId);
+		_customItemUnitPriceEditText.setHint(itemPriceHintStringResId);
 	}
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mOnAddItemToPlanDialogFragmentListener = (OnAddItemToPlanDialogFragmentListener) activity;
+			_mOnAddItemToPlanDialogFragmentListener = (OnAddItemToPlanDialogFragmentListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnFragmentListener");
@@ -383,7 +383,7 @@ public class AddItemToPlanDialogFragment extends DialogFragment {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		mOnAddItemToPlanDialogFragmentListener = null;
+		_mOnAddItemToPlanDialogFragmentListener = null;
 	}
 
 	public interface OnAddItemToPlanDialogFragmentListener {

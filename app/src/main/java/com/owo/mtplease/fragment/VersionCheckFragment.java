@@ -21,10 +21,11 @@ import com.owo.mtplease.R;
 public class VersionCheckFragment extends Fragment {
 
 	private static final String MTPLEASE_FACEBOOK_URL = "http://facebook.com/mtowo";
-	private TextView appVersionTextView;
-	private ImageButton sendOpinionImageButton;
-	private ImageButton goFacebookImageButton;
-	private OnVersionCheckFragmentListener mOnVersionCheckFragmentListener;
+	private TextView _appVersionTextView;
+	private ImageButton _sendOpinionImageButton;
+	private ImageButton _goFacebookImageButton;
+	private ImageButton _goKakaoYellowIdButton;
+	private OnVersionCheckFragmentListener _mOnVersionCheckFragmentListener;
 
 	public static VersionCheckFragment newInstance() {
 		VersionCheckFragment fragment = new VersionCheckFragment();
@@ -46,11 +47,11 @@ public class VersionCheckFragment extends Fragment {
 		// Inflate the layout for this fragment
 		View versionCheckFragemntView = inflater.inflate(R.layout.fragment_version_check, container, false);
 
-		appVersionTextView = (TextView) versionCheckFragemntView.findViewById(R.id.textView_version_application);
-		appVersionTextView.setText(R.string.application_version);
+		_appVersionTextView = (TextView) versionCheckFragemntView.findViewById(R.id.textView_version_application);
+		_appVersionTextView.setText(R.string.application_version);
 
-		sendOpinionImageButton = (ImageButton) versionCheckFragemntView.findViewById(R.id.imageButton_send_decision);
-		sendOpinionImageButton.setOnClickListener(new View.OnClickListener() {
+		_sendOpinionImageButton = (ImageButton) versionCheckFragemntView.findViewById(R.id.imageButton_send_decision);
+		_sendOpinionImageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent sendEmailIntent = new Intent(Intent.ACTION_SEND);
@@ -62,8 +63,8 @@ public class VersionCheckFragment extends Fragment {
 			}
 		});
 
-		goFacebookImageButton = (ImageButton) versionCheckFragemntView.findViewById(R.id.imageButton_go_facebook);
-		goFacebookImageButton.setOnClickListener(new View.OnClickListener() {
+		_goFacebookImageButton = (ImageButton) versionCheckFragemntView.findViewById(R.id.imageButton_go_facebook);
+		_goFacebookImageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Uri webLink = Uri.parse(MTPLEASE_FACEBOOK_URL);
@@ -72,8 +73,18 @@ public class VersionCheckFragment extends Fragment {
 			}
 		});
 
-		if(mOnVersionCheckFragmentListener != null)
-			mOnVersionCheckFragmentListener.onCreateVersionCheckFragmentView();
+		_goKakaoYellowIdButton = (ImageButton) versionCheckFragemntView.findViewById(R.id.imageButton_kakaotalk_yellow_id);
+		_goKakaoYellowIdButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Uri webLink = Uri.parse("http://goto.kakao.com/@%EC%97%A0%ED%8B%B0%EB%A5%BC%EB%B6%80%ED%83%81%ED%95%B4");
+				Intent webBrowseIntent = new Intent(Intent.ACTION_VIEW, webLink);
+				startActivity(webBrowseIntent);
+			}
+		});
+
+		if(_mOnVersionCheckFragmentListener != null)
+			_mOnVersionCheckFragmentListener.onCreateVersionCheckFragmentView();
 
 		versionCheckFragemntView.setClickable(true);
 
@@ -84,7 +95,7 @@ public class VersionCheckFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mOnVersionCheckFragmentListener = (OnVersionCheckFragmentListener) activity;
+			_mOnVersionCheckFragmentListener = (OnVersionCheckFragmentListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnVersionCheckFragmentListener");
@@ -94,13 +105,13 @@ public class VersionCheckFragment extends Fragment {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		mOnVersionCheckFragmentListener = null;
+		_mOnVersionCheckFragmentListener = null;
 	}
 
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		mOnVersionCheckFragmentListener.onDestroyVersionCheckFragmentView();
+		_mOnVersionCheckFragmentListener.onDestroyVersionCheckFragmentView();
 	}
 
 	public interface OnVersionCheckFragmentListener {

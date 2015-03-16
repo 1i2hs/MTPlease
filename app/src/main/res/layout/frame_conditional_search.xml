@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:gravity="center"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:id="@+id/textView_we"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            android:text="@string/we"
+            android:textColor="@color/mtplease_main_text_color"
+            android:textSize="20sp"/>
+
+        <RelativeLayout
+            android:id="@+id/layout_select_date_and_region"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_we"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="8dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btn_select_date"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="4dp"
+                android:background="@drawable/shape_button_date"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:textColor="@color/mtplease_main_text_color"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/textView_postposition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/btn_select_date"
+                android:text="@string/postposition_1"
+                android:textColor="@color/mtplease_main_text_color"
+                android:textSize="20sp"/>
+
+            <Spinner
+                android:id="@+id/spinner_select_region"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                android:layout_toRightOf="@id/textView_postposition"
+                android:prompt="@string/where"
+                android:spinnerMode="dropdown"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_select_number_of_people"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_select_date_and_region"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/editText_input_number_people"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:elegantTextHeight="false"
+                android:ems="4"
+                android:gravity="center_horizontal"
+                android:hint="@string/howMany"
+                android:imeOptions="actionDone"
+                android:inputType="numberDecimal"
+                android:maxLength="3"
+                android:singleLine="true"
+                android:textColor="@color/mtplease_main_text_color"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/textView_with"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="4dp"
+                android:layout_toRightOf="@id/editText_input_number_people"
+                android:text="@string/postposition_2"
+                android:textColor="@color/mtplease_main_text_color"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/textView_go_MT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_toRightOf="@+id/textView_with"
+                android:singleLine="false"
+                android:text="@string/go_MT"
+                android:textColor="@color/mtplease_main_text_color"
+                android:textSize="20sp"/>
+
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/btn_search_room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_select_number_of_people"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/btn_search"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

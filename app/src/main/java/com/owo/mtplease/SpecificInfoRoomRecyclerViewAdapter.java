@@ -1,5 +1,6 @@
 package com.owo.mtplease;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,17 +14,20 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -49,7 +53,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	// Series of cards
 	private static final int CARD_IMAGE_VIEW_PAGER = 0;
 	private static final int CARD_PRICE_AND_RATE = 1;
-	private static final int CARD_PHONE_AND_WEBSITE_BUTTONS = 2;
+	private static final int CARD_PHONE_AND_KAKAOTALK_BUTTONS = 2;
 	private static final int CARD_BASIC_INFO = 3;
 	private static final int CARD_PENSION_NOTICE = 4;
 	private static final int CARD_OPTIONS = 5;
@@ -62,6 +66,8 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	private static final int CARD_FACILITY_AND_SERVICE = 10;
 	private static final int CARD_CAUTIONS = 11;
 	// End of series of cards
+
+	private static View _basicInfoCardView;
 
 	// Model: Data variables for User Interface Views
 	private static RoomInfoModelController mRoomInfoModelController;
@@ -138,11 +144,12 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 					cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_price_and_rate, parent, false);
 					return new PriceAndRateCard(cardView, mContext);
 				}
-			case CARD_PHONE_AND_WEBSITE_BUTTONS:
-				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_phone_and_website_buttons, parent, false);
-				return new PhoneAndWebsiteButtonsCard(cardView, mContext);
+			case CARD_PHONE_AND_KAKAOTALK_BUTTONS:
+				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_phone_and_kakaotalk_buttons, parent, false);
+				return new PhoneAndKakaotalkButtonsCard(cardView, mContext);
 			case CARD_BASIC_INFO:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_basic_info, parent, false);
+				_basicInfoCardView = cardView;
 				return new BasicInfoCard(cardView, mContext);
 			case CARD_PENSION_NOTICE:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_pension_notice, parent, false);
@@ -191,8 +198,8 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 					if(mRoomInfoModelController.getRoom_cost() != 0)
 						((PriceAndRateCard) cardViewHolder).setComponents();
 					break;
-				case CARD_PHONE_AND_WEBSITE_BUTTONS:
-					((PhoneAndWebsiteButtonsCard) cardViewHolder).setComponents();
+				case CARD_PHONE_AND_KAKAOTALK_BUTTONS:
+					((PhoneAndKakaotalkButtonsCard) cardViewHolder).setComponents();
 					break;
 				case CARD_BASIC_INFO:
 					((BasicInfoCard) cardViewHolder).setComponents();
@@ -246,7 +253,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			case 1:
 				return CARD_PRICE_AND_RATE;
 			case 2:
-				return CARD_PHONE_AND_WEBSITE_BUTTONS;
+				return CARD_PHONE_AND_KAKAOTALK_BUTTONS;
 			case 3:
 				return CARD_BASIC_INFO;
 			case 4:
@@ -461,15 +468,12 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		}
 	}
 
-	private static class PhoneAndWebsiteButtonsCard extends RecyclerView.ViewHolder {
-		private Button contactButton;
-		private RelativeLayout callMtpleaseButton;
-		private TextView callMtpleaseButtonTextView;
-		private TextView callMtpleaseButtonSubTextView;
-		private Button callPensionButton;
-		private Button callMtpleaseSpaceButton;
-		private Button callPensionSpaceButton;
-		private Button kakaoTalkButton;
+	private static class PhoneAndKakaotalkButtonsCard extends RecyclerView.ViewHolder {
+		private View phoneAndKakaotalkButtonsCardView;
+		private FrameLayout contactButton;
+		private FrameLayout kakaoTalkButton;
+		private FrameLayout callMtpleaseButton;
+		private FrameLayout callPensionButton;
 
 		private Context mContext;
 
@@ -479,11 +483,9 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			contactButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					/*if(!isContactButtonClicked) {
-						callMtpleaseSpaceButton.setVisibility(View.VISIBLE);
-						callMtpleaseSpaceButton.setClickable(false);
-						callPensionSpaceButton.setVisibility(View.VISIBLE);
-						callPensionSpaceButton.setClickable(false);
+					if(!isContactButtonClicked) {
+						expand(phoneAndKakaotalkButtonsCardView, convertDpToPx(72 + 4 + 50 + 4, mContext), contactButton);
+
 						callMtpleaseButton.animate().setListener(null);
 						callPensionButton.animate().setListener(null);
 						callMtpleaseButton.setAlpha(0.0F);
@@ -492,7 +494,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 						callPensionButton.setAlpha(0.0F);
 						callPensionButton.setVisibility(View.VISIBLE);
 						callPensionButton.animate().alpha(1.0F);
-						callPensionButton.animate().translationYBy(convertDpToPx(50 + 4, mContext));
+						callPensionButton.animate().translationYBy(convertDpToPx(72 + 4, mContext));
 
 						isContactButtonClicked = true;
 					} else {
@@ -505,7 +507,6 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 									@Override
 									public void onAnimationEnd(Animator animation) {
-										callMtpleaseSpaceButton.setVisibility(View.GONE);
 										callMtpleaseButton.setVisibility(View.GONE);
 									}
 
@@ -521,7 +522,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 								});
 
 						callPensionButton.animate().alpha(0.0F);
-						callPensionButton.animate().translationYBy(-(convertDpToPx(50 + 4, mContext))).
+						callPensionButton.animate().translationYBy(-(convertDpToPx(72 + 4, mContext))).
 								setListener(new Animator.AnimatorListener() {
 									@Override
 									public void onAnimationStart(Animator animation) {
@@ -530,7 +531,6 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 									@Override
 									public void onAnimationEnd(Animator animation) {
-										callPensionSpaceButton.setVisibility(View.GONE);
 										callPensionButton.setVisibility(View.GONE);
 									}
 
@@ -544,49 +544,134 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 									}
 								});
+
+						collapse(phoneAndKakaotalkButtonsCardView, convertDpToPx(72 + 4 + 50 + 4, mContext), contactButton);
+
 						isContactButtonClicked = false;
-					}*/
-					Uri phoneNumber = Uri.parse("tel:" + mRoomInfoModelController.getPen_phone1());
-					Intent contactIntent = new Intent(Intent.ACTION_DIAL, phoneNumber);
-					mContext.startActivity(contactIntent);
+					}
 				}
 			});
 			kakaoTalkButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Uri webLink = Uri.parse(mRoomInfoModelController.getPen_homepage());
+					/*Uri webLink = Uri.parse(mRoomInfoModelController.getPen_homepage());
+					Intent webBrowseIntent = new Intent(Intent.ACTION_VIEW, webLink);
+					mContext.startActivity(webBrowseIntent);*/
+					Uri webLink = Uri.parse("http://goto.kakao.com/@%EC%97%A0%ED%8B%B0%EB%A5%BC%EB%B6%80%ED%83%81%ED%95%B4");
 					Intent webBrowseIntent = new Intent(Intent.ACTION_VIEW, webLink);
 					mContext.startActivity(webBrowseIntent);
 				}
 			});
 
-			/*callPensionButton.setOnClickListener(new View.OnClickListener() {
+			callMtpleaseButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					Uri phoneNumber = Uri.parse("tel:" + "01092055132");
+					Intent contactIntent = new Intent(Intent.ACTION_DIAL, phoneNumber);
+					mContext.startActivity(contactIntent);
+				}
+			});
+
+			callPensionButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Toast toast = Toast.makeText(mContext, R.string.please_say_mtplease, Toast.LENGTH_SHORT);
+					toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, convertDpToPx(150, mContext));
+					toast.show();
+
 					Uri phoneNumber = Uri.parse("tel:" + mRoomInfoModelController.getPen_phone1());
 					Intent contactIntent = new Intent(Intent.ACTION_DIAL, phoneNumber);
 					mContext.startActivity(contactIntent);
 				}
-			});*/
+			});
 		}
-		public PhoneAndWebsiteButtonsCard(View cardView, Context context) {
+		public PhoneAndKakaotalkButtonsCard(View cardView, Context context) {
 			super(cardView);
-			contactButton = (Button) cardView.findViewById(R.id.btn_call);
-			contactButton.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
-			callMtpleaseButton = (RelativeLayout) cardView.findViewById(R.id.btn_call_mtplease);
-			callMtpleaseButtonTextView = (TextView) cardView.findViewById(R.id.textView_call_mtplease);
-			callMtpleaseButtonTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
-			callMtpleaseButtonSubTextView = (TextView) cardView.findViewById(R.id.textView_call_mtplease_sub);
-			callMtpleaseButtonSubTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
-			callPensionButton = (Button) cardView.findViewById(R.id.btn_call_pension);
-			callPensionButton.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
-			callMtpleaseSpaceButton = (Button) cardView.findViewById(R.id.btn_space_call_mtplease);
-			callPensionSpaceButton = (Button) cardView.findViewById(R.id.btn_space_call_pension);
-			kakaoTalkButton = (Button) cardView.findViewById(R.id.btn_website);
-			kakaoTalkButton.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			phoneAndKakaotalkButtonsCardView = cardView;
+			contactButton = (FrameLayout) cardView.findViewById(R.id.btn_contact);
+			kakaoTalkButton = (FrameLayout) cardView.findViewById(R.id.btn_kakaotalk_yellow_id);
+			callMtpleaseButton = (FrameLayout) cardView.findViewById(R.id.btn_call_mtplease);
+			callPensionButton = (FrameLayout) cardView.findViewById(R.id.btn_call_pension);
 
 			mContext = context;
 		}
+	}
+
+	public static void expand(final View v, final int targetHeight, final View clickedButton) {
+		v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+		final int initialHeight = v.getMeasuredHeight();
+
+		Animation a = new Animation() {
+			@Override
+			protected void applyTransformation(float interpolatedTime, Transformation t) {
+				v.getLayoutParams().height = initialHeight + (int) (targetHeight * interpolatedTime);
+				v.requestLayout();
+			}
+
+			@Override
+			public boolean willChangeBounds() {
+				return true;
+			}
+		};
+
+		a.setAnimationListener(new Animation.AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+				clickedButton.setClickable(false);
+			}
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				clickedButton.setClickable(true);
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+
+			}
+		});
+		a.setDuration(500);
+		v.startAnimation(a);
+	}
+
+	public static void collapse(final View v, final int heightToBeDecreased, final View clickedButton) {
+		v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+		final int initialHeight = v.getMeasuredHeight();
+
+		Animation a = new Animation() {
+			@Override
+			protected void applyTransformation(float interpolatedTime, Transformation t) {
+				v.getLayoutParams().height =  initialHeight - (int) (heightToBeDecreased * interpolatedTime);
+				v.requestLayout();
+			}
+
+			@Override
+			public boolean willChangeBounds() {
+				return true;
+			}
+		};
+
+		a.setAnimationListener(new Animation.AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+				clickedButton.setClickable(false);
+			}
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				clickedButton.setClickable(true);
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+
+			}
+		});
+
+		a.setDuration(500);
+		v.startAnimation(a);
 	}
 
 	private static class BasicInfoCard extends RecyclerView.ViewHolder {
@@ -891,13 +976,11 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			mapWebView.loadUrl(pensionLocationURL);
 
 			if(!mRoomInfoModelController.getPen_walk_station().equals("null"))
-//				walkFromStationTimeTextView.setText(changeTimeStringIntoKoreanTimeFormat(mRoomInfoModelController.getPen_walk_station()));
 				walkFromStationTimeTextView.setText(mRoomInfoModelController.getPen_walk_station());
 			else
 				walkFromStationTimeTextView.setText("-");
 
 			if(!mRoomInfoModelController.getPen_walk_terminal().equals("null"))
-//				walkFromTerminalTimeTextView.setText(changeTimeStringIntoKoreanTimeFormat(mRoomInfoModelController.getPen_walk_terminal()));
 				walkFromTerminalTimeTextView.setText(mRoomInfoModelController.getPen_walk_terminal());
 			else
 				walkFromTerminalTimeTextView.setText("-");

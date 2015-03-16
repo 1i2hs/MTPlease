@@ -28,544 +28,544 @@ public class RoomInfoModelController implements Parcelable {
 
 	private static final String TAG = "RoomInfoModelController";
 
-	private LinkedList<String> roomRealImageURL;
-	private LinkedList<String> roomUnrealImageURL;
-	private String roomRealThumbnailImageURL;
-	private String roomUnrealThumbnailImageURL;
-	private boolean roomRealImageExists;
-	private boolean roomRealThumbnailImageExists;
+	private LinkedList<String> _roomRealImageURL;
+	private LinkedList<String> _roomUnrealImageURL;
+	private String _roomRealThumbnailImageURL;
+	private String _roomUnrealThumbnailImageURL;
+	private boolean _roomRealImageExists;
+	private boolean _roomRealThumbnailImageExists;
 
-	private int pen_id;
-	private String room_name;
-	private String pen_period_division;
-	private String period_start;
-	private String period_end;
-	private int weekdays;
-	private int friday;
-	private int weekends;
-	private int room_id;
-	private int room_std_people;
-	private int room_max_people;
-	private String room_pyeong;
-	private int num_rooms;
-	private int num_toilets;
-	private int room_aircon;
-	private String room_equipment;
-	private String room_description;
-	private int room_picture_flag;
-	private int num_images;
-	private String pen_region;
-	private String pen_name;
-	private String pen_homepage;
-	private String pen_lot_adr;
-	private String pen_road_adr;
-	private String pen_ceo;
-	private String pen_phone1;
-	private String pen_phone2;
-	private String pen_ceo_account;
-	private String pen_checkin;
-	private String pen_checkout;
-	private int pen_pickup;
-	private String pen_pickup_cost;
-	private String pen_pickup_location;
-	private String pen_pickup_description;
-	private int pen_barbecue;
-	private String pen_barbecue_cost;
-	private String pen_barbecue_component;
-	private String pen_barbecue_location;
-	private String pen_barbecue_description;
-	private int pen_ground;
-	private String pen_ground_type;
-	private String pen_ground_description;
-	private int pen_valley;
-	private String pen_valley_distance;
-	private String pen_valley_depth;
-	private String pen_valley_description;
-	private double pen_latitude;
-	private double pen_longitude;
-	private String pen_walk_station;
-	private String pen_walk_terminal;
-	private JSONArray cost_table;
-	private JSONArray period_table;
-	private int room_cost;
-	private JSONArray facility;
-	private JSONArray service;
-	private JSONArray usage_caution;
-	private JSONArray reserve_caution;
-	private JSONArray refund_caution;
-	private String pen_description;
+	private int _pen_id;
+	private String _room_name;
+	private String _pen_period_division;
+	private String _period_start;
+	private String _period_end;
+	private int _weekdays;
+	private int _friday;
+	private int _weekends;
+	private int _room_id;
+	private int _room_std_people;
+	private int _room_max_people;
+	private String _room_pyeong;
+	private int _num_rooms;
+	private int _num_toilets;
+	private int _room_aircon;
+	private String _room_equipment;
+	private String _room_description;
+	private int _room_picture_flag;
+	private int _num_images;
+	private String _pen_region;
+	private String _pen_name;
+	private String _pen_homepage;
+	private String _pen_lot_adr;
+	private String _pen_road_adr;
+	private String _pen_ceo;
+	private String _pen_phone1;
+	private String _pen_phone2;
+	private String _pen_ceo_account;
+	private String _pen_checkin;
+	private String _pen_checkout;
+	private int _pen_pickup;
+	private String _pen_pickup_cost;
+	private String _pen_pickup_location;
+	private String _pen_pickup_description;
+	private int _pen_barbecue;
+	private String _pen_barbecue_cost;
+	private String _pen_barbecue_component;
+	private String _pen_barbecue_location;
+	private String _pen_barbecue_description;
+	private int _pen_ground;
+	private String _pen_ground_type;
+	private String _pen_ground_description;
+	private int _pen_valley;
+	private String _pen_valley_distance;
+	private String _pen_valley_depth;
+	private String _pen_valley_description;
+	private double _pen_latitude;
+	private double _pen_longitude;
+	private String _pen_walk_station;
+	private String _pen_walk_terminal;
+	private JSONArray _cost_table;
+	private JSONArray _period_table;
+	private int _room_cost;
+	private JSONArray _facility;
+	private JSONArray _service;
+	private JSONArray _usage_caution;
+	private JSONArray _reserve_caution;
+	private JSONArray _refund_caution;
+	private String _pen_description;
 
 	public int getPen_id() {
-		return pen_id;
+		return _pen_id;
 	}
 
-	public void setPen_id(int pen_id) {
-		this.pen_id = pen_id;
+	public void setPen_id(int _pen_id) {
+		this._pen_id = _pen_id;
 	}
 
 	public String getRoom_name() {
-		return room_name;
+		return _room_name;
 	}
 
-	public void setRoom_name(String room_name) {
-		this.room_name = room_name;
+	public void setRoom_name(String _room_name) {
+		this._room_name = _room_name;
 	}
 
 	public String getPen_period_division() {
-		return pen_period_division;
+		return _pen_period_division;
 	}
 
-	public void setPen_period_division(String pen_period_division) {
-		this.pen_period_division = pen_period_division;
+	public void setPen_period_division(String _pen_period_division) {
+		this._pen_period_division = _pen_period_division;
 	}
 
 	public String getPeriod_start() {
-		return period_start;
+		return _period_start;
 	}
 
-	public void setPeriod_start(String period_start) {
-		this.period_start = period_start;
+	public void setPeriod_start(String _period_start) {
+		this._period_start = _period_start;
 	}
 
 	public String getPeriod_end() {
-		return period_end;
+		return _period_end;
 	}
 
-	public void setPeriod_end(String period_end) {
-		this.period_end = period_end;
+	public void setPeriod_end(String _period_end) {
+		this._period_end = _period_end;
 	}
 
 	public int getWeekdays() {
-		return weekdays;
+		return _weekdays;
 	}
 
-	public void setWeekdays(int weekdays) {
-		this.weekdays = weekdays;
+	public void setWeekdays(int _weekdays) {
+		this._weekdays = _weekdays;
 	}
 
 	public int getFriday() {
-		return friday;
+		return _friday;
 	}
 
-	public void setFriday(int friday) {
-		this.friday = friday;
+	public void setFriday(int _friday) {
+		this._friday = _friday;
 	}
 
-	public void setRoom_id(int room_id) {
-		this.room_id = room_id;
+	public void setRoom_id(int _room_id) {
+		this._room_id = _room_id;
 	}
 
 	public int getRoom_id() {
-		return room_id;
+		return _room_id;
 	}
 
 	public int getWeekends() {
-		return weekends;
+		return _weekends;
 	}
 
-	public void setWeekends(int weekends) {
-		this.weekends = weekends;
+	public void setWeekends(int _weekends) {
+		this._weekends = _weekends;
 	}
 
 	public int getRoom_std_people() {
-		return room_std_people;
+		return _room_std_people;
 	}
 
-	public void setRoom_std_people(int room_std_people) {
-		this.room_std_people = room_std_people;
+	public void setRoom_std_people(int _room_std_people) {
+		this._room_std_people = _room_std_people;
 	}
 
 	public int getRoom_max_people() {
-		return room_max_people;
+		return _room_max_people;
 	}
 
-	public void setRoom_max_people(int room_max_people) {
-		this.room_max_people = room_max_people;
+	public void setRoom_max_people(int _room_max_people) {
+		this._room_max_people = _room_max_people;
 	}
 
 	public String getRoom_pyeong() {
-		return room_pyeong;
+		return _room_pyeong;
 	}
 
-	public void setRoom_pyeong(String room_pyeong) {
-		this.room_pyeong = room_pyeong;
+	public void setRoom_pyeong(String _room_pyeong) {
+		this._room_pyeong = _room_pyeong;
 	}
 
 	public int getNum_rooms() {
-		return num_rooms;
+		return _num_rooms;
 	}
 
-	public void setNum_rooms(int num_rooms) {
-		this.num_rooms = num_rooms;
+	public void setNum_rooms(int _num_rooms) {
+		this._num_rooms = _num_rooms;
 	}
 
 	public int getNum_toilets() {
-		return num_toilets;
+		return _num_toilets;
 	}
 
-	public void setNum_toilets(int num_toilets) {
-		this.num_toilets = num_toilets;
+	public void setNum_toilets(int _num_toilets) {
+		this._num_toilets = _num_toilets;
 	}
 
 	public int getRoom_aircon() {
-		return room_aircon;
+		return _room_aircon;
 	}
 
-	public void setRoom_aircon(int room_aircon) {
-		this.room_aircon = room_aircon;
+	public void setRoom_aircon(int _room_aircon) {
+		this._room_aircon = _room_aircon;
 	}
 
 	public String getRoom_equipment() {
-		return room_equipment;
+		return _room_equipment;
 	}
 
-	public void setRoom_equipment(String room_equipment) {
-		this.room_equipment = room_equipment;
+	public void setRoom_equipment(String _room_equipment) {
+		this._room_equipment = _room_equipment;
 	}
 
 	public String getRoom_description() {
-		return room_description;
+		return _room_description;
 	}
 
-	public void setRoom_description(String room_description) {
-		this.room_description = room_description;
+	public void setRoom_description(String _room_description) {
+		this._room_description = _room_description;
 	}
 
 	public int getRoom_picture_flag() {
-		return room_picture_flag;
+		return _room_picture_flag;
 	}
 
-	public void setRoom_picture_flag(int room_picture_flag) {
-		this.room_picture_flag = room_picture_flag;
+	public void setRoom_picture_flag(int _room_picture_flag) {
+		this._room_picture_flag = _room_picture_flag;
 	}
 
 	public int getNum_images() {
-		return num_images;
+		return _num_images;
 	}
 
-	public void setNum_images(int num_images) {
-		this.num_images = num_images;
+	public void setNum_images(int _num_images) {
+		this._num_images = _num_images;
 	}
 
 	public String getPen_region() {
-		return pen_region;
+		return _pen_region;
 	}
 
-	public void setPen_region(String pen_region) {
-		this.pen_region = pen_region;
+	public void setPen_region(String _pen_region) {
+		this._pen_region = _pen_region;
 	}
 
 	public String getPen_name() {
-		return pen_name;
+		return _pen_name;
 	}
 
-	public void setPen_name(String pen_name) {
-		this.pen_name = pen_name;
+	public void setPen_name(String _pen_name) {
+		this._pen_name = _pen_name;
 	}
 
 	public String getPen_homepage() {
-		return pen_homepage;
+		return _pen_homepage;
 	}
 
-	public void setPen_homepage(String pen_homepage) {
-		this.pen_homepage = pen_homepage;
+	public void setPen_homepage(String _pen_homepage) {
+		this._pen_homepage = _pen_homepage;
 	}
 
 	public String getPen_lot_adr() {
-		return pen_lot_adr;
+		return _pen_lot_adr;
 	}
 
-	public void setPen_lot_adr(String pen_lot_adr) {
-		this.pen_lot_adr = pen_lot_adr;
+	public void setPen_lot_adr(String _pen_lot_adr) {
+		this._pen_lot_adr = _pen_lot_adr;
 	}
 
 	public String getPen_road_adr() {
-		return pen_road_adr;
+		return _pen_road_adr;
 	}
 
-	public void setPen_road_adr(String pen_road_adr) {
-		this.pen_road_adr = pen_road_adr;
+	public void setPen_road_adr(String _pen_road_adr) {
+		this._pen_road_adr = _pen_road_adr;
 	}
 
 	public String getPen_ceo() {
-		return pen_ceo;
+		return _pen_ceo;
 	}
 
-	public void setPen_ceo(String pen_ceo) {
-		this.pen_ceo = pen_ceo;
+	public void setPen_ceo(String _pen_ceo) {
+		this._pen_ceo = _pen_ceo;
 	}
 
 	public String getPen_phone1() {
-		return pen_phone1;
+		return _pen_phone1;
 	}
 
-	public void setPen_phone1(String pen_phone1) {
-		this.pen_phone1 = pen_phone1;
+	public void setPen_phone1(String _pen_phone1) {
+		this._pen_phone1 = _pen_phone1;
 	}
 
 	public String getPen_phone2() {
-		return pen_phone2;
+		return _pen_phone2;
 	}
 
-	public void setPen_phone2(String pen_phone2) {
-		this.pen_phone2 = pen_phone2;
+	public void setPen_phone2(String _pen_phone2) {
+		this._pen_phone2 = _pen_phone2;
 	}
 
 	public String getPen_ceo_account() {
-		return pen_ceo_account;
+		return _pen_ceo_account;
 	}
 
-	public void setPen_ceo_account(String pen_ceo_account) {
-		this.pen_ceo_account = pen_ceo_account;
+	public void setPen_ceo_account(String _pen_ceo_account) {
+		this._pen_ceo_account = _pen_ceo_account;
 	}
 
 	public String getPen_checkin() {
-		return pen_checkin;
+		return _pen_checkin;
 	}
 
-	public void setPen_checkin(String pen_checkin) {
-		this.pen_checkin = pen_checkin;
+	public void setPen_checkin(String _pen_checkin) {
+		this._pen_checkin = _pen_checkin;
 	}
 
 	public String getPen_checkout() {
-		return pen_checkout;
+		return _pen_checkout;
 	}
 
-	public void setPen_checkout(String pen_checkout) {
-		this.pen_checkout = pen_checkout;
+	public void setPen_checkout(String _pen_checkout) {
+		this._pen_checkout = _pen_checkout;
 	}
 
 	public int getPen_pickup() {
-		return pen_pickup;
+		return _pen_pickup;
 	}
 
-	public void setPen_pickup(int pen_pickup) {
-		this.pen_pickup = pen_pickup;
+	public void setPen_pickup(int _pen_pickup) {
+		this._pen_pickup = _pen_pickup;
 	}
 
 	public String getPen_pickup_cost() {
-		return pen_pickup_cost;
+		return _pen_pickup_cost;
 	}
 
-	public void setPen_pickup_cost(String pen_pickup_cost) {
-		this.pen_pickup_cost = pen_pickup_cost;
+	public void setPen_pickup_cost(String _pen_pickup_cost) {
+		this._pen_pickup_cost = _pen_pickup_cost;
 	}
 
 	public String getPen_pickup_location() {
-		return pen_pickup_location;
+		return _pen_pickup_location;
 	}
 
-	public void setPen_pickup_location(String pen_pickup_location) {
-		this.pen_pickup_location = pen_pickup_location;
+	public void setPen_pickup_location(String _pen_pickup_location) {
+		this._pen_pickup_location = _pen_pickup_location;
 	}
 
 	public String getPen_pickup_description() {
-		return pen_pickup_description;
+		return _pen_pickup_description;
 	}
 
-	public void setPen_pickup_description(String pen_pickup_description) {
-		this.pen_pickup_description = pen_pickup_description;
+	public void setPen_pickup_description(String _pen_pickup_description) {
+		this._pen_pickup_description = _pen_pickup_description;
 	}
 
 	public int getPen_barbecue() {
-		return pen_barbecue;
+		return _pen_barbecue;
 	}
 
-	public void setPen_barbecue(int pen_barbecue) {
-		this.pen_barbecue = pen_barbecue;
+	public void setPen_barbecue(int _pen_barbecue) {
+		this._pen_barbecue = _pen_barbecue;
 	}
 
 	public String getPen_barbecue_cost() {
-		return pen_barbecue_cost;
+		return _pen_barbecue_cost;
 	}
 
-	public void setPen_barbecue_cost(String pen_barbecue_cost) {
-		this.pen_barbecue_cost = pen_barbecue_cost;
+	public void setPen_barbecue_cost(String _pen_barbecue_cost) {
+		this._pen_barbecue_cost = _pen_barbecue_cost;
 	}
 
 	public String getPen_barbecue_component() {
-		return pen_barbecue_component;
+		return _pen_barbecue_component;
 	}
 
-	public void setPen_barbecue_component(String pen_barbecue_component) {
-		this.pen_barbecue_component = pen_barbecue_component;
+	public void setPen_barbecue_component(String _pen_barbecue_component) {
+		this._pen_barbecue_component = _pen_barbecue_component;
 	}
 
 	public String getPen_barbecue_location() {
-		return pen_barbecue_location;
+		return _pen_barbecue_location;
 	}
 
-	public void setPen_barbecue_location(String pen_barbecue_location) {
-		this.pen_barbecue_location = pen_barbecue_location;
+	public void setPen_barbecue_location(String _pen_barbecue_location) {
+		this._pen_barbecue_location = _pen_barbecue_location;
 	}
 
 	public String getPen_barbecue_description() {
-		return pen_barbecue_description;
+		return _pen_barbecue_description;
 	}
 
-	public void setPen_barbecue_description(String pen_barbecue_description) {
-		this.pen_barbecue_description = pen_barbecue_description;
+	public void setPen_barbecue_description(String _pen_barbecue_description) {
+		this._pen_barbecue_description = _pen_barbecue_description;
 	}
 
 	public int getPen_ground() {
-		return pen_ground;
+		return _pen_ground;
 	}
 
-	public void setPen_ground(int pen_ground) {
-		this.pen_ground = pen_ground;
+	public void setPen_ground(int _pen_ground) {
+		this._pen_ground = _pen_ground;
 	}
 
 	public String getPen_ground_type() {
-		return pen_ground_type;
+		return _pen_ground_type;
 	}
 
-	public void setPen_ground_type(String pen_ground_type) {
-		this.pen_ground_type = pen_ground_type;
+	public void setPen_ground_type(String _pen_ground_type) {
+		this._pen_ground_type = _pen_ground_type;
 	}
 
 	public String getPen_ground_description() {
-		return pen_ground_description;
+		return _pen_ground_description;
 	}
 
-	public void setPen_ground_description(String pen_ground_description) {
-		this.pen_ground_description = pen_ground_description;
+	public void setPen_ground_description(String _pen_ground_description) {
+		this._pen_ground_description = _pen_ground_description;
 	}
 
 	public int getPen_valley() {
-		return pen_valley;
+		return _pen_valley;
 	}
 
-	public void setPen_valley(int pen_valley) {
-		this.pen_valley = pen_valley;
+	public void setPen_valley(int _pen_valley) {
+		this._pen_valley = _pen_valley;
 	}
 
 	public String getPen_valley_distance() {
-		return pen_valley_distance;
+		return _pen_valley_distance;
 	}
 
-	public void setPen_valley_distance(String pen_valley_distance) {
-		this.pen_valley_distance = pen_valley_distance;
+	public void setPen_valley_distance(String _pen_valley_distance) {
+		this._pen_valley_distance = _pen_valley_distance;
 	}
 
 	public String getPen_valley_depth() {
-		return pen_valley_depth;
+		return _pen_valley_depth;
 	}
 
-	public void setPen_valley_depth(String pen_valley_depth) {
-		this.pen_valley_depth = pen_valley_depth;
+	public void setPen_valley_depth(String _pen_valley_depth) {
+		this._pen_valley_depth = _pen_valley_depth;
 	}
 
 	public String getPen_valley_description() {
-		return pen_valley_description;
+		return _pen_valley_description;
 	}
 
-	public void setPen_valley_description(String pen_valley_description) {
-		this.pen_valley_description = pen_valley_description;
+	public void setPen_valley_description(String _pen_valley_description) {
+		this._pen_valley_description = _pen_valley_description;
 	}
 
 	public double getPen_latitude() {
-		return pen_latitude;
+		return _pen_latitude;
 	}
 
-	public void setPen_latitude(double pen_latitude) {
-		this.pen_latitude = pen_latitude;
+	public void setPen_latitude(double _pen_latitude) {
+		this._pen_latitude = _pen_latitude;
 	}
 
 	public double getPen_longitude() {
-		return pen_longitude;
+		return _pen_longitude;
 	}
 
-	public void setPen_longitude(double pen_longitude) {
-		this.pen_longitude = pen_longitude;
+	public void setPen_longitude(double _pen_longitude) {
+		this._pen_longitude = _pen_longitude;
 	}
 
 	public String getPen_walk_station() {
-		return pen_walk_station;
+		return _pen_walk_station;
 	}
 
-	public void setPen_walk_station(String pen_walk_station) {
-		this.pen_walk_station = pen_walk_station;
+	public void setPen_walk_station(String _pen_walk_station) {
+		this._pen_walk_station = _pen_walk_station;
 	}
 
 	public String getPen_walk_terminal() {
-		return pen_walk_terminal;
+		return _pen_walk_terminal;
 	}
 
-	public void setPen_walk_terminal(String pen_walk_terminal) {
-		this.pen_walk_terminal = pen_walk_terminal;
+	public void setPen_walk_terminal(String _pen_walk_terminal) {
+		this._pen_walk_terminal = _pen_walk_terminal;
 	}
 
 	public JSONArray getCost_table() {
-		return cost_table;
+		return _cost_table;
 	}
 
-	public void setCost_table(JSONArray cost_table) {
-		this.cost_table = cost_table;
+	public void setCost_table(JSONArray _cost_table) {
+		this._cost_table = _cost_table;
 	}
 
 	public JSONArray getPeriod_table() {
-		return period_table;
+		return _period_table;
 	}
 
-	public void setPeriod_table(JSONArray period_table) {
-		Log.d(TAG, period_table.toString());
-		this.period_table = period_table;
+	public void setPeriod_table(JSONArray _period_table) {
+		Log.d(TAG, _period_table.toString());
+		this._period_table = _period_table;
 	}
 
 	public int getRoom_cost() {
-		return room_cost;
+		return _room_cost;
 	}
 
-	public void setRoom_cost(int room_cost) {
-		this.room_cost = room_cost;
+	public void setRoom_cost(int _room_cost) {
+		this._room_cost = _room_cost;
 	}
 
 	public JSONArray getFacility() {
-		return facility;
+		return _facility;
 	}
 
-	public void setFacility(JSONArray facility) {
-		this.facility = facility;
+	public void setFacility(JSONArray _facility) {
+		this._facility = _facility;
 	}
 
 	public JSONArray getService() {
-		return service;
+		return _service;
 	}
 
-	public void setService(JSONArray service) {
-		this.service = service;
+	public void setService(JSONArray _service) {
+		this._service = _service;
 	}
 
 	public JSONArray getUsage_caution() {
-		return usage_caution;
+		return _usage_caution;
 	}
 
-	public void setUsage_caution(JSONArray usage_caution) {
-		this.usage_caution = usage_caution;
+	public void setUsage_caution(JSONArray _usage_caution) {
+		this._usage_caution = _usage_caution;
 	}
 
 	public JSONArray getReserve_caution() {
-		return reserve_caution;
+		return _reserve_caution;
 	}
 
-	public void setReserve_caution(JSONArray reserve_caution) {
-		this.reserve_caution = reserve_caution;
+	public void setReserve_caution(JSONArray _reserve_caution) {
+		this._reserve_caution = _reserve_caution;
 	}
 
 	public JSONArray getRefund_caution() {
-		return refund_caution;
+		return _refund_caution;
 	}
 
-	public void setRefund_caution(JSONArray refund_caution) {
-		this.refund_caution = refund_caution;
+	public void setRefund_caution(JSONArray _refund_caution) {
+		this._refund_caution = _refund_caution;
 	}
 
 	public String getPen_description() {
-		return pen_description;
+		return _pen_description;
 	}
 
-	public void setPen_description(String pen_description) {
-		this.pen_description = pen_description;
+	public void setPen_description(String _pen_description) {
+		this._pen_description = _pen_description;
 	}
 
 	public RoomInfoModelController() {
@@ -582,177 +582,177 @@ public class RoomInfoModelController implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(pen_id);
-		dest.writeString(room_name);
-		dest.writeString(pen_period_division);
-		dest.writeString(period_start);
-		dest.writeString(period_end);
-		dest.writeInt(weekdays);
-		dest.writeInt(friday);
-		dest.writeInt(weekends);
-		dest.writeInt(room_id);
-		dest.writeInt(room_std_people);
-		dest.writeInt(room_max_people);
-		dest.writeString(room_pyeong);
-		dest.writeInt(num_rooms);
-		dest.writeInt(num_toilets);
-		dest.writeInt(room_aircon);
-		dest.writeString(room_equipment);
-		dest.writeString(room_description);
-		dest.writeInt(room_picture_flag);
-		dest.writeInt(num_images);
-		dest.writeString(pen_region);
-		dest.writeString(pen_name);
-		dest.writeString(pen_homepage);
-		dest.writeString(pen_lot_adr);
-		dest.writeString(pen_road_adr);
-		dest.writeString(pen_ceo);
-		dest.writeString(pen_phone1);
-		dest.writeString(pen_phone2);
-		dest.writeString(pen_ceo_account);
-		dest.writeString(pen_checkin);
-		dest.writeString(pen_checkout);
-		dest.writeInt(pen_pickup);
-		dest.writeString(pen_pickup_cost);
-		dest.writeString(pen_pickup_location);
-		dest.writeString(pen_pickup_description);
-		dest.writeInt(pen_barbecue);
-		dest.writeString(pen_barbecue_cost);
-		dest.writeString(pen_barbecue_component);
-		dest.writeString(pen_barbecue_location);
-		dest.writeString(pen_barbecue_description);
-		dest.writeInt(pen_ground);
-		dest.writeString(pen_ground_type);
-		dest.writeString(pen_ground_description);
-		dest.writeInt(pen_valley);
-		dest.writeString(pen_valley_distance);
-		dest.writeString(pen_valley_depth);
-		dest.writeString(pen_valley_description);
-		dest.writeDouble(pen_latitude);
-		dest.writeDouble(pen_longitude);
-		dest.writeString(pen_walk_station);
-		dest.writeString(pen_walk_terminal);
-		if(cost_table != null)
-			dest.writeString(cost_table.toString());
+		dest.writeInt(_pen_id);
+		dest.writeString(_room_name);
+		dest.writeString(_pen_period_division);
+		dest.writeString(_period_start);
+		dest.writeString(_period_end);
+		dest.writeInt(_weekdays);
+		dest.writeInt(_friday);
+		dest.writeInt(_weekends);
+		dest.writeInt(_room_id);
+		dest.writeInt(_room_std_people);
+		dest.writeInt(_room_max_people);
+		dest.writeString(_room_pyeong);
+		dest.writeInt(_num_rooms);
+		dest.writeInt(_num_toilets);
+		dest.writeInt(_room_aircon);
+		dest.writeString(_room_equipment);
+		dest.writeString(_room_description);
+		dest.writeInt(_room_picture_flag);
+		dest.writeInt(_num_images);
+		dest.writeString(_pen_region);
+		dest.writeString(_pen_name);
+		dest.writeString(_pen_homepage);
+		dest.writeString(_pen_lot_adr);
+		dest.writeString(_pen_road_adr);
+		dest.writeString(_pen_ceo);
+		dest.writeString(_pen_phone1);
+		dest.writeString(_pen_phone2);
+		dest.writeString(_pen_ceo_account);
+		dest.writeString(_pen_checkin);
+		dest.writeString(_pen_checkout);
+		dest.writeInt(_pen_pickup);
+		dest.writeString(_pen_pickup_cost);
+		dest.writeString(_pen_pickup_location);
+		dest.writeString(_pen_pickup_description);
+		dest.writeInt(_pen_barbecue);
+		dest.writeString(_pen_barbecue_cost);
+		dest.writeString(_pen_barbecue_component);
+		dest.writeString(_pen_barbecue_location);
+		dest.writeString(_pen_barbecue_description);
+		dest.writeInt(_pen_ground);
+		dest.writeString(_pen_ground_type);
+		dest.writeString(_pen_ground_description);
+		dest.writeInt(_pen_valley);
+		dest.writeString(_pen_valley_distance);
+		dest.writeString(_pen_valley_depth);
+		dest.writeString(_pen_valley_description);
+		dest.writeDouble(_pen_latitude);
+		dest.writeDouble(_pen_longitude);
+		dest.writeString(_pen_walk_station);
+		dest.writeString(_pen_walk_terminal);
+		if(_cost_table != null)
+			dest.writeString(_cost_table.toString());
 		else
 			dest.writeString("");
 
-		Log.d(TAG, period_table.toString());
-		if(period_table != null)
-			dest.writeString(period_table.toString());
+		Log.d(TAG, _period_table.toString());
+		if(_period_table != null)
+			dest.writeString(_period_table.toString());
 		else
 			dest.writeString("");
 
-		dest.writeInt(room_cost);
+		dest.writeInt(_room_cost);
 
-		if(facility != null)
-			dest.writeString(facility.toString());
+		if(_facility != null)
+			dest.writeString(_facility.toString());
 		else
 			dest.writeString("");
 
-		if(service != null)
-			dest.writeString(service.toString());
+		if(_service != null)
+			dest.writeString(_service.toString());
 		else
 			dest.writeString("");
 
-		if(usage_caution != null)
-			dest.writeString(usage_caution.toString());
+		if(_usage_caution != null)
+			dest.writeString(_usage_caution.toString());
 		else
 			dest.writeString("");
 
-		if(reserve_caution != null)
-			dest.writeString(reserve_caution.toString());
+		if(_reserve_caution != null)
+			dest.writeString(_reserve_caution.toString());
 		else
 			dest.writeString("");
 
-		if(refund_caution != null)
-			dest.writeString(refund_caution.toString());
+		if(_refund_caution != null)
+			dest.writeString(_refund_caution.toString());
 		else
 			dest.writeString("");
 
-		dest.writeString(pen_description);
+		dest.writeString(_pen_description);
 	}
 	public void readFromParcel(Parcel in) {
 		try {
-			pen_id = in.readInt();
-			room_name = in.readString();
-			pen_period_division  = in.readString();
-			period_start = in.readString();
-			period_end = in.readString();
-			weekdays = in.readInt();
-			room_id = in.readInt();
-			friday = in.readInt();
-			weekends = in.readInt();
-			room_std_people = in.readInt();
-			room_max_people = in.readInt();
-			room_pyeong = in.readString();
-			num_rooms = in.readInt();
-			num_toilets = in.readInt();
-			room_aircon = in.readInt();
-			room_equipment = in.readString();
-			room_description = in.readString();
-			room_picture_flag = in.readInt();
-			num_images = in.readInt();
-			pen_region = in.readString();
-			pen_name = in.readString();
-			pen_homepage = in.readString();
-			pen_lot_adr = in.readString();
-			pen_road_adr = in.readString();
-			pen_ceo = in.readString();
-			pen_phone1 = in.readString();
-			pen_phone2 = in.readString();
-			pen_ceo_account = in.readString();
-			pen_checkin = in.readString();
-			pen_checkout = in.readString();
-			pen_pickup = in.readInt();
-			pen_pickup_cost = in.readString();
-			pen_pickup_location = in.readString();
-			pen_pickup_description = in.readString();
-			pen_barbecue = in.readInt();
-			pen_barbecue_cost = in.readString();
-			pen_barbecue_component = in.readString();
-			pen_barbecue_location = in.readString();
-			pen_barbecue_description = in.readString();
-			pen_ground = in.readInt();
-			pen_ground_type = in.readString();
-			pen_ground_description = in.readString();
-			pen_valley = in.readInt();
-			pen_valley_distance = in.readString();
-			pen_valley_depth = in.readString();
-			pen_valley_description = in.readString();
-			pen_latitude = in.readDouble();
-			pen_longitude = in.readDouble();
-			pen_walk_station = in.readString();
-			pen_walk_terminal = in.readString();
-			cost_table = new JSONArray(in.readString());
-			period_table = new JSONArray(in.readString());
-			Log.d(TAG, period_table.toString());
-			room_cost = in.readInt();
-			facility = new JSONArray(in.readString());
-			service = new JSONArray(in.readString());
-			usage_caution = new JSONArray(in.toString());
-			reserve_caution = new JSONArray(in.toString());
-			refund_caution = new JSONArray(in.toString());
-			pen_description = in.readString();
+			_pen_id = in.readInt();
+			_room_name = in.readString();
+			_pen_period_division  = in.readString();
+			_period_start = in.readString();
+			_period_end = in.readString();
+			_weekdays = in.readInt();
+			_room_id = in.readInt();
+			_friday = in.readInt();
+			_weekends = in.readInt();
+			_room_std_people = in.readInt();
+			_room_max_people = in.readInt();
+			_room_pyeong = in.readString();
+			_num_rooms = in.readInt();
+			_num_toilets = in.readInt();
+			_room_aircon = in.readInt();
+			_room_equipment = in.readString();
+			_room_description = in.readString();
+			_room_picture_flag = in.readInt();
+			_num_images = in.readInt();
+			_pen_region = in.readString();
+			_pen_name = in.readString();
+			_pen_homepage = in.readString();
+			_pen_lot_adr = in.readString();
+			_pen_road_adr = in.readString();
+			_pen_ceo = in.readString();
+			_pen_phone1 = in.readString();
+			_pen_phone2 = in.readString();
+			_pen_ceo_account = in.readString();
+			_pen_checkin = in.readString();
+			_pen_checkout = in.readString();
+			_pen_pickup = in.readInt();
+			_pen_pickup_cost = in.readString();
+			_pen_pickup_location = in.readString();
+			_pen_pickup_description = in.readString();
+			_pen_barbecue = in.readInt();
+			_pen_barbecue_cost = in.readString();
+			_pen_barbecue_component = in.readString();
+			_pen_barbecue_location = in.readString();
+			_pen_barbecue_description = in.readString();
+			_pen_ground = in.readInt();
+			_pen_ground_type = in.readString();
+			_pen_ground_description = in.readString();
+			_pen_valley = in.readInt();
+			_pen_valley_distance = in.readString();
+			_pen_valley_depth = in.readString();
+			_pen_valley_description = in.readString();
+			_pen_latitude = in.readDouble();
+			_pen_longitude = in.readDouble();
+			_pen_walk_station = in.readString();
+			_pen_walk_terminal = in.readString();
+			_cost_table = new JSONArray(in.readString());
+			_period_table = new JSONArray(in.readString());
+			Log.d(TAG, _period_table.toString());
+			_room_cost = in.readInt();
+			_facility = new JSONArray(in.readString());
+			_service = new JSONArray(in.readString());
+			_usage_caution = new JSONArray(in.toString());
+			_reserve_caution = new JSONArray(in.toString());
+			_refund_caution = new JSONArray(in.toString());
+			_pen_description = in.readString();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public boolean isRoomRealThumbnailImageExists() {
-		return roomRealThumbnailImageExists;
+		return _roomRealThumbnailImageExists;
 	}
 
-	public void setRoomRealThumbnailImageExists(boolean roomRealThumbnailImageExists) {
-		this.roomRealThumbnailImageExists = roomRealThumbnailImageExists;
+	public void setRoomRealThumbnailImageExists(boolean _roomRealThumbnailImageExists) {
+		this._roomRealThumbnailImageExists = _roomRealThumbnailImageExists;
 	}
 
 	public boolean isRoomRealImageExists() {
-		return roomRealImageExists;
+		return _roomRealImageExists;
 	}
 
-	public void setRoomRealImageExists(boolean roomRealImageExists) {
-		this.roomRealImageExists = roomRealImageExists;
+	public void setRoomRealImageExists(boolean _roomRealImageExists) {
+		this._roomRealImageExists = _roomRealImageExists;
 	}
 
 
@@ -760,22 +760,22 @@ public class RoomInfoModelController implements Parcelable {
 	public String getRoomThumbnailImageURL(String mtPleaseUrl) {
 		String imageURL;
 
-		/*imageURL = mtPleaseUrl + "img/pensions/" + this.pen_id + "/"
-				+ URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20")
+		/*imageURL = mtPleaseUrl + "img/pensions/" + this._pen_id + "/"
+				+ URLEncoder.encode(this._room_name, "utf-8").replaceAll("\\+", "%20")
 				+ "/real/thumbnail.png";*/
 
-		imageURL =  mtPleaseUrl + "pensions/" + this.pen_id
-				+ "/" + this.room_id + "/real/thumbnail.png";
+		imageURL =  mtPleaseUrl + "pensions/" + this._pen_id
+				+ "/" + this._room_id + "/real/thumbnail.png";
 
 		return imageURL;
-			/*if(roomRealThumbnailImageExists) {
-				imageURL = mtPleaseUrl + "img/pensions/" + this.pen_id + "/"
-						+ URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20")
+			/*if(_roomRealThumbnailImageExists) {
+				imageURL = mtPleaseUrl + "img/pensions/" + this._pen_id + "/"
+						+ URLEncoder.encode(this._room_name, "utf-8").replaceAll("\\+", "%20")
 						+ "/real/thumbnail.png";
 			}
 			else {
-				imageURL = mtPleaseUrl + "img/pensions/" + this.pen_id + "/"
-						+ URLEncoder.encode(this.room_name, "utf-8").replaceAll("\\+", "%20")
+				imageURL = mtPleaseUrl + "img/pensions/" + this._pen_id + "/"
+						+ URLEncoder.encode(this._room_name, "utf-8").replaceAll("\\+", "%20")
 						+ "/unreal/thumbnail.png";
 			}*/
 	}

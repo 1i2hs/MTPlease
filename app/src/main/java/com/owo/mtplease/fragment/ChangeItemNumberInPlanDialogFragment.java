@@ -30,24 +30,24 @@ public class ChangeItemNumberInPlanDialogFragment extends DialogFragment {
 	private static final String ARG_NUMBER_OF_ITEMS = "param5";
 	private static final String ARG_UNIT_COUNT_OF_ITEM = "param6";
 
-	private int itemType;
-	private String itemName;
-	private String itemUnit;
-	private int itemUnitPrice;
-	private int itemCount;	// number of items after being changed
-	private String itemCountUnit;
+	private int _itemType;
+	private String _itemName;
+	private String _itemUnit;
+	private int _itemUnitPrice;
+	private int _itemCount;	// number of items after being changed
+	private String _itemCountUnit;
 
-	private TextView itemNameTextView;
-	private TextView itemUnitTextView;
+	private TextView _itemNameTextView;
+	private TextView _itemUnitTextView;
 	private NumberPicker itemNumberPicker;
-	private TextView itemUnitPriceTextView;
-	private TextView itemCountUnitTextView;
-	private TextView itemTotalPriceTextView;
-	private Button changeItemButton;
+	private TextView _itemUnitPriceTextView;
+	private TextView _itemCountUnitTextView;
+	private TextView _itemTotalPriceTextView;
+	private Button _changeItemButton;
 	private Button cancelItemButton;
 
 	private OnChangeItemNumberInPlanDialogFragmentListener
-			mOnChangeItemNumberInPlanDialogFragmentListener;
+			_mOnChangeItemNumberInPlanDialogFragmentListener;
 
 	public ChangeItemNumberInPlanDialogFragment() {
 		// Required empty public constructor
@@ -57,25 +57,25 @@ public class ChangeItemNumberInPlanDialogFragment extends DialogFragment {
 	 * Use this factory method to create a new instance of
 	 * this fragment using the provided parameters.
 	 *
-	 * @param itemType      Type of the item
-	 * @param itemName      Name of the item
-	 * @param itemUnit      Unit of the item
-	 * @param itemUnitPrice Unit Price of the item
-	 * @param itemCount     Number of items
-	 * @param itemCountUnit Count of the item
+	 * @param _itemType      Type of the item
+	 * @param _itemName      Name of the item
+	 * @param _itemUnit      Unit of the item
+	 * @param _itemUnitPrice Unit Price of the item
+	 * @param _itemCount     Number of items
+	 * @param _itemCountUnit Count of the item
 	 * @return A new instance of fragment ChangeItemCountInPlanDialogFragment.
 	 */
 	// TODO: Rename and change types and number of parameters
-	public static ChangeItemNumberInPlanDialogFragment newInstance(int itemType, String itemName, String itemUnit, int itemUnitPrice,
-																   int itemCount, String itemCountUnit) {
+	public static ChangeItemNumberInPlanDialogFragment newInstance(int _itemType, String _itemName, String _itemUnit, int _itemUnitPrice,
+																   int _itemCount, String _itemCountUnit) {
 		ChangeItemNumberInPlanDialogFragment fragment = new ChangeItemNumberInPlanDialogFragment();
 		Bundle args = new Bundle();
-		args.putInt(ARG_ITEM_TYPE, itemType);
-		args.putString(ARG_ITEM_NAME, itemName);
-		args.putString(ARG_UNIT_OF_ITEM, itemUnit);
-		args.putInt(ARG_UNIT_PRICE_OF_ITEM, itemUnitPrice);
-		args.putInt(ARG_NUMBER_OF_ITEMS, itemCount);
-		args.putString(ARG_UNIT_COUNT_OF_ITEM, itemCountUnit);
+		args.putInt(ARG_ITEM_TYPE, _itemType);
+		args.putString(ARG_ITEM_NAME, _itemName);
+		args.putString(ARG_UNIT_OF_ITEM, _itemUnit);
+		args.putInt(ARG_UNIT_PRICE_OF_ITEM, _itemUnitPrice);
+		args.putInt(ARG_NUMBER_OF_ITEMS, _itemCount);
+		args.putString(ARG_UNIT_COUNT_OF_ITEM, _itemCountUnit);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -84,12 +84,12 @@ public class ChangeItemNumberInPlanDialogFragment extends DialogFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			itemType = getArguments().getInt(ARG_ITEM_TYPE);
-			itemName = getArguments().getString(ARG_ITEM_NAME);
-			itemUnit = getArguments().getString(ARG_UNIT_OF_ITEM);
-			itemUnitPrice = getArguments().getInt(ARG_UNIT_PRICE_OF_ITEM);
-			itemCount = getArguments().getInt(ARG_NUMBER_OF_ITEMS);
-			itemCountUnit = getArguments().getString(ARG_UNIT_COUNT_OF_ITEM);
+			_itemType = getArguments().getInt(ARG_ITEM_TYPE);
+			_itemName = getArguments().getString(ARG_ITEM_NAME);
+			_itemUnit = getArguments().getString(ARG_UNIT_OF_ITEM);
+			_itemUnitPrice = getArguments().getInt(ARG_UNIT_PRICE_OF_ITEM);
+			_itemCount = getArguments().getInt(ARG_NUMBER_OF_ITEMS);
+			_itemCountUnit = getArguments().getString(ARG_UNIT_COUNT_OF_ITEM);
 		}
 	}
 
@@ -100,32 +100,32 @@ public class ChangeItemNumberInPlanDialogFragment extends DialogFragment {
 		View changeItemNumberInPlanDialogFragmentView = inflater.
 				inflate(R.layout.fragment_change_item_number_in_plan_dialog, container, false);
 
-		itemNameTextView = (TextView) changeItemNumberInPlanDialogFragmentView.findViewById(R.id.textView_name_item_dialog_plan);
-		itemNameTextView.setText(itemName);
+		_itemNameTextView = (TextView) changeItemNumberInPlanDialogFragmentView.findViewById(R.id.textView_name_item_dialog_plan);
+		_itemNameTextView.setText(_itemName);
 
-		itemUnitTextView = (TextView) changeItemNumberInPlanDialogFragmentView.findViewById(R.id.textView_unit_item_dialog_plan);
-		itemUnitTextView.setText(itemUnit);
+		_itemUnitTextView = (TextView) changeItemNumberInPlanDialogFragmentView.findViewById(R.id.textView_unit_item_dialog_plan);
+		_itemUnitTextView.setText(_itemUnit);
 
-		itemUnitPriceTextView = (TextView) changeItemNumberInPlanDialogFragmentView.findViewById(R.id.textView_unit_price_item_dialog_plan);
-		itemUnitPriceTextView.setText(castItemPriceToString(itemUnitPrice));
+		_itemUnitPriceTextView = (TextView) changeItemNumberInPlanDialogFragmentView.findViewById(R.id.textView_unit_price_item_dialog_plan);
+		_itemUnitPriceTextView.setText(_castItemPriceToString(_itemUnitPrice));
 
-		itemTotalPriceTextView = (TextView) changeItemNumberInPlanDialogFragmentView.findViewById(R.id.textView_price_total_item_dialog_plan);
-		itemTotalPriceTextView.setText(castItemPriceToString(itemCount * itemUnitPrice));
+		_itemTotalPriceTextView = (TextView) changeItemNumberInPlanDialogFragmentView.findViewById(R.id.textView_price_total_item_dialog_plan);
+		_itemTotalPriceTextView.setText(_castItemPriceToString(_itemCount * _itemUnitPrice));
 
 		itemNumberPicker = (NumberPicker) changeItemNumberInPlanDialogFragmentView.findViewById(R.id.numberPicker_number_item_dialog_plan);
 		itemNumberPicker.setMaxValue(500);
 		itemNumberPicker.setMinValue(0);
-		itemNumberPicker.setValue(itemCount);
+		itemNumberPicker.setValue(_itemCount);
 		itemNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 			@Override
 			public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-				itemTotalPriceTextView.setText(castItemPriceToString(itemUnitPrice * newVal));
-				itemCount = newVal;
+				_itemTotalPriceTextView.setText(_castItemPriceToString(_itemUnitPrice * newVal));
+				_itemCount = newVal;
 			}
 		});
 
-		itemCountUnitTextView = (TextView) changeItemNumberInPlanDialogFragmentView.findViewById(R.id.textView_count_unit_item_dialog_plan);
-		itemCountUnitTextView.setText(itemCountUnit);
+		_itemCountUnitTextView = (TextView) changeItemNumberInPlanDialogFragmentView.findViewById(R.id.textView_count_unit_item_dialog_plan);
+		_itemCountUnitTextView.setText(_itemCountUnit);
 
 		cancelItemButton = (Button) changeItemNumberInPlanDialogFragmentView.findViewById(R.id.btn_cancel_item_dialog_plan);
 		cancelItemButton.setOnClickListener(new View.OnClickListener() {
@@ -135,11 +135,11 @@ public class ChangeItemNumberInPlanDialogFragment extends DialogFragment {
 			}
 		});
 
-		changeItemButton = (Button) changeItemNumberInPlanDialogFragmentView.findViewById(R.id.btn_change_item_dialog_plan);
-		changeItemButton.setOnClickListener(new View.OnClickListener() {
+		_changeItemButton = (Button) changeItemNumberInPlanDialogFragmentView.findViewById(R.id.btn_change_item_dialog_plan);
+		_changeItemButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mOnChangeItemNumberInPlanDialogFragmentListener.onClickChangeButton(itemType, itemName, itemUnitPrice, itemCount);
+				_mOnChangeItemNumberInPlanDialogFragmentListener.onClickChangeButton(_itemType, _itemName, _itemUnitPrice, _itemCount);
 				dismiss();
 			}
 		});
@@ -153,7 +153,7 @@ public class ChangeItemNumberInPlanDialogFragment extends DialogFragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mOnChangeItemNumberInPlanDialogFragmentListener
+			_mOnChangeItemNumberInPlanDialogFragmentListener
 					= (OnChangeItemNumberInPlanDialogFragmentListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
@@ -164,10 +164,10 @@ public class ChangeItemNumberInPlanDialogFragment extends DialogFragment {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		mOnChangeItemNumberInPlanDialogFragmentListener = null;
+		_mOnChangeItemNumberInPlanDialogFragmentListener = null;
 	}
 
-	private String castItemPriceToString(int price) {
+	private String _castItemPriceToString(int price) {
 		String totalRoomCostString = String.valueOf(price);
 		String totalRoomCostStringChanged = "";
 
@@ -193,8 +193,7 @@ public class ChangeItemNumberInPlanDialogFragment extends DialogFragment {
 	 * activity.
 	 */
 	public interface OnChangeItemNumberInPlanDialogFragmentListener {
-		// TODO: Update argument type and name
-		public void onClickChangeButton(int itemType, String itemName, int itemUnitPrice, int newItemCount);
+		public void onClickChangeButton(int _itemType, String _itemName, int _itemUnitPrice, int newItemCount);
 	}
 
 }

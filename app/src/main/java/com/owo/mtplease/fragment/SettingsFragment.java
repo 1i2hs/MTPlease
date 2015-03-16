@@ -40,19 +40,19 @@ public class SettingsFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		View settingsFragementView = inflater.inflate(R.layout.fragment_settings, container, false);
+		View settingsFragmentView = inflater.inflate(R.layout.fragment_settings, container, false);
 
-		setAppVersionView(settingsFragementView);
+		_setAppVersionView(settingsFragmentView);
 
 		if(_onSettingsFragmentListener != null)
 			_onSettingsFragmentListener.onCreateSettingsFragmentView();
 
-		settingsFragementView.setClickable(true);
+		settingsFragmentView.setClickable(true);
 
-		return settingsFragementView;
+		return settingsFragmentView;
 	}
 
-	private void setAppVersionView(View parentView) {
+	private void _setAppVersionView(View parentView) {
 		RelativeLayout appVersionButton = (RelativeLayout) parentView.findViewById(R.id.layout_ver_app);
 		appVersionButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -61,7 +61,6 @@ public class SettingsFragment extends Fragment {
 			}
 		});
 	}
-
 
 	@Override
 	public void onAttach(Activity activity) {
