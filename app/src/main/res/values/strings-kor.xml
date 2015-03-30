@@ -2,7 +2,7 @@
 <resources>
 
     <!-- FOR GLOBAL USE-->
-    <string name="application_version">version 0.2.0 (beta)</string>
+    <string name="application_version">version 0.2.1 (beta)</string>
     <string name="mtplease_url">http://mtplease.herokuapp.com/</string>
     <string name="mtplease_url_temp">http://owo.naraeon.net/</string>
     <string name="pref_app_ver">pref_app_ver</string>
@@ -216,8 +216,8 @@
 
     <!--For login page-->
     <string name="login">로그인</string>
-    <string name="kakao_app_key"></string>
-    <string name="facebook_app_id"></string>
+    <string name="kakao_app_key">xxxx</string>
+    <string name="facebook_app_id">xxxx</string>
     <string name="new_comer">처음이신가요?</string>
     <string name="sign_up">가입하기</string>
     <string name="login_with_email">이메일로 로그인하기</string>
