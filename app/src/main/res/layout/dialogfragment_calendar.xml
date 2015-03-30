@@ -27,7 +27,7 @@
         android:id="@+id/layout_title_dialog"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/mtplease_actionbar_color"
+        android:background="@color/mtplease_color_primary"
         android:paddingLeft="@dimen/cardView_padding">
 
         <TextView

@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,16 +56,18 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
 	// others
 	private String mtDate;
+	private int _listType;
 	// End of the others
 
 	private static String imageUrl;
 
 	public RoomListRecyclerViewAdapter(Context context, JSONArray jsonArray, String date,
-									   ResultFragment.OnResultFragmentListener onResultFragmentListener) {
+									   ResultFragment.OnResultFragmentListener onResultFragmentListener, int listType) {
 		mContext = context;
 		roomArray = jsonArray;
 		mtDate = date;
 		mOnResultFragmentListener = onResultFragmentListener;
+		_listType = listType;
 
 		preLoadImages();
 	}
@@ -124,9 +125,15 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			return new RoomCard(itemView, mContext, mtDate, mOnResultFragmentListener, roomArray);
 		}
 		else if(viewType == TYPE_HEADER) {
-			View headerView = LayoutInflater.from(parent.getContext()).
-					inflate(R.layout.view_header_placeholder, parent, false);
+			View headerView;
 
+			if(_listType == ResultFragment.LIST_OF_ROOMS_AFTER_SEARCH) {
+				headerView = LayoutInflater.from(parent.getContext()).
+						inflate(R.layout.card_header_placeholder_large, parent, false);
+			} else {
+				headerView = LayoutInflater.from(parent.getContext()).
+						inflate(R.layout.card_header_placeholder_small, parent, false);
+			}
 			return new BlankHeader(headerView);
 		}
 
@@ -141,7 +148,6 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			try {
 				JSONObject roomData = roomArray.getJSONObject(position - 1);
 				((RoomCard) holder).setComponents(roomData);
-				((RoomCard) holder).getLayout().setOnClickListener((RoomCard) holder);
 			} catch(JSONException e) {
 				e.printStackTrace();
 			} catch(NullPointerException e) {
@@ -183,7 +189,6 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
 	private static class RoomCard extends RecyclerView.ViewHolder implements View.OnClickListener {
 		private CardView roomCard;
-		private LinearLayout roomLayout;
 		//private ImageView roomThumbnailImage;
 		private final WeakReference<ImageView> imageViewReference;
 		//private NetworkImageView roomThumbnailImage;
@@ -217,7 +222,6 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			mOnResultFragmentListener = onResultFragmentListener;
 			this.roomArray = roomArray;
 
-			roomLayout = (LinearLayout) cardView.findViewById(R.id.LinearLayout_card_room);
 //			roomThumbnailImage = (ImageView) cardView.findViewById(R.id.imageView_thumbnail_room);
 			imageViewReference = new WeakReference<ImageView>((ImageView) cardView.findViewById(R.id.imageView_thumbnail_room));
 			realPictureSticker = (ImageView) cardView.findViewById(R.id.imageView_sticker_real);
@@ -312,11 +316,8 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 				roomPrice.setText(castRoomPriceToString(roomPriceInt));
 			}
 
+			roomCard.setOnClickListener(this);
 			roomCard.setPreventCornerOverlap(false);
-		}
-
-		public LinearLayout getLayout() {
-			return roomLayout;
 		}
 
 		private String castRoomPriceToString(int price) {
@@ -444,7 +445,7 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 				getRequest.setContext(mContext);*/
 
 				JsonObjectRequest getRequest = new JsonObjectRequest(
-						Request.Method.GET, specificRoomURL, null, new Response.Listener<JSONObject>() {
+						Request.Method.GET, specificRoomURL, (String) null, new Response.Listener<JSONObject>() {
 
 					@Override
 					public void onResponse(JSONObject response) {

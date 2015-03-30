@@ -22,7 +22,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="4dp"
         android:text="New Text"
-        android:textColor="@color/mtplease_actionbar_color"
+        android:textColor="@color/mtplease_color_primary"
         android:textSize="20sp"
         android:textStyle="bold"/>
 

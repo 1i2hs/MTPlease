@@ -1,8 +1,10 @@
 package com.owo.mtplease.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,12 +29,13 @@ import org.json.JSONObject;
 public class TimelineFragment extends Fragment {
 
 	private static final String TAG = "TimelineFragment";
-	
+
 	private static final String ARG_JSONSTRING_POST_LIST = "param1";
 
 	// View: User Interface Views
 	private RecyclerView _mRecyclerView;
 	private LinearLayoutManager _mLayoutManager;
+	private SwipeRefreshLayout _mSwipeRefreshLayout;
 	// End of User Interface Views
 
 	// Controller: Adapters for User Interface Views
@@ -86,8 +89,18 @@ public class TimelineFragment extends Fragment {
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
-				if(_mScrollTabHolder != null)
+				if (_mScrollTabHolder != null)
 					_mScrollTabHolder.onScroll(recyclerView, _mLayoutManager.findFirstVisibleItemPosition(), 0, MainActivity.TIMELINE_FRAGMENT_VISIBLE);
+			}
+		});
+
+
+		_mSwipeRefreshLayout.setProgressViewOffset(false, _convertDpToPx(220, getActivity()), _convertDpToPx(290, getActivity()));
+		_mSwipeRefreshLayout.setColorSchemeResources(R.color.mtplease_color_primary, R.color.mtplease_date_select_button_color, R.color.mtplease_call_subbutton_color);
+		_mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				_mTimelineFragmentListener.onRefreshTimelineFragment(_mSwipeRefreshLayout);
 			}
 		});
 
@@ -119,9 +132,14 @@ public class TimelineFragment extends Fragment {
 		View timelineView = inflater.inflate(R.layout.fragment_timeline, container, false);
 		_mRecyclerView = (RecyclerView) timelineView.findViewById(R.id.list_timeline);
 
+		_mSwipeRefreshLayout = (SwipeRefreshLayout) timelineView.findViewById(R.id.swiperefreshlayout_timeline);
+
 		if(_mTimelineFragmentListener != null) {
 			try {
-				_mTimelineFragmentListener.onCreateTimelineFragmentView(_postObject.getString("roomCount"));
+				if(_postObject != null)
+					_mTimelineFragmentListener.onCreateTimelineFragmentView(_postObject.getString("roomCount"));
+				else
+					_mTimelineFragmentListener.onCreateTimelineFragmentView("0");
 			} catch(JSONException e) {
 				e.printStackTrace();
 			}
@@ -149,6 +167,12 @@ public class TimelineFragment extends Fragment {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		Log.d(TAG, "onResume");
+	}
+
+	@Override
 	public void onDetach() {
 		super.onDetach();
 		Log.d(TAG, "onDetach()");
@@ -168,8 +192,15 @@ public class TimelineFragment extends Fragment {
 		_mTimelineFragmentListener.onDestroyTimelineFragmentView();
 	}
 
+	private static int _convertDpToPx(int dp, Context context) {
+		float screenDensity = context.getResources().getDisplayMetrics().density;
+		int px = (int)(dp * screenDensity);
+		return px;
+	}
+
 	public interface OnTimelineFragmentListener {
 		public void onCreateTimelineFragmentView(String roomCount);
 		public void onDestroyTimelineFragmentView();
+		public void onRefreshTimelineFragment(SwipeRefreshLayout swipeRefreshLayout);
 	}
 }

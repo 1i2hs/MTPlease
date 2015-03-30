@@ -98,7 +98,7 @@ public class LoginActivity extends ActionBarActivity implements EmailLoginFragme
 			});
 		}
 
-		loadingLayout = (FrameLayout) findViewById(R.id.background_loading);
+		loadingLayout = (FrameLayout) findViewById(R.id.framelayout_loading);
 		loadingBackground = loadingLayout.getBackground();
 		loadingBackground.setAlpha(0);
 

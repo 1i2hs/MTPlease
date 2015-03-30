@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,10 +30,14 @@ public class ResultFragment extends Fragment {
 
 	private static final String TAG = "ResultFragment";
 
-	private static final String ARG_JSONSTRING_OF_ROOMS = "param1";
-	private static final String ARG_DATE_OF_MET = "param2";
+	private static final String ARG_JSONSTRING_OF_ROOMS = "jsonstring_of_rooms";
+	private static final String ARG_DATE_OF_MT = "date_of_mt";
+	private static final String ARG_TYPE_OF_LIST = "type_of_list";
 
 	private static final int DEFAULT_FIRST_ITEM_POSITION = 1;
+
+	public static final int LIST_OF_ROOMS_AFTER_SEARCH = 1;
+	public static final int LIST_OF_ROOMS_OF_PENSION = 2;
 
 	// View: User Interface Views
 	private RecyclerView _mRecyclerView;
@@ -47,6 +52,7 @@ public class ResultFragment extends Fragment {
 	private String _jsonStringRoomList;
 	private JSONArray _roomArray;
 	private String _mtDate;
+	private int _listType;
 	// End of the Model
 
 	// Flags
@@ -67,15 +73,17 @@ public class ResultFragment extends Fragment {
 	 * Use this factory method to create a new instance of
 	 * this fragment using the provided parameters.
 	 *
-	 * @param jsonString Parameter 1.
-	 * @param _mtDate Parameter 1.
+	 * @param jsonString response data(received data which is the list of rooms) from the server
+	 * @param mtDate date of the mt to go
+	 * @param listType Type of list to show in the result page
 	 * @return A new instance of fragment MainFragment.
 	 */
-	public static ResultFragment newInstance(String jsonString, String _mtDate) {
+	public static ResultFragment newInstance(String jsonString, String mtDate, int listType) {
 		ResultFragment fragment = new ResultFragment();
 		Bundle args = new Bundle();
 		args.putString(ARG_JSONSTRING_OF_ROOMS, jsonString);
-		args.putString(ARG_DATE_OF_MET, _mtDate);
+		args.putString(ARG_DATE_OF_MT, mtDate);
+		args.putInt(ARG_TYPE_OF_LIST, listType);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -86,13 +94,14 @@ public class ResultFragment extends Fragment {
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		Log.d(TAG, "onViewCreated");
 		_mLayoutManager = new LinearLayoutManager(getActivity());
 		_mRecyclerView.setLayoutManager(_mLayoutManager);
 		_mRecyclerView.setHasFixedSize(true);
 		_mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
 		_mAdapter = new RoomListRecyclerViewAdapter(getActivity(),
-				_roomArray, _mtDate, _mOnResultFragmentListener);
+				_roomArray, _mtDate, _mOnResultFragmentListener, _listType);
 		_mRecyclerView.setAdapter(_mAdapter);
 
 		_mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -120,7 +129,8 @@ public class ResultFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
 			_jsonStringRoomList = getArguments().getString(ARG_JSONSTRING_OF_ROOMS);
-			_mtDate = getArguments().getString(ARG_DATE_OF_MET);
+			_mtDate = getArguments().getString(ARG_DATE_OF_MT);
+			_listType = getArguments().getInt(ARG_TYPE_OF_LIST);
 			Log.i(TAG, _jsonStringRoomList);
 
 			try {
@@ -136,13 +146,13 @@ public class ResultFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
+		Log.d(TAG, "onCreateView");
 		// Inflate the layout for this fragment
-//		Log.d(TAG, "ResultFragmentView created");
 		View resultView = inflater.inflate(R.layout.fragment_result, container, false);
 		_mRecyclerView = (RecyclerView) resultView.findViewById(R.id.list_room);
 
 		if(_mOnResultFragmentListener != null && _roomArray != null)
-			_mOnResultFragmentListener.onCreateResultFragmentView(_roomArray.length());
+			_mOnResultFragmentListener.onCreateResultFragmentView(_roomArray.length(), _listType);
 
 		return resultView;
 	}
@@ -150,6 +160,7 @@ public class ResultFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+		Log.d(TAG, "onResume");
 		_mOnResultFragmentListener.onResumeResultFragmentView(_mLayoutManager, DEFAULT_FIRST_ITEM_POSITION);
 	}
 
@@ -181,11 +192,53 @@ public class ResultFragment extends Fragment {
 	}
 
 	public interface OnResultFragmentListener {
-		public void onCreateResultFragmentView(int numRoom);
+		public void onCreateResultFragmentView(int numRoom, int listType);
 		public void onPreLoadSpecificInfoFragment();
 		public void onLoadSpecificInfoFragment(RoomInfoModelController roomInfoModelController, JSONArray _roomArray);
 		public void onPostLoadSpecificInfoFragment();
 		public void onDestroyResultFragmentView();
 		public void onResumeResultFragmentView(LinearLayoutManager linearLayoutManager, int defaultPosition);
+	}
+
+	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		Log.d(TAG, "onActivityCreated");
+	}
+
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		Log.d(TAG, "onHiddenChanged");
+	}
+
+	@Override
+	public void onInflate(Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
+		super.onInflate(activity, attrs, savedInstanceState);
+		Log.d(TAG, "onInflate");
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG, "onPause");
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG, "onStart");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG, "onStop");
+	}
+
+	@Override
+	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+		super.onViewStateRestored(savedInstanceState);
+		Log.d(TAG, "onViewStateRestored");
 	}
 }

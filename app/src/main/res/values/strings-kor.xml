@@ -150,6 +150,7 @@
     <string name="facility">부대시설</string>
     <string name="service">서비스</string>
     <string name="our_pension_is">우리 펜션은요...</string>
+    <string name="see_other_rooms">펜션의 다른 방들 보기</string>
 
     <!-- For plan page -->
     <string name="when_question">언제?</string>
@@ -215,6 +216,8 @@
 
     <!--For login page-->
     <string name="login">로그인</string>
+    <string name="kakao_app_key"></string>
+    <string name="facebook_app_id"></string>
     <string name="new_comer">처음이신가요?</string>
     <string name="sign_up">가입하기</string>
     <string name="login_with_email">이메일로 로그인하기</string>

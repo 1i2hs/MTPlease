@@ -27,7 +27,7 @@ public class SettingsActivity extends ActionBarActivity implements VersionCheckF
 
 			getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-			getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.mtplease_actionbar_color)));
+			getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.mtplease_color_primary)));
 
 			getFragmentManager().beginTransaction()
 					.replace(R.id.body_background, new SettingsFragment())

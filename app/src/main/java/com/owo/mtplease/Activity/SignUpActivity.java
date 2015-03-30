@@ -74,7 +74,7 @@ public class SignUpActivity extends ActionBarActivity implements SignUpFragment.
 			mSwippingDisabledViewPager.setAdapter(mSignUpFragmentPagerAdapter);
 			mSwippingDisabledViewPager.setOffscreenPageLimit(2);
 
-			loadingLayout = (FrameLayout) findViewById(R.id.background_loading);
+			loadingLayout = (FrameLayout) findViewById(R.id.framelayout_loading);
 			loadingBackground = loadingLayout.getBackground();
 			loadingBackground.setAlpha(0);
 

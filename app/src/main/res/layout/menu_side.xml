@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:color/white"
+                android:background="#ff494949"
                 android:gravity="left"
                 android:orientation="vertical"
     >
@@ -10,8 +10,15 @@
     <RelativeLayout
         android:id="@+id/layout_menu_side_top"
         android:layout_width="match_parent"
-        android:layout_height="110dp"
-        android:background="@color/mtplease_actionbar_color">
+        android:layout_height="160dp"
+        >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView_background"
+            android:src="@drawable/background_drawer"
+            android:scaleType="centerCrop"/>
 
         <ImageView
             android:id="@+id/imageView"
@@ -19,56 +26,123 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="32dp"
-            android:src="@drawable/ic_app_title"/>
+            android:layout_marginLeft="24dp"
+            android:src="@drawable/ic_app_title"
+            android:layout_marginTop="24dp"/>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/shape_edittext_keyword_search"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingTop="4dp"
+                android:layout_marginLeft="24dp"
+                android:id="@+id/relativelayout_keyword"
+                android:layout_below="@+id/imageView"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:paddingLeft="8dp">
+
+                <EditText
+                    android:id="@+id/editText_search_keyword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/keyword_search_hint"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/mtplease_main_text_color"
+                    android:textSize="16sp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/imageButton_search_keyword"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="4dp"
+                    android:textColorHint="@color/mtplease_main_text_color"/>
+
+                <ImageButton
+                    android:id="@+id/imageButton_search_keyword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:focusable="true"
+                    android:paddingTop="4dp"
+                    android:src="@drawable/ic_action_search"
+                    android:layout_gravity="right"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:paddingRight="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="4dp"/>
+            </RelativeLayout>
 
     </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/layout_btn_menu"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/layout_menu_side_top"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="48dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <LinearLayout
             android:id="@+id/layout_btn_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
             android:clickable="true"
             android:focusable="true"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:longClickable="true"
+            >
+
+            <FrameLayout
+                android:layout_width="8dp"
+                android:layout_height="match_parent"
+                android:id="@+id/framelayout_indicator_home"
+                android:background="@color/mtplease_color_primary"
+                android:visibility="invisible">
+            </FrameLayout>
 
             <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginLeft="48dp"
-                android:src="@drawable/ic_action_home"/>
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="18dp"
+                android:src="@drawable/ic_action_home"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"/>
 
             <Button
                 android:id="@+id/btn_menu_home"
-                android:layout_width="150dp"
+                android:layout_width="136dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="8dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="16dp"
                 android:background="@android:color/transparent"
                 android:clickable="false"
                 android:text="@string/menu_btn_home"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/mtplease_main_text_color"/>
+                android:textColor="@android:color/white"
+                android:gravity="center_vertical"
+                android:textSize="18sp"/>
 
         </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="5dp"
+            android:layout_height="1dp"
             android:layout_below="@+id/layout_btn_home"
-            android:background="@drawable/shape_cell_bottom_line"
-            >
+            android:visibility="gone"
+            android:background="@android:color/darker_gray">
         </FrameLayout>
 
         <!--<ImageView
@@ -106,10 +180,17 @@
             android:orientation="horizontal"
             android:visibility="gone">
 
+            <FrameLayout
+                android:layout_width="8dp"
+                android:layout_height="match_parent"
+                android:id="@+id/framelayout_indicator_mypage"
+                android:background="@color/mtplease_color_primary"
+                android:visibility="invisible"/>
+
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginLeft="48dp"
+                android:layout_marginLeft="18dp"
                 android:src="@drawable/ic_action_mypage"/>
 
             <Button
@@ -117,7 +198,7 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="8dp"
+                android:layout_marginLeft="16dp"
                 android:background="@android:color/transparent"
                 android:clickable="true"
                 android:text="@string/menu_btn_mypage"
@@ -139,38 +220,48 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_btn_mypage"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
             android:clickable="true"
             android:focusable="true"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:longClickable="true"
+            >
+
+            <FrameLayout
+                android:layout_width="8dp"
+                android:layout_height="match_parent"
+                android:id="@+id/framelayout_indicator_setting"
+                android:background="@color/mtplease_color_primary"
+                android:visibility="invisible"/>
 
             <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginLeft="48dp"
-                android:src="@drawable/ic_action_setting"/>
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="18dp"
+                android:src="@drawable/ic_action_setting"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"/>
 
             <Button
                 android:id="@+id/btn_menu_setting"
-                android:layout_width="150dp"
+                android:layout_width="136dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="8dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="16dp"
                 android:background="@android:color/transparent"
                 android:clickable="false"
                 android:text="@string/menu_btn_setting"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/mtplease_main_text_color"/>
+                android:textColor="@android:color/white"
+                android:gravity="center_vertical"
+                android:textSize="18sp"/>
 
         </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="5dp"
+            android:layout_height="1dp"
             android:layout_below="@+id/layout_btn_setting"
-            android:background="@drawable/shape_cell_bottom_line"
-            >
+            android:background="@android:color/darker_gray"
+            android:visibility="gone">
         </FrameLayout>
 
         <LinearLayout
@@ -178,29 +269,41 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_btn_setting"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
             android:clickable="true"
             android:focusable="true"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:longClickable="true"
+            >
+
+            <FrameLayout
+                android:layout_width="8dp"
+                android:layout_height="match_parent"
+                android:id="@+id/framelayout_indicator_help"
+                android:background="@color/mtplease_color_primary"
+                android:visibility="invisible"
+                android:paddingTop="-12dp"
+                android:paddingBottom="-12dp"/>
 
             <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginLeft="48dp"
-                android:src="@drawable/ic_action_guide"/>
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="18dp"
+                android:src="@drawable/ic_action_guide"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"/>
 
             <Button
                 android:id="@+id/btn_menu_help"
-                android:layout_width="150dp"
+                android:layout_width="136dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="8dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="16dp"
                 android:background="@android:color/transparent"
                 android:clickable="false"
                 android:text="@string/menu_btn_help"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/mtplease_main_text_color"/>
+                android:textColor="@android:color/white"
+                android:gravity="center_vertical"
+                android:textSize="18sp"/>
 
         </LinearLayout>
 

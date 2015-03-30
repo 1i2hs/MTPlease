@@ -16,7 +16,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:background="@color/mtplease_actionbar_color"/>
+            android:background="@color/mtplease_color_primary"/>
 
         <LinearLayout
             android:orientation="vertical"

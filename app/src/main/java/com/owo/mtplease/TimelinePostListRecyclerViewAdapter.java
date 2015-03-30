@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -34,7 +33,8 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	private static final String TAG = "TimelinePostListRecyclerViewAdapter";
 
 	private static final int TYPE_HEADER = 0;
-	private static final int TYPE_ITEM = 1;
+	private static final int TYPE_TITLE = 1;
+	private static final int TYPE_ITEM = 2;
 
 	private Context mContext;
 	private JSONArray postArray;
@@ -45,7 +45,8 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		mContext = context;
 		postArray = jsonArray;
 
-		preLoadImage();
+		if(jsonArray != null)
+			preLoadImage();
 	}
 
 	private void preLoadImage() {
@@ -81,15 +82,21 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		if(viewType == TYPE_ITEM) {
-			//inflate your layout and pass it to view holder
-			View itemView = LayoutInflater.from(parent.getContext())
+			View itemView;
+
+			if(postArray != null) {
+				itemView = LayoutInflater.from(parent.getContext())
 						.inflate(R.layout.card_timeline, parent, false);
-
-			return new PostCard(itemView, mContext);
-		}
-		else if(viewType == TYPE_HEADER) {
-			View headerView = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_header_placeholder, parent, false);
-
+				return new PostCard(itemView, mContext);
+			} else {
+				itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_swipe_to_refresh, parent, false);
+				return new SwipeToRefreshCard(itemView);
+			}
+		} else if(viewType == TYPE_TITLE) {
+			View titleView = LayoutInflater.from(parent.getContext()).inflate(R.layout.frame_timeline_title, parent, false);
+			return new BlankHeader(titleView);
+		} else if(viewType == TYPE_HEADER) {
+			View headerView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_header_placeholder_large, parent, false);
 			return new BlankHeader(headerView);
 		}
 
@@ -100,9 +107,10 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 		if(holder instanceof PostCard) {
 			try {
-				JSONObject postData = postArray.getJSONObject(position - 1);
-				((PostCard) holder).setItem(postData);
-				((PostCard) holder).getLayout().setOnClickListener((PostCard) holder);
+				if(postArray != null) {
+					JSONObject postData = postArray.getJSONObject(position - 2);
+					((PostCard) holder).setItem(postData);
+				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			} catch(NullPointerException e) {
@@ -113,25 +121,24 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 	@Override
 	public int getItemCount() {
-		return postArray.length() + 1;
+		if(postArray != null)
+			return postArray.length() + 2;
+		else
+			return 2;
 	}
 
 	@Override
 	public int getItemViewType(int position) {
-		if (isPositionHeader(position))
+		if (position == 0)
 			return TYPE_HEADER;
-
-		return TYPE_ITEM;
+		else if(position == 1)
+			return TYPE_TITLE;
+		else
+			return TYPE_ITEM;
 	}
 
-	private boolean isPositionHeader(int position) {
-		return position == 0;
-	}
-
-	private static class PostCard extends RecyclerView.ViewHolder implements View.OnClickListener {
+	private static class PostCard extends RecyclerView.ViewHolder {
 		private CardView postCard;
-		private LinearLayout postLayout;
-		//private ImageView postImage;
 		private final WeakReference<ImageView> imageViewReference;
 		private TextView postTitle;
 		private TextView postDate;
@@ -141,9 +148,6 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		public PostCard(View cardView, Context context) {
 			super(cardView);
 			postCard = (CardView) cardView;
-			postLayout = (LinearLayout) cardView.findViewById(R.id.LinearLayout_card_timeline);
-			//postImage = (ImageView) cardView.findViewById(R.id.image_post);
-			//postImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			imageViewReference = new WeakReference<ImageView>((ImageView) cardView.findViewById(R.id.image_post));
 			postTitle = (TextView) cardView.findViewById(R.id.text_post_title);
 			postTitle.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
@@ -180,23 +184,26 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			postTitle.setText(postData.optString("timeline_title"));
 			postDate.setText(postData.optString("timeline_datetime"));
 			linkURL = postData.optString("timeline_link");
+			postCard.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Uri webLink = Uri.parse(linkURL);
+					Intent webBrowseIntent = new Intent(Intent.ACTION_VIEW, webLink);
+					v.getContext().startActivity(webBrowseIntent);
+				}
+			});
 			postCard.setPreventCornerOverlap(false);
-		}
-
-		public LinearLayout getLayout() {
-			return postLayout;
-		}
-
-		@Override
-		public void onClick(View v) {
-			Uri webLink = Uri.parse(linkURL);
-			Intent webBrowseIntent = new Intent(Intent.ACTION_VIEW, webLink);
-			v.getContext().startActivity(webBrowseIntent);
 		}
 	}
 
 	private static class BlankHeader extends RecyclerView.ViewHolder {
 		public BlankHeader(View cardView) {
+			super(cardView);
+		}
+	}
+
+	private static class SwipeToRefreshCard extends RecyclerView.ViewHolder {
+		public SwipeToRefreshCard(View cardView) {
 			super(cardView);
 		}
 	}

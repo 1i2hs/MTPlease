@@ -35,6 +35,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapView;
+import com.owo.mtplease.fragment.SpecificInfoFragment;
 import com.owo.mtplease.view.TypefaceLoader;
 
 import org.json.JSONArray;
@@ -65,17 +66,21 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	private static final int CARD_EQUIPMENT = 9;
 	private static final int CARD_FACILITY_AND_SERVICE = 10;
 	private static final int CARD_CAUTIONS = 11;
+	private static final int CARD_OTHER_ROOMS = 12;
 	// End of series of cards
 
 	private static View _basicInfoCardView;
 
 	// Model: Data variables for User Interface Views
-	private static RoomInfoModelController mRoomInfoModelController;
+	private static RoomInfoModelController _mRoomInfoModelController;
 	// End of the Model
 
 	// others
-	private Context mContext;
-	private static String imageUrl;
+	private Context _mContext;
+	private static String _imageUrl;
+	
+	// Listeners
+	private SpecificInfoFragment.OnSpecificInfoFragmentListener _mOnSpecificInfoFragmentListener;
 
 	// Naver Map API Key
 	private static final String NAVER_MAP_API_KEY = "d95aa436e270994d04d2fcc5bffdb1cb";
@@ -85,34 +90,36 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		/*NMapViewerResourceProvider mMapViewerResourceProvider = null;
 		NMapOverlayManager mOverlayManager;*/
 
-	public SpecificInfoRoomRecyclerViewAdapter(Context context, RoomInfoModelController roomInfoModelController) {
+	public SpecificInfoRoomRecyclerViewAdapter(Context context, RoomInfoModelController roomInfoModelController,
+											   SpecificInfoFragment.OnSpecificInfoFragmentListener onSpecificInfoFragmentListener) {
 		Log.d(TAG, TAG);
-		mContext = context;
-		mRoomInfoModelController = roomInfoModelController;
+		_mContext = context;
+		_mRoomInfoModelController = roomInfoModelController;
+		_mOnSpecificInfoFragmentListener = onSpecificInfoFragmentListener;
 
 		preLoadImages();
 	}
 
 	private void preLoadImages() {
-		for(int i = 1; i <= mRoomInfoModelController.getNum_images(); i++) {
-				/*imageUrl = mContext.getResources().getString(R.string.mtplease_url) + "img/pensions/" + mRoomInfoModelController.getPen_id() + "/"
-						+ URLEncoder.encode(mRoomInfoModelController.getRoom_name(), "utf-8").replaceAll("\\+", "%20");*/
+		for(int i = 1; i <= _mRoomInfoModelController.getNum_images(); i++) {
+				/*_imageUrl = _mContext.getResources().getString(R.string.mtplease_url) + "img/pensions/" + _mRoomInfoModelController.getPen_id() + "/"
+						+ URLEncoder.encode(_mRoomInfoModelController.getRoom_name(), "utf-8").replaceAll("\\+", "%20");*/
 
-			imageUrl = mContext.getResources().getString(R.string.mtplease_url_temp) + "pensions/" + mRoomInfoModelController.getPen_id() + "/"
-					+ mRoomInfoModelController.getRoom_id();
+			_imageUrl = _mContext.getResources().getString(R.string.mtplease_url_temp) + "pensions/" + _mRoomInfoModelController.getPen_id() + "/"
+					+ _mRoomInfoModelController.getRoom_id();
 
-			if (mRoomInfoModelController.getRoom_picture_flag() == REAL_PICTURE_EXISTS)
-				imageUrl += "/real/" + i + ".JPG";
+			if (_mRoomInfoModelController.getRoom_picture_flag() == REAL_PICTURE_EXISTS)
+				_imageUrl += "/real/" + i + ".JPG";
 			else
-				imageUrl += "/unreal/" + i + ".JPG";
+				_imageUrl += "/unreal/" + i + ".JPG";
 
-			Log.d(TAG, imageUrl);
+			Log.d(TAG, _imageUrl);
 
-			if(!ServerCommunicationManager.getInstance(mContext).containsImage(imageUrl)) {
-				ImageRequest imageRequest = new ImageRequest(imageUrl, new Response.Listener<Bitmap>() {
+			if(!ServerCommunicationManager.getInstance(_mContext).containsImage(_imageUrl)) {
+				ImageRequest imageRequest = new ImageRequest(_imageUrl, new Response.Listener<Bitmap>() {
 					@Override
 					public void onResponse(Bitmap response) {
-						ServerCommunicationManager.getInstance(mContext).putBitmap(imageUrl, response);
+						ServerCommunicationManager.getInstance(_mContext).putBitmap(_imageUrl, response);
 					}
 				}, 0, 0, null, new Response.ErrorListener() {
 					@Override
@@ -121,7 +128,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 					}
 				});
 
-				ServerCommunicationManager.getInstance(mContext).addToRequestQueue(imageRequest);
+				ServerCommunicationManager.getInstance(_mContext).addToRequestQueue(imageRequest);
 			}
 		}
 	}
@@ -135,52 +142,55 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		switch(cardViewType) {
 			case CARD_IMAGE_VIEW_PAGER:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_pager_room_images, parent, false);
-				return new RoomImageViewPagerCard(cardView, mContext);
+				return new RoomImageViewPagerCard(cardView, _mContext);
 			case CARD_PRICE_AND_RATE:
-				if(mRoomInfoModelController.getRoom_cost() == 0) {
+				if(_mRoomInfoModelController.getRoom_cost() == 0) {
 					cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_blank, parent, false);
 					return new BlankCard(cardView);
 				} else {
 					cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_price_and_rate, parent, false);
-					return new PriceAndRateCard(cardView, mContext);
+					return new PriceAndRateCard(cardView, _mContext);
 				}
 			case CARD_PHONE_AND_KAKAOTALK_BUTTONS:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_phone_and_kakaotalk_buttons, parent, false);
-				return new PhoneAndKakaotalkButtonsCard(cardView, mContext);
+				return new PhoneAndKakaotalkButtonsCard(cardView, _mContext);
 			case CARD_BASIC_INFO:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_basic_info, parent, false);
 				_basicInfoCardView = cardView;
-				return new BasicInfoCard(cardView, mContext);
+				return new BasicInfoCard(cardView, _mContext);
 			case CARD_PENSION_NOTICE:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_pension_notice, parent, false);
-				return new PensionNoticeCard(cardView, mContext);
+				return new PensionNoticeCard(cardView, _mContext);
 			case CARD_OPTIONS:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_options_temp, parent, false);
-				return new OptionsCard(cardView, mContext);
+				return new OptionsCard(cardView, _mContext);
 			/*case CARD_VISITED_SCHOOLS:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_visited_schools, parent, false);
-				return new VisitedSchoolsCard(cardView, mContext);
+				return new VisitedSchoolsCard(cardView, _mContext);
 			case CARD_REVIEWS:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_reviews, parent, false);
-				return new ReviewsCard(cardView, mContext);*/
+				return new ReviewsCard(cardView, _mContext);*/
 			case CARD_ADDRESS_AND_ROUTE_AND_MAP:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_address_and_route_and_map, parent, false);
-				return new AddressAndRouteAndMapCard(cardView, mContext);
+				return new AddressAndRouteAndMapCard(cardView, _mContext);
 			case CARD_PRICE_AND_DATE_SELECTION:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_price_and_period, parent, false);
-				return new PriceAndDateSelectionCard(cardView, mContext);
+				return new PriceAndDateSelectionCard(cardView, _mContext);
 			case CARD_OWNER_INFO:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_owner_info, parent, false);
-				return new OwnerInfoCard(cardView, mContext);
+				return new OwnerInfoCard(cardView, _mContext);
 			case CARD_EQUIPMENT:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_equipment, parent, false);
-				return new EquipmentCard(cardView, mContext);
+				return new EquipmentCard(cardView, _mContext);
 			case CARD_FACILITY_AND_SERVICE:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_facility_and_service, parent, false);
-				return new FacilityAndServiceCard(cardView, mContext);
+				return new FacilityAndServiceCard(cardView, _mContext);
 			case CARD_CAUTIONS:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_cautions, parent, false);
-				return new CautionsCard(cardView, mContext);
+				return new CautionsCard(cardView, _mContext);
+			case CARD_OTHER_ROOMS:
+				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_other_rooms, parent, false);
+				return new OtherRoomsCard(cardView, _mContext, _mOnSpecificInfoFragmentListener);
 		}
 
 		throw new RuntimeException("there is no type that matches the type " + cardViewType + "make sure your using types correctly");
@@ -195,7 +205,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 					((RoomImageViewPagerCard) cardViewHolder).setRoomImages();
 					break;
 				case CARD_PRICE_AND_RATE:
-					if(mRoomInfoModelController.getRoom_cost() != 0)
+					if(_mRoomInfoModelController.getRoom_cost() != 0)
 						((PriceAndRateCard) cardViewHolder).setComponents();
 					break;
 				case CARD_PHONE_AND_KAKAOTALK_BUTTONS:
@@ -242,7 +252,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 	@Override
 	public int getItemCount() {
-		return 12;
+		return 13;
 	}
 
 	@Override
@@ -276,6 +286,8 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 				return CARD_FACILITY_AND_SERVICE;
 			case 11:
 				return CARD_CAUTIONS;
+			case 12:
+				return CARD_OTHER_ROOMS;
 			default:
 				return position;
 		}
@@ -288,7 +300,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private ImageView nextPictureIndicator;
 		private LinearLayout roomPictureIndicatorLinearLayout;
 		private PictureCarouselAdapter roomImageCarouselAdapter;
-		private Context mContext;
+		private Context _mContext;
 
 		private boolean isRoomImageCarouselVisible = false;
 
@@ -302,13 +314,13 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			nextPictureIndicator = (ImageView) cardView.findViewById(R.id.imageView_next);
 			nextPictureIndicator.setAlpha(1.0F);
 			roomPictureIndicatorLinearLayout = (LinearLayout) cardView.findViewById(R.id.layout_indicators_picture_room);
-			mContext = context;
+			_mContext = context;
 		}
 
 		public void setRoomImages() {
 			if (!isRoomImageCarouselVisible) {
-				final int numPicture = mRoomInfoModelController.getNum_images();
-				roomImageCarouselAdapter = new PictureCarouselAdapter(mContext, numPicture);
+				final int numPicture = _mRoomInfoModelController.getNum_images();
+				roomImageCarouselAdapter = new PictureCarouselAdapter(_mContext, numPicture);
 				roomImageViewPager.setAdapter(roomImageCarouselAdapter);
 				roomImageViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 					@Override
@@ -351,14 +363,14 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 				});
 
 				for (int i = 0; i < numPicture; i++) {
-					ImageView pictureIndicator = new ImageView(mContext);
+					ImageView pictureIndicator = new ImageView(_mContext);
 					if (i == 0)
 						pictureIndicator.setImageResource(R.drawable.ic_indicator_selected);
 					else
 						pictureIndicator.setImageResource(R.drawable.ic_indicator_not_selected);
 
 					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-					params.setMargins(0, 0, convertDpToPx(4, mContext), 0);
+					params.setMargins(0, 0, convertDpToPx(4, _mContext), 0);
 
 					pictureIndicator.setLayoutParams(params);
 
@@ -371,11 +383,11 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 	private static class PictureCarouselAdapter extends PagerAdapter {
 		private ImageView roomImage;
-		private Context mContext;
+		private Context _mContext;
 		private int pictureCount;
 
-		private PictureCarouselAdapter(Context mContext, int pictureCount) {
-			this.mContext = mContext;
+		private PictureCarouselAdapter(Context _mContext, int pictureCount) {
+			this._mContext = _mContext;
 			this.pictureCount = pictureCount;
 		}
 
@@ -392,24 +404,24 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
 
-				/*imageUrl = mContext.getResources().getString(R.string.mtplease_url) + "img/pensions/" + mRoomInfoModelController.getPen_id() + "/"
-						+ URLEncoder.encode(mRoomInfoModelController.getRoom_name(), "utf-8").replaceAll("\\+", "%20");*/
+				/*_imageUrl = _mContext.getResources().getString(R.string.mtplease_url) + "img/pensions/" + _mRoomInfoModelController.getPen_id() + "/"
+						+ URLEncoder.encode(_mRoomInfoModelController.getRoom_name(), "utf-8").replaceAll("\\+", "%20");*/
 
-			imageUrl = mContext.getResources().getString(R.string.mtplease_url_temp) + "pensions/" + mRoomInfoModelController.getPen_id() + "/"
-					+ mRoomInfoModelController.getRoom_id();
+			_imageUrl = _mContext.getResources().getString(R.string.mtplease_url_temp) + "pensions/" + _mRoomInfoModelController.getPen_id() + "/"
+					+ _mRoomInfoModelController.getRoom_id();
 
-			if (mRoomInfoModelController.getRoom_picture_flag() == REAL_PICTURE_EXISTS)
-				imageUrl += "/real/" + (position + 1) + ".JPG";
+			if (_mRoomInfoModelController.getRoom_picture_flag() == REAL_PICTURE_EXISTS)
+				_imageUrl += "/real/" + (position + 1) + ".JPG";
 			else
-				imageUrl += "/unreal/" + (position + 1) + ".JPG";
+				_imageUrl += "/unreal/" + (position + 1) + ".JPG";
 
-			Log.d(TAG, imageUrl);
+			Log.d(TAG, _imageUrl);
 
-			roomImage = new ImageView(mContext);
+			roomImage = new ImageView(_mContext);
 			roomImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			roomImage.setImageResource(R.drawable.scrn_room_img_place_holder);
 
-			ServerCommunicationManager.getInstance(mContext).getImage(imageUrl,
+			ServerCommunicationManager.getInstance(_mContext).getImage(_imageUrl,
 					new ImageLoader.ImageListener() {
 						@Override
 						public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
@@ -417,7 +429,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 								roomImage.setAlpha(0.0F);
 								roomImage.setImageBitmap(response.getBitmap());
 								roomImage.animate().alpha(1.0F);
-								/*if(mRoomInfoModelController.getRoom_picture_flag() == REAL_PICTURE_EXISTS) {
+								/*if(_mRoomInfoModelController.getRoom_picture_flag() == REAL_PICTURE_EXISTS) {
 									roomImage.setImageResource(R.drawable.ic_real_picture_sticker);
 									roomImage.animate().alpha(1.0F);
 								}*/
@@ -450,21 +462,21 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 	private static class PriceAndRateCard extends RecyclerView.ViewHolder {
 		private TextView roomPriceTextView;
-		private Context mContext;
+		private Context _mContext;
 
 		public void setComponents() {
-			Log.d(TAG, mRoomInfoModelController.getRoom_cost() + "원");
-			if(mRoomInfoModelController.getRoom_cost() == 0)
+			Log.d(TAG, _mRoomInfoModelController.getRoom_cost() + "원");
+			if(_mRoomInfoModelController.getRoom_cost() == 0)
 				roomPriceTextView.setText(R.string.telephone_inquiry);
 			else
-				roomPriceTextView.setText(castItemPriceToString(mRoomInfoModelController.getRoom_cost(), mContext));
+				roomPriceTextView.setText(castItemPriceToString(_mRoomInfoModelController.getRoom_cost(), _mContext));
 		}
 
 		public PriceAndRateCard(View cardView, Context context) {
 			super(cardView);
 			roomPriceTextView = (TextView) cardView.findViewById(R.id.text_price_room);
 			roomPriceTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
-			mContext= context;
+			_mContext= context;
 		}
 	}
 
@@ -475,7 +487,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private FrameLayout callMtpleaseButton;
 		private FrameLayout callPensionButton;
 
-		private Context mContext;
+		private Context _mContext;
 
 		private boolean isContactButtonClicked = false;
 
@@ -484,7 +496,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 				@Override
 				public void onClick(View v) {
 					if(!isContactButtonClicked) {
-						expand(phoneAndKakaotalkButtonsCardView, convertDpToPx(72 + 4 + 50 + 4, mContext), contactButton);
+						expand(phoneAndKakaotalkButtonsCardView, convertDpToPx(72 + 4 + 50 + 4, _mContext), contactButton);
 
 						callMtpleaseButton.animate().setListener(null);
 						callPensionButton.animate().setListener(null);
@@ -494,7 +506,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 						callPensionButton.setAlpha(0.0F);
 						callPensionButton.setVisibility(View.VISIBLE);
 						callPensionButton.animate().alpha(1.0F);
-						callPensionButton.animate().translationYBy(convertDpToPx(72 + 4, mContext));
+						callPensionButton.animate().translationYBy(convertDpToPx(72 + 4, _mContext));
 
 						isContactButtonClicked = true;
 					} else {
@@ -522,7 +534,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 								});
 
 						callPensionButton.animate().alpha(0.0F);
-						callPensionButton.animate().translationYBy(-(convertDpToPx(72 + 4, mContext))).
+						callPensionButton.animate().translationYBy(-(convertDpToPx(72 + 4, _mContext))).
 								setListener(new Animator.AnimatorListener() {
 									@Override
 									public void onAnimationStart(Animator animation) {
@@ -545,7 +557,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 									}
 								});
 
-						collapse(phoneAndKakaotalkButtonsCardView, convertDpToPx(72 + 4 + 50 + 4, mContext), contactButton);
+						collapse(phoneAndKakaotalkButtonsCardView, convertDpToPx(72 + 4 + 50 + 4, _mContext), contactButton);
 
 						isContactButtonClicked = false;
 					}
@@ -554,12 +566,12 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			kakaoTalkButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					/*Uri webLink = Uri.parse(mRoomInfoModelController.getPen_homepage());
+					/*Uri webLink = Uri.parse(_mRoomInfoModelController.getPen_homepage());
 					Intent webBrowseIntent = new Intent(Intent.ACTION_VIEW, webLink);
-					mContext.startActivity(webBrowseIntent);*/
+					_mContext.startActivity(webBrowseIntent);*/
 					Uri webLink = Uri.parse("http://goto.kakao.com/@%EC%97%A0%ED%8B%B0%EB%A5%BC%EB%B6%80%ED%83%81%ED%95%B4");
 					Intent webBrowseIntent = new Intent(Intent.ACTION_VIEW, webLink);
-					mContext.startActivity(webBrowseIntent);
+					_mContext.startActivity(webBrowseIntent);
 				}
 			});
 
@@ -568,20 +580,20 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 				public void onClick(View v) {
 					Uri phoneNumber = Uri.parse("tel:" + "01092055132");
 					Intent contactIntent = new Intent(Intent.ACTION_DIAL, phoneNumber);
-					mContext.startActivity(contactIntent);
+					_mContext.startActivity(contactIntent);
 				}
 			});
 
 			callPensionButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Toast toast = Toast.makeText(mContext, R.string.please_say_mtplease, Toast.LENGTH_SHORT);
-					toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, convertDpToPx(150, mContext));
+					Toast toast = Toast.makeText(_mContext, R.string.please_say_mtplease, Toast.LENGTH_SHORT);
+					toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, convertDpToPx(150, _mContext));
 					toast.show();
 
-					Uri phoneNumber = Uri.parse("tel:" + mRoomInfoModelController.getPen_phone1());
+					Uri phoneNumber = Uri.parse("tel:" + _mRoomInfoModelController.getPen_phone1());
 					Intent contactIntent = new Intent(Intent.ACTION_DIAL, phoneNumber);
-					mContext.startActivity(contactIntent);
+					_mContext.startActivity(contactIntent);
 				}
 			});
 		}
@@ -593,7 +605,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			callMtpleaseButton = (FrameLayout) cardView.findViewById(R.id.btn_call_mtplease);
 			callPensionButton = (FrameLayout) cardView.findViewById(R.id.btn_call_pension);
 
-			mContext = context;
+			_mContext = context;
 		}
 	}
 
@@ -685,39 +697,39 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private TextView structureRoomTextView;
 		private TextView sizeRoomTextView;
 
-		private Context mContext;
+		private Context _mContext;
 
 		public void setComponents() {
-			if(!mRoomInfoModelController.getPen_checkin().equals("null"))
-				checkinTimeTextView.setText(mContext.getResources().getString(R.string.checkin_time) + "  " + mRoomInfoModelController.getPen_checkin());
+			if(!_mRoomInfoModelController.getPen_checkin().equals("null"))
+				checkinTimeTextView.setText(_mContext.getResources().getString(R.string.checkin_time) + "  " + _mRoomInfoModelController.getPen_checkin());
 			else
 				checkinTimeTextView.setText("-");
 
-			if(!mRoomInfoModelController.getPen_checkout().equals("null"))
-				checkoutTimeTextView.setText(mContext.getResources().getString(R.string.checkout_time) + "  " + mRoomInfoModelController.getPen_checkout());
+			if(!_mRoomInfoModelController.getPen_checkout().equals("null"))
+				checkoutTimeTextView.setText(_mContext.getResources().getString(R.string.checkout_time) + "  " + _mRoomInfoModelController.getPen_checkout());
 			else
 				checkoutTimeTextView.setText("-");
 
-			numberRoomsTextView.setText(mContext.getResources().getString(R.string.number_of_rooms) + "  " + mRoomInfoModelController.getNum_rooms());
-			numberToiletsTextView.setText(mContext.getResources().getString(R.string.number_of_toilets) + "  " + mRoomInfoModelController.getNum_toilets());
-			numberPeopleStdTextView.setText(mContext.getResources().getString(R.string.std_number_of_people) + "  " + mRoomInfoModelController.getRoom_std_people());
-			numberPeopleMaxTextView.setText(mContext.getResources().getString(R.string.max_number_of_people) + "  " + mRoomInfoModelController.getRoom_max_people());
+			numberRoomsTextView.setText(_mContext.getResources().getString(R.string.number_of_rooms) + "  " + _mRoomInfoModelController.getNum_rooms());
+			numberToiletsTextView.setText(_mContext.getResources().getString(R.string.number_of_toilets) + "  " + _mRoomInfoModelController.getNum_toilets());
+			numberPeopleStdTextView.setText(_mContext.getResources().getString(R.string.std_number_of_people) + "  " + _mRoomInfoModelController.getRoom_std_people());
+			numberPeopleMaxTextView.setText(_mContext.getResources().getString(R.string.max_number_of_people) + "  " + _mRoomInfoModelController.getRoom_max_people());
 
-			if(!mRoomInfoModelController.getRoom_description().equals("null"))
-				structureRoomTextView.setText(mContext.getResources().getString(R.string.structure_of_room) + "  " + mRoomInfoModelController.getRoom_description());
+			if(!_mRoomInfoModelController.getRoom_description().equals("null"))
+				structureRoomTextView.setText(_mContext.getResources().getString(R.string.structure_of_room) + "  " + _mRoomInfoModelController.getRoom_description());
 			else
-				structureRoomTextView.setText(mContext.getResources().getString(R.string.structure_of_room) + " - ");
+				structureRoomTextView.setText(_mContext.getResources().getString(R.string.structure_of_room) + " - ");
 
-			if(!mRoomInfoModelController.getRoom_pyeong().equals("null"))
-				sizeRoomTextView.setText(mContext.getResources().getString(R.string.size_of_room) + "  " + mRoomInfoModelController.getRoom_pyeong());
+			if(!_mRoomInfoModelController.getRoom_pyeong().equals("null"))
+				sizeRoomTextView.setText(_mContext.getResources().getString(R.string.size_of_room) + "  " + _mRoomInfoModelController.getRoom_pyeong());
 			else
-				sizeRoomTextView.setText(mContext.getResources().getString(R.string.size_of_room) + " - ");
+				sizeRoomTextView.setText(_mContext.getResources().getString(R.string.size_of_room) + " - ");
 		}
 
 		public BasicInfoCard(View cardView, Context context) {
 			super(cardView);
 			basicInfoTitleTextView = (TextView) cardView.findViewById(R.id.textView_info_basic);
-			basicInfoTitleTextView.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			basicInfoTitleTextView.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			checkinTimeTextView = (TextView) cardView.findViewById(R.id.textView_time_checkin);
 			checkinTimeTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			checkoutTimeTextView = (TextView) cardView.findViewById(R.id.textView_time_checkout);
@@ -734,7 +746,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			structureRoomTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			sizeRoomTextView = (TextView) cardView.findViewById(R.id.textView_size_room);
 			sizeRoomTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
-			mContext = context;
+			_mContext = context;
 		}
 	}
 
@@ -742,28 +754,28 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private TextView pensionDescriptionTitleTextView;
 		private LinearLayout pensionDescriptionLinearLayout;
 		private boolean isComponentsLoaded = false;
-		private Context mContext;
+		private Context _mContext;
 
 		public void setComponents() {
 			if(!isComponentsLoaded) {
-				if (!mRoomInfoModelController.getPen_description().equals("null")) {
-					String pensionNoticeString = mRoomInfoModelController.getPen_description();
+				if (!_mRoomInfoModelController.getPen_description().equals("null")) {
+					String pensionNoticeString = _mRoomInfoModelController.getPen_description();
 					String[] pensionNoticeStringList = pensionNoticeString.split("/");
 
 					for (int i = 0; i < pensionNoticeStringList.length; i++) {
-						TextView pensionDescriptionTextView = new TextView(mContext);
+						TextView pensionDescriptionTextView = new TextView(_mContext);
 						pensionDescriptionTextView.setText("> " + pensionNoticeStringList[i]);
 
 						LinearLayout.LayoutParams params
 								= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
 								LinearLayout.LayoutParams.WRAP_CONTENT);
-						params.setMargins(0, 0, 0, convertDpToPx(4, mContext));
+						params.setMargins(0, 0, 0, convertDpToPx(4, _mContext));
 
 						pensionDescriptionTextView.setLayoutParams(params);
 						pensionDescriptionLinearLayout.addView(pensionDescriptionTextView);
 					}
 				} else {
-					TextView pensionDescriptionTextView = new TextView(mContext);
+					TextView pensionDescriptionTextView = new TextView(_mContext);
 					pensionDescriptionTextView.setText("-");
 
 					pensionDescriptionLinearLayout.addView(pensionDescriptionTextView);
@@ -777,7 +789,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			pensionDescriptionTitleTextView = (TextView) cardView.findViewById(R.id.textView_title_pension_description);
 			pensionDescriptionTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			pensionDescriptionLinearLayout = (LinearLayout) cardView.findViewById(R.id.layout_description_pension);
-			mContext = context;
+			_mContext = context;
 		}
 
 	}
@@ -807,75 +819,75 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 
 		public void setComponents() {
-			if(mRoomInfoModelController.getPen_ground() != 1)
+			if(_mRoomInfoModelController.getPen_ground() != 1)
 				playgroundIconImageView.setImageResource(R.drawable.ic_no_playground);
 
-			if(mRoomInfoModelController.getPen_pickup() != 1)
+			if(_mRoomInfoModelController.getPen_pickup() != 1)
 				pickupIconImageView.setImageResource(R.drawable.ic_no_pick_up);
 
-			if(mRoomInfoModelController.getPen_barbecue() != 1)
+			if(_mRoomInfoModelController.getPen_barbecue() != 1)
 				barbecueIconImageView.setImageResource(R.drawable.ic_no_barbecue);
 
-			if(mRoomInfoModelController.getPen_valley() != 1)
+			if(_mRoomInfoModelController.getPen_valley() != 1)
 				valleyIconImageView.setImageResource(R.drawable.ic_no_valley);
 
-			if(!mRoomInfoModelController.getPen_ground_type().equals("null"))
-				playgroundTypeTextView.setText(mRoomInfoModelController.getPen_ground_type());
+			if(!_mRoomInfoModelController.getPen_ground_type().equals("null"))
+				playgroundTypeTextView.setText(_mRoomInfoModelController.getPen_ground_type());
 			else
 				playgroundTypeTextView.setText("-");
 
-			if(!mRoomInfoModelController.getPen_ground_description().equals("null"))
-				playgroundDescriptionTextView.setText(mRoomInfoModelController.getPen_ground_description());
+			if(!_mRoomInfoModelController.getPen_ground_description().equals("null"))
+				playgroundDescriptionTextView.setText(_mRoomInfoModelController.getPen_ground_description());
 			else
 				playgroundDescriptionTextView.setText("-");
 
-			if(!mRoomInfoModelController.getPen_pickup_cost().equals("null"))
-				pickupPriceTextView.setText(mRoomInfoModelController.getPen_pickup_cost());
+			if(!_mRoomInfoModelController.getPen_pickup_cost().equals("null"))
+				pickupPriceTextView.setText(_mRoomInfoModelController.getPen_pickup_cost());
 			else
 				pickupPriceTextView.setText("-");
 
-			if(!mRoomInfoModelController.getPen_pickup_location().equals("null"))
-				pickupLocationTextView.setText(mRoomInfoModelController.getPen_pickup_location());
+			if(!_mRoomInfoModelController.getPen_pickup_location().equals("null"))
+				pickupLocationTextView.setText(_mRoomInfoModelController.getPen_pickup_location());
 			else
 				pickupLocationTextView.setText("-");
 
-			if(!mRoomInfoModelController.getPen_pickup_description().equals("null"))
-				pickupDescriptionTextView.setText(mRoomInfoModelController.getPen_pickup_description());
+			if(!_mRoomInfoModelController.getPen_pickup_description().equals("null"))
+				pickupDescriptionTextView.setText(_mRoomInfoModelController.getPen_pickup_description());
 			else
 				pickupDescriptionTextView.setText("-");
 
-			if(!mRoomInfoModelController.getPen_barbecue_cost().equals("null"))
-				barbecuePriceTextView.setText(mRoomInfoModelController.getPen_barbecue_cost());
+			if(!_mRoomInfoModelController.getPen_barbecue_cost().equals("null"))
+				barbecuePriceTextView.setText(_mRoomInfoModelController.getPen_barbecue_cost());
 			else
 				barbecuePriceTextView.setText("-");
 
-			if(!mRoomInfoModelController.getPen_barbecue_component().equals("null"))
-				barbecueComponentTextView.setText(mRoomInfoModelController.getPen_barbecue_component());
+			if(!_mRoomInfoModelController.getPen_barbecue_component().equals("null"))
+				barbecueComponentTextView.setText(_mRoomInfoModelController.getPen_barbecue_component());
 			else
 				barbecueComponentTextView.setText("-");
 
-			if(!mRoomInfoModelController.getPen_barbecue_location().equals("null"))
-				barbecueLocationTextView.setText(mRoomInfoModelController.getPen_barbecue_location());
+			if(!_mRoomInfoModelController.getPen_barbecue_location().equals("null"))
+				barbecueLocationTextView.setText(_mRoomInfoModelController.getPen_barbecue_location());
 			else
 				barbecueLocationTextView.setText("-");
 
-			if(!mRoomInfoModelController.getPen_barbecue_description().equals("null"))
-				barbecueDescriptionTextView.setText(mRoomInfoModelController.getPen_barbecue_description());
+			if(!_mRoomInfoModelController.getPen_barbecue_description().equals("null"))
+				barbecueDescriptionTextView.setText(_mRoomInfoModelController.getPen_barbecue_description());
 			else
 				barbecueDescriptionTextView.setText("-");
 
-			if(!mRoomInfoModelController.getPen_valley_distance().equals("null"))
-				valleyDistanceTextView.setText(mRoomInfoModelController.getPen_valley_distance());
+			if(!_mRoomInfoModelController.getPen_valley_distance().equals("null"))
+				valleyDistanceTextView.setText(_mRoomInfoModelController.getPen_valley_distance());
 			else
 				valleyDistanceTextView.setText("-");
 
-			if(!mRoomInfoModelController.getPen_valley_depth().equals("null"))
-				valleyDepthTextView.setText(mRoomInfoModelController.getPen_valley_depth());
+			if(!_mRoomInfoModelController.getPen_valley_depth().equals("null"))
+				valleyDepthTextView.setText(_mRoomInfoModelController.getPen_valley_depth());
 			else
 				valleyDepthTextView.setText("-");
 
-			if(!mRoomInfoModelController.getPen_valley_description().equals("null"))
-				valleyDescriptionTextView.setText(mRoomInfoModelController.getPen_valley_description());
+			if(!_mRoomInfoModelController.getPen_valley_description().equals("null"))
+				valleyDescriptionTextView.setText(_mRoomInfoModelController.getPen_valley_description());
 			else
 				valleyDescriptionTextView.setText("-");
 		}
@@ -945,26 +957,26 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private TextView walkFromStationTimeTextView;
 		private TextView walkFromTerminalTitleTextView;
 		private TextView walkFromTerminalTimeTextView;
-		private Context mContext;
+		private Context _mContext;
 
 		public void setComponents() {
-			final String pensionLocationURL = "http://m.map.naver.com/map.nhn?lng=" + mRoomInfoModelController.getPen_longitude()
-					+ "&lat=" + mRoomInfoModelController.getPen_latitude() +"&dlevel=11";
+			final String pensionLocationURL = "http://m.map.naver.com/map.nhn?lng=" + _mRoomInfoModelController.getPen_longitude()
+					+ "&lat=" + _mRoomInfoModelController.getPen_latitude() +"&dlevel=11";
 
 			lookLargerMapButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					Uri webLink = Uri.parse(pensionLocationURL);
 					Intent webBrowseIntent = new Intent(Intent.ACTION_VIEW, webLink);
-					mContext.startActivity(webBrowseIntent);
+					_mContext.startActivity(webBrowseIntent);
 				}
 			});
-			if(!mRoomInfoModelController.getPen_road_adr().equals("null"))
-				pensionRoadAddress.setText(mRoomInfoModelController.getPen_road_adr());
+			if(!_mRoomInfoModelController.getPen_road_adr().equals("null"))
+				pensionRoadAddress.setText(_mRoomInfoModelController.getPen_road_adr());
 			else
 				pensionRoadAddress.setText("-");
-			if(!mRoomInfoModelController.getPen_lot_adr().equals("null"))
-				pensionParcelAddressTextView.setText(mRoomInfoModelController.getPen_lot_adr());
+			if(!_mRoomInfoModelController.getPen_lot_adr().equals("null"))
+				pensionParcelAddressTextView.setText(_mRoomInfoModelController.getPen_lot_adr());
 			else
 				pensionParcelAddressTextView.setText("-");
 
@@ -975,13 +987,13 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			mapWebView.setWebChromeClient(new WebChromeClient());
 			mapWebView.loadUrl(pensionLocationURL);
 
-			if(!mRoomInfoModelController.getPen_walk_station().equals("null"))
-				walkFromStationTimeTextView.setText(mRoomInfoModelController.getPen_walk_station());
+			if(!_mRoomInfoModelController.getPen_walk_station().equals("null"))
+				walkFromStationTimeTextView.setText(_mRoomInfoModelController.getPen_walk_station());
 			else
 				walkFromStationTimeTextView.setText("-");
 
-			if(!mRoomInfoModelController.getPen_walk_terminal().equals("null"))
-				walkFromTerminalTimeTextView.setText(mRoomInfoModelController.getPen_walk_terminal());
+			if(!_mRoomInfoModelController.getPen_walk_terminal().equals("null"))
+				walkFromTerminalTimeTextView.setText(_mRoomInfoModelController.getPen_walk_terminal());
 			else
 				walkFromTerminalTimeTextView.setText("-");
 		}
@@ -994,9 +1006,9 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 				int charCounter = 0;
 				for (int i = timeString.length() - 1; i >= 0; i--) {
 					if(charCounter == 0)
-						timeStringChanged += mContext.getResources().getString(R.string.second) + timeString.charAt(i);
+						timeStringChanged += _mContext.getResources().getString(R.string.second) + timeString.charAt(i);
 					else if(charCounter == 2)
-						timeStringChanged += mContext.getResources().getString(R.string.minute) + timeString.charAt(i);
+						timeStringChanged += _mContext.getResources().getString(R.string.minute) + timeString.charAt(i);
 					else
 						timeStringChanged += timeString.charAt(i) ;
 					charCounter++;
@@ -1028,7 +1040,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			walkFromTerminalTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			walkFromTerminalTimeTextView = (TextView) cardView.findViewById(R.id.textView_walk_terminal);
 			walkFromTerminalTimeTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
-			mContext = context;
+			_mContext = context;
 		}
 	}
 
@@ -1056,26 +1068,26 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private TableLayout periodTable;
 		private TextView periodCell2;
 
-		private Context mContext;
+		private Context _mContext;
 
 		private boolean isPeriodTableVisible = false;
 
 		public void setComponents() {
 			try {
-				for (int i = 0; i < mRoomInfoModelController.getCost_table().length(); i++) {
-					JSONObject costObject = mRoomInfoModelController.getCost_table().getJSONObject(i);
+				for (int i = 0; i < _mRoomInfoModelController.getCost_table().length(); i++) {
+					JSONObject costObject = _mRoomInfoModelController.getCost_table().getJSONObject(i);
 					String pen_period_division = costObject.optString("pen_period_division");
 					Log.d(TAG, pen_period_division);
-					if (pen_period_division.equals(mContext.getResources().getString(R.string.off_season))) {
+					if (pen_period_division.equals(_mContext.getResources().getString(R.string.off_season))) {
 						Log.d(TAG, "비수기");
 						priceCell22.setText(castRoomPrice(costObject.optInt("weekdays")));
 						priceCell23.setText(castRoomPrice(costObject.optInt("friday")));
 						priceCell24.setText(castRoomPrice(costObject.optInt("weekends")));
-					} else if (pen_period_division.equals(mContext.getResources().getString(R.string.semi_on_season))) {
+					} else if (pen_period_division.equals(_mContext.getResources().getString(R.string.semi_on_season))) {
 						priceCell32.setText(castRoomPrice(costObject.optInt("weekdays")));
 						priceCell33.setText(castRoomPrice(costObject.optInt("friday")));
 						priceCell34.setText(castRoomPrice(costObject.optInt("weekends")));
-					} else if (pen_period_division.equals(mContext.getResources().getString(R.string.on_season))) {
+					} else if (pen_period_division.equals(_mContext.getResources().getString(R.string.on_season))) {
 						Log.d(TAG, "성수기");
 						priceCell42.setText(castRoomPrice(costObject.optInt("weekdays")));
 						priceCell43.setText(castRoomPrice(costObject.optInt("friday")));
@@ -1089,35 +1101,35 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 				}
 
 				if(!isPeriodTableVisible) {
-					for (int i = 0; i < mRoomInfoModelController.getPeriod_table().length(); i++) {
+					for (int i = 0; i < _mRoomInfoModelController.getPeriod_table().length(); i++) {
 						int rowNum = i + 1;
 
-						TableRow periodTableRow = new TableRow(mContext);
+						TableRow periodTableRow = new TableRow(_mContext);
 						periodTableRow.setId(rowNum); // id is set by the level of the row
 						periodTableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 
 
-						JSONObject periodObject = mRoomInfoModelController.getPeriod_table().getJSONObject(i);
+						JSONObject periodObject = _mRoomInfoModelController.getPeriod_table().getJSONObject(i);
 						String pen_period_division = periodObject.optString("pen_period_division");
 						String period = periodObject.optString("period_start") + " ~ " + periodObject.optString("period_end");
 
 						for (int j = 0; j < 2; j++) {
 							int colNum = j + 1;
 							int cellNum = rowNum * 10 + colNum;
-							TextView periodCell = new TextView(mContext);
+							TextView periodCell = new TextView(_mContext);
 							periodCell.setId(cellNum);
 							periodCell.setGravity(Gravity.CENTER);
-							periodCell.setPadding(0, (int) mContext.getResources().getDimension(R.dimen.cell_vertical_padding), 0, (int) mContext.getResources().getDimension(R.dimen.cell_vertical_padding));
+							periodCell.setPadding(0, (int) _mContext.getResources().getDimension(R.dimen.cell_vertical_padding), 0, (int) _mContext.getResources().getDimension(R.dimen.cell_vertical_padding));
 							periodCell.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT));
-							periodCell.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+							periodCell.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 
-							if (pen_period_division.equals(mContext.getResources().getString(R.string.off_season))) {
+							if (pen_period_division.equals(_mContext.getResources().getString(R.string.off_season))) {
 								Log.d(TAG, "비수기");
 								setPeriodCell(periodCell, R.string.off_season, period);
-							} else if (pen_period_division.equals(mContext.getResources().getString(R.string.semi_on_season))) {
+							} else if (pen_period_division.equals(_mContext.getResources().getString(R.string.semi_on_season))) {
 								Log.d(TAG, "준성수기");
 								setPeriodCell(periodCell, R.string.semi_on_season, period);
-							} else if (pen_period_division.equals(mContext.getResources().getString(R.string.on_season))) {
+							} else if (pen_period_division.equals(_mContext.getResources().getString(R.string.on_season))) {
 								Log.d(TAG, "성수기");
 								setPeriodCell(periodCell, R.string.on_season, period);
 							} else {
@@ -1150,58 +1162,58 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 		private String castRoomPrice(int roomPrice) {
 			if(roomPrice == 0) {
-				return mContext.getResources().getString(R.string.telephone_inquiry);
+				return _mContext.getResources().getString(R.string.telephone_inquiry);
 			} else {
-				return castItemPriceToString(roomPrice, mContext);
+				return castItemPriceToString(roomPrice, _mContext);
 			}
 		}
 
 		public PriceAndDateSelectionCard(View cardView, Context context) {
 			super(cardView);
 			priceInfoTitleTextView = (TextView) cardView.findViewById(R.id.textView_info_price);
-			priceInfoTitleTextView.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceInfoTitleTextView.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell12 = (TextView) cardView.findViewById(R.id.cell12_price);
-			priceCell12.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell12.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell13 = (TextView) cardView.findViewById(R.id.cell13_price);
-			priceCell13.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell13.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell14 = (TextView) cardView.findViewById(R.id.cell14_price);
-			priceCell14.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell14.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell21 = (TextView) cardView.findViewById(R.id.cell21_price);
-			priceCell21.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell21.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell31 = (TextView) cardView.findViewById(R.id.cell31_price);
-			priceCell31.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell31.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell41 = (TextView) cardView.findViewById(R.id.cell41_price);
-			priceCell41.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell41.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell51 = (TextView) cardView.findViewById(R.id.cell51_price);
-			priceCell51.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell51.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell22 = (TextView) cardView.findViewById(R.id.cell22_price);
-			priceCell22.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell22.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell23 = (TextView) cardView.findViewById(R.id.cell23_price);
-			priceCell23.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell23.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell24 = (TextView) cardView.findViewById(R.id.cell24_price);
-			priceCell24.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell24.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell32 = (TextView) cardView.findViewById(R.id.cell32_price);
-			priceCell32.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell32.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell33 = (TextView) cardView.findViewById(R.id.cell33_price);
-			priceCell33.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell33.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell34 = (TextView) cardView.findViewById(R.id.cell34_price);
-			priceCell34.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell34.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell42 = (TextView) cardView.findViewById(R.id.cell42_price);
-			priceCell42.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell42.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell43 = (TextView) cardView.findViewById(R.id.cell43_price);
-			priceCell43.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell43.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell44 = (TextView) cardView.findViewById(R.id.cell44_price);
-			priceCell44.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell44.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell52 = (TextView) cardView.findViewById(R.id.cell52_price);
-			priceCell52.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell52.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell53 = (TextView) cardView.findViewById(R.id.cell53_price);
-			priceCell53.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell53.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell54 = (TextView) cardView.findViewById(R.id.cell54_price);
-			priceCell54.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			priceCell54.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			periodTable = (TableLayout) cardView.findViewById(R.id.tablelayout_period_room);
 			periodCell2 = (TextView) cardView.findViewById(R.id.cell12_period);
-			periodCell2.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
-			mContext = context;
+			periodCell2.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			_mContext = context;
 		}
 	}
 
@@ -1210,18 +1222,18 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private TextView ceoNameTextView;
 		private TextView ceoAccountTextView;
 
-		private Context mContext;
+		private Context _mContext;
 
 		public void setComponents() {
-			if(!mRoomInfoModelController.getPen_ceo().equals("null"))
-				ceoNameTextView.setText(mContext.getResources().getString(R.string.ceo_name) + "  " + mRoomInfoModelController.getPen_ceo());
+			if(!_mRoomInfoModelController.getPen_ceo().equals("null"))
+				ceoNameTextView.setText(_mContext.getResources().getString(R.string.ceo_name) + "  " + _mRoomInfoModelController.getPen_ceo());
 			else
 				ceoNameTextView.setText("-");
 
-			if(!mRoomInfoModelController.getPen_ceo_account().equals("null"))
-				ceoAccountTextView.setText(mContext.getResources().getString(R.string.ceo_account) + "  " + mRoomInfoModelController.getPen_ceo_account());
+			if(!_mRoomInfoModelController.getPen_ceo_account().equals("null"))
+				ceoAccountTextView.setText(_mContext.getResources().getString(R.string.ceo_account) + "  " + _mRoomInfoModelController.getPen_ceo_account());
 			else
-				ceoAccountTextView.setText(mContext.getResources().getString(R.string.ceo_account) + "  " + "-");
+				ceoAccountTextView.setText(_mContext.getResources().getString(R.string.ceo_account) + "  " + "-");
 		}
 
 		public OwnerInfoCard(View cardView, Context context) {
@@ -1232,7 +1244,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			ceoNameTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			ceoAccountTextView = (TextView) cardView.findViewById(R.id.textView_account_ceo);
 			ceoAccountTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
-			mContext = context;
+			_mContext = context;
 		}
 	}
 
@@ -1241,8 +1253,8 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private TextView equipmentTextView;
 
 		public void setComponents() {
-			if(!mRoomInfoModelController.getRoom_equipment().equals("null"))
-				equipmentTextView.setText(mRoomInfoModelController.getRoom_equipment());
+			if(!_mRoomInfoModelController.getRoom_equipment().equals("null"))
+				equipmentTextView.setText(_mRoomInfoModelController.getRoom_equipment());
 			else
 				equipmentTextView.setText("-");
 		}
@@ -1264,11 +1276,11 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private TableLayout serviceTable;
 		private boolean isComponentVisible = false;
 
-		private Context mContext;
+		private Context _mContext;
 
 		public void setComponents() {
 			if(!isComponentVisible) {
-				JSONArray facilityList = mRoomInfoModelController.getFacility();
+				JSONArray facilityList = _mRoomInfoModelController.getFacility();
 				for (int i = 0; i < facilityList.length(); i++) {
 					try {
 
@@ -1281,7 +1293,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 						for (int j = 0; j < facilityStringList.length; j++) {
 							Log.d(TAG, facilityStringList[j]);
 
-							TableRow facilityTableRow = new TableRow(mContext);
+							TableRow facilityTableRow = new TableRow(_mContext);
 							facilityTableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 
 							for(int k = 0; k < 2; k++) {
@@ -1289,7 +1301,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 								TableRow.LayoutParams params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT);
 
 								if(k == 0) {
-									params.setMargins(0, 0, convertDpToPx(8, mContext), 0);
+									params.setMargins(0, 0, convertDpToPx(8, _mContext), 0);
 									facilityCell.setLayoutParams(params);
 								} else {
 									facilityCell.setLayoutParams(params);
@@ -1314,7 +1326,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 					}
 				}
 
-				JSONArray serviceList = mRoomInfoModelController.getService();
+				JSONArray serviceList = _mRoomInfoModelController.getService();
 				for (int i = 0; i < serviceList.length(); i++) {
 					try {
 						JSONObject serviceObject = serviceList.getJSONObject(i);
@@ -1326,7 +1338,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 						for (int j = 0; j < serviceStringList.length; j++) {
 							Log.d(TAG, serviceStringList[j]);
 
-							TableRow serviceTableRow = new TableRow(mContext);
+							TableRow serviceTableRow = new TableRow(_mContext);
 							serviceTableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT));
 
 							for(int k = 0; k < 2; k++) {
@@ -1334,7 +1346,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 								TableRow.LayoutParams params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT);
 
 								if(k == 0) {
-									params.setMargins(0, 0, convertDpToPx(8, mContext), 0);
+									params.setMargins(0, 0, convertDpToPx(8, _mContext), 0);
 									serviceCell.setLayoutParams(params);
 								} else {
 									serviceCell.setLayoutParams(params);
@@ -1365,11 +1377,11 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		}
 
 		private TextView createCell() {
-			TextView cell = new TextView(mContext);
+			TextView cell = new TextView(_mContext);
 			cell.setGravity(Gravity.LEFT);
-			cell.setPadding(0, (int) mContext.getResources().getDimension(R.dimen.cell_vertical_padding), 0, (int) mContext.getResources().getDimension(R.dimen.cell_vertical_padding));
+			cell.setPadding(0, (int) _mContext.getResources().getDimension(R.dimen.cell_vertical_padding), 0, (int) _mContext.getResources().getDimension(R.dimen.cell_vertical_padding));
 			cell.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT));
-			cell.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			cell.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			cell.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
 			return cell;
 		}
@@ -1385,7 +1397,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			serviceTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			serviceTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			serviceTable = (TableLayout) cardView.findViewById(R.id.tableLayout_service);
-			mContext = context;
+			_mContext = context;
 		}
 	}
 
@@ -1398,22 +1410,22 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		private TextView stdRefundTitleTextView;
 		private TableLayout stdRefundTable;
 
-		private Context mContext;
+		private Context _mContext;
 
 		private boolean isComponentsLoaded = false;
 
 		public void setComponents() {
 			if(!isComponentsLoaded) {
-				JSONArray roomUsageCautionList = mRoomInfoModelController.getUsage_caution();
+				JSONArray roomUsageCautionList = _mRoomInfoModelController.getUsage_caution();
 				for (int i = 0; i < roomUsageCautionList.length(); i++) {
 					try {
 						JSONObject roomUsageCautionObject = roomUsageCautionList.getJSONObject(i);
-						TextView roomUsageCautionTextView = new TextView(mContext);
+						TextView roomUsageCautionTextView = new TextView(_mContext);
 						roomUsageCautionTextView.setText("> " + roomUsageCautionObject.optString("pen_usage_caution"));
 						roomUsageCautionTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
 
 						LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-						params.setMargins(0, 0, 0, convertDpToPx(4, mContext));
+						params.setMargins(0, 0, 0, convertDpToPx(4, _mContext));
 
 						roomUsageCautionTextView.setLayoutParams(params);
 						roomUsageLinearLayout.addView(roomUsageCautionTextView);
@@ -1422,16 +1434,16 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 					}
 				}
 
-				JSONArray reservationCautionList = mRoomInfoModelController.getReserve_caution();
+				JSONArray reservationCautionList = _mRoomInfoModelController.getReserve_caution();
 				for (int i = 0; i < reservationCautionList.length(); i++) {
 					try {
 						JSONObject reservationCautionObject = reservationCautionList.getJSONObject(i);
-						TextView reservationCautionTextView = new TextView(mContext);
+						TextView reservationCautionTextView = new TextView(_mContext);
 						reservationCautionTextView.setText("> " + reservationCautionObject.optString("pen_reserve_caution"));
 						reservationCautionTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
 
 						LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-						params.setMargins(0, 0, 0, convertDpToPx(4, mContext));
+						params.setMargins(0, 0, 0, convertDpToPx(4, _mContext));
 
 						reservationCautionTextView.setLayoutParams(params);
 						reservationLinearLayout.addView(reservationCautionTextView);
@@ -1440,12 +1452,12 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 					}
 				}
 
-				JSONArray stdRefundList = mRoomInfoModelController.getRefund_caution();
+				JSONArray stdRefundList = _mRoomInfoModelController.getRefund_caution();
 				for (int i = 0; i < stdRefundList.length(); i++) {
 					try {
 						int rowNum = i + 1;
 
-						TableRow stdRefundTableRow = new TableRow(mContext);
+						TableRow stdRefundTableRow = new TableRow(_mContext);
 						stdRefundTableRow.setId(rowNum); // id is set by the level of the row
 						TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 						stdRefundTableRow.setLayoutParams(params);
@@ -1457,12 +1469,12 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 						for (int j = 0; j < 2; j++) {
 							int colNum = j + 1;
 							int cellNum = rowNum * 10 + colNum;
-							TextView stdRefundCell = new TextView(mContext);
+							TextView stdRefundCell = new TextView(_mContext);
 							stdRefundCell.setId(cellNum);
 							stdRefundCell.setGravity(Gravity.CENTER);
-							stdRefundCell.setPadding(0, (int) mContext.getResources().getDimension(R.dimen.cell_vertical_padding), 0, (int) mContext.getResources().getDimension(R.dimen.cell_vertical_padding));
+							stdRefundCell.setPadding(0, (int) _mContext.getResources().getDimension(R.dimen.cell_vertical_padding), 0, (int) _mContext.getResources().getDimension(R.dimen.cell_vertical_padding));
 							stdRefundCell.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
-							stdRefundCell.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+							stdRefundCell.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 							stdRefundCell.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
 							stdRefundCell.setText(stdRefundStringList[j]);
 							if(j == 0)
@@ -1493,7 +1505,23 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			stdRefundTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			stdRefundTable = (TableLayout) cardView.findViewById(R.id.tableLayout_refund_std);
 
-			mContext = context;
+			_mContext = context;
+		}
+	}
+
+	private static class OtherRoomsCard extends RecyclerView.ViewHolder {
+		public OtherRoomsCard(View cardView, Context context,
+							  final SpecificInfoFragment.OnSpecificInfoFragmentListener onSpecificInfoFragmentListener) {
+			super(cardView);
+			cardView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					onSpecificInfoFragmentListener.onClickSeeOtherRoomsButton(_mRoomInfoModelController.getPen_name());
+				}
+			});
+
+			TextView otherRoomsCardTextView = (TextView) cardView.findViewById(R.id.textview_rooms_other);
+			otherRoomsCardTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 		}
 	}
 

@@ -6,14 +6,15 @@
                                     android:layout_margin="8dp"
                                     android:background="@android:color/white"
                                     android:orientation="horizontal"
-                                    card_view:cardCornerRadius="0dp">
+                                    card_view:cardCornerRadius="0dp"
+                                    android:clickable="true">
 
 
     <LinearLayout
         android:id="@+id/LinearLayout_card_room"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
+        android:clickable="false"
         android:orientation="vertical">
 
         <RelativeLayout

@@ -63,7 +63,7 @@ public class GuideFragment extends Fragment {
 			}
 		});
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 8; i++) {
 			ImageView guideIndicator = new ImageView(getActivity());
 			if (i == 0)
 				guideIndicator.setImageResource(R.drawable.ic_indicator_selected);
@@ -97,12 +97,12 @@ public class GuideFragment extends Fragment {
 					((ImageView) leftPictureIndicator).setImageResource(R.drawable.ic_indicator_not_selected);
 				}
 
-				if (position + 1 < 5) {
+				if (position + 1 < 8) {
 					View leftPictureIndicator = _guideIndicatorLinearLayout.getChildAt(position + 1);
 					((ImageView) leftPictureIndicator).setImageResource(R.drawable.ic_indicator_not_selected);
 				}
 
-				if(position == 4) {
+				if(position == 7) {
 					_closeButton.setVisibility(View.VISIBLE);
 				} else {
 					_closeButton.setVisibility(View.INVISIBLE);
@@ -159,11 +159,14 @@ public class GuideFragment extends Fragment {
 		Context mContext;
 
 		private int[] GuideImages = new int[]{
-				R.drawable.scrn_guide_1,
-				R.drawable.scrn_guide_2,
-				R.drawable.scrn_guide_3,
-				R.drawable.scrn_guide_4,
-				R.drawable.scrn_guide_5
+				R.drawable.scrn_tutorial_1,
+				R.drawable.scrn_tutorial_2,
+				R.drawable.scrn_tutorial_3,
+				R.drawable.scrn_tutorial_4,
+				R.drawable.scrn_tutorial_5,
+				R.drawable.scrn_tutorial_6,
+				R.drawable.scrn_tutorial_7,
+				R.drawable.scrn_tutorial_8
 		};
 
 		public GuideImageAdapter(Context context) {

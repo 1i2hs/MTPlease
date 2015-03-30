@@ -11,18 +11,6 @@
         android:layout_height="match_parent"
         android:background="@color/mtplease_main_background_color">
 
-        <Button
-            android:id="@+id/btn_reconnect_server"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="100dp"
-            android:background="@drawable/shape_button_big"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:text="@string/reconnect_to_server"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"/>
     </FrameLayout>
 
     <RelativeLayout
@@ -55,7 +43,8 @@
             android:orientation="horizontal"
             android:layout_alignParentRight="true"
             android:layout_marginRight="12dp"
-            android:id="@+id/radioGroup_switch_search_mode">
+            android:id="@+id/radioGroup_switch_search_mode"
+            android:visibility="gone">
 
             <RadioButton
                 android:id="@+id/radioButton_search_mode_conditional"
@@ -145,13 +134,12 @@
     </RelativeLayout>
 
     <FrameLayout
-        android:id="@+id/background_loading"
+        android:id="@+id/framelayout_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/black"
         android:focusable="true"
-        android:focusableInTouchMode="true"
-        >
+        android:focusableInTouchMode="true">
 
         <ProgressBar
             android:id="@+id/progressBar_condition_search"
@@ -163,11 +151,10 @@
     </FrameLayout>
 
     <RelativeLayout
-        android:id="@+id/screen_splash"
+        android:id="@+id/relativelayout_splash"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/mtplease_main_background_color"
-        >
+        android:background="@color/mtplease_main_background_color">
 
         <ImageView
             android:id="@+id/imageView_text_top"
@@ -201,9 +188,10 @@
         android:id="@+id/toolbar_main"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/mtplease_actionbar_color"
+        android:background="@color/mtplease_color_primary"
         android:minHeight="?android:attr/actionBarSize"
         app:contentInsetEnd="0dp"
-        app:contentInsetStart="0dp"/>
+        app:contentInsetStart="0dp"
+        android:elevation="4dp"/>
 
 </RelativeLayout>
