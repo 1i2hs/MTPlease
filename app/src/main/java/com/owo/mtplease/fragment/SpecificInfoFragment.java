@@ -1,10 +1,11 @@
 package com.owo.mtplease.fragment;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -14,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -141,34 +144,35 @@ public class SpecificInfoFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				if(!_isActionButtonClicked) {
-					v.animate().rotation(90.0F);
+					ObjectAnimator.ofFloat(v, "rotation", 0.0F, 90.0F).start();
 					_grayFrameLayout.setVisibility(View.VISIBLE);
 					_grayFrameLayout.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							_actionButton.animate().rotation(360.0F);
+							ObjectAnimator.ofFloat(v, "rotation", 90.0F, 0.0F).start();
 							_grayFrameLayout.setVisibility(View.GONE);
 							_grayFrameLayout.setOnClickListener(null);
-							_animateActionButtons(0.0F, _convertDpToPx(80, v.getContext()), 0.1F, 0.1F);
+							_animateActionButtons(0.0F, _convertDpToPx(160, v.getContext()), 0.1F, 0.1F);
 							_isActionButtonClicked = false;
 						}
 					});
-					_animateActionButtons(1.0F, -_convertDpToPx(80, v.getContext()), 1.0F, 1.0F);
+					_animateActionButtons(1.0F, _convertDpToPx(160, v.getContext()), 1.0F, 1.0F);
 					_isActionButtonClicked = true;
 				} else {
-					v.animate().rotation(360.0F);
+					ObjectAnimator.ofFloat(v, "rotation", 90.0F, 0.0F).start();
 					_grayFrameLayout.setVisibility(View.GONE);
 					_grayFrameLayout.setOnClickListener(null);
-					_animateActionButtons(0.0F, _convertDpToPx(80, v.getContext()), 0.1F, 0.1F);
+					_animateActionButtons(0.0F, _convertDpToPx(160, v.getContext()), 0.1F, 0.1F);
 					_isActionButtonClicked = false;
 				}
 			}
 		});
 
 		_otherRoomsButton = (ImageView) specificInfoView.findViewById(R.id.imageView_btn_other_rooms);
-		_otherRoomsButton.setScaleX(0.1F);
-		_otherRoomsButton.setScaleY(0.1F);
+		/*_otherRoomsButton.setScaleX(0.1F);
+		_otherRoomsButton.setScaleY(0.1F);*/
 		_otherRoomsButton.setAlpha(0.0F);
+		_otherRoomsButton.setTranslationX(2 * _convertDpToPx(80, getActivity()));
 		_otherRoomsButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -214,26 +218,28 @@ public class SpecificInfoFragment extends Fragment {
 	}
 
 	private void _animateActionButtons(final float alpha, final int translation, final float scaleX, final float scaleY) {
+		AccelerateDecelerateInterpolator accelerateDecelerateInterpolator = new AccelerateDecelerateInterpolator();
+		BounceInterpolator bounceInterpolator = new BounceInterpolator();
+		AnimatorSet animatorSet = new AnimatorSet();
+
 		if(!_isActionButtonClicked) {
-			_otherRoomsButton.animate().scaleX(scaleX);
-			_otherRoomsButton.animate().scaleY(scaleY);
-			_otherRoomsButton.animate().alpha(alpha);
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					_otherRoomsButton.animate().translationXBy(translation);
-				}
-			}, 200);
+			ObjectAnimator otherRoomsAnimatorAlpha = ObjectAnimator.ofFloat(_otherRoomsButton, "alpha", 0.0F, alpha);
+			otherRoomsAnimatorAlpha.setInterpolator(accelerateDecelerateInterpolator);
+			otherRoomsAnimatorAlpha.setDuration(500);
+			ObjectAnimator otherRoomsAnimatorTranslationX = ObjectAnimator.ofFloat(_otherRoomsButton, "translationX", translation, 0.0F);
+			otherRoomsAnimatorTranslationX.setInterpolator(bounceInterpolator);
+			otherRoomsAnimatorTranslationX.setDuration(500);
+			animatorSet.play(otherRoomsAnimatorAlpha).with(otherRoomsAnimatorTranslationX);
+			animatorSet.start();
 		} else {
-			_otherRoomsButton.animate().translationXBy(translation);
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					_otherRoomsButton.animate().scaleX(scaleX);
-					_otherRoomsButton.animate().scaleY(scaleY);
-					_otherRoomsButton.animate().alpha(alpha);
-				}
-			}, 200);
+			ObjectAnimator otherRoomsAnimatorAlpha = ObjectAnimator.ofFloat(_otherRoomsButton, "alpha", 1.0F, alpha);
+			otherRoomsAnimatorAlpha.setInterpolator(accelerateDecelerateInterpolator);
+			otherRoomsAnimatorAlpha.setDuration(200);
+			ObjectAnimator otherRoomsAnimatorTranslationX = ObjectAnimator.ofFloat(_otherRoomsButton, "translationX", 0.0F, translation);
+			otherRoomsAnimatorTranslationX.setInterpolator(bounceInterpolator);
+			otherRoomsAnimatorTranslationX.setDuration(600);
+			animatorSet.play(otherRoomsAnimatorAlpha).with(otherRoomsAnimatorTranslationX);
+			animatorSet.start();
 		}
 	}
 

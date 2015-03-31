@@ -322,6 +322,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 				final int numPicture = _mRoomInfoModelController.getNum_images();
 				roomImageCarouselAdapter = new PictureCarouselAdapter(_mContext, numPicture);
 				roomImageViewPager.setAdapter(roomImageCarouselAdapter);
+				roomImageViewPager.setOffscreenPageLimit(3);
 				roomImageViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 					@Override
 					public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -1548,5 +1549,4 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		int px = (int)(dp * screenDensity);
 		return px;
 	}
-
 }

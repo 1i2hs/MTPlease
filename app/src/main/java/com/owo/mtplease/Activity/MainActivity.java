@@ -159,9 +159,11 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	// User Interface Views
 	private RelativeLayout _splashScreenLayout;
-	private ActionBar _mActionBar;
+	private Toolbar _toolbar;
+	private ActionBar _actionBar;
 	private TextView _actionBarTitleTextView;
 	private TextView _actionBarSubtitleTextView;
+	private LinearLayout _actionBarQueryHeaderLinearLayout;
 	private ImageButton _actionBarMenuButton;
 	private SlidingMenu _doubleSideSlidingMenu;
 
@@ -292,8 +294,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
-		setSupportActionBar(toolbar);
+		_toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+		setSupportActionBar(_toolbar);
 
 		if (savedInstanceState == null) {
 
@@ -351,12 +353,12 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			ServerCommunicationManager.getInstance(this).initImageLoader("cache", 1024 * 1024 * 20, Bitmap.CompressFormat.JPEG, 100);
 			// end of the setting
 
-			_loadTimelineFragment(null);
-			_toggleMenuButton(R.id.layout_btn_home);
-
 			// check version of the application
 			_checkApplicationVersion();
 			// end of checking
+
+			_loadTimelineFragment(null);
+			_toggleMenuButton(R.id.layout_btn_home);
 		}
 	}
 
@@ -374,9 +376,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		if(_pageStateStack == null) {
 			_pageStateStack = new LinkedList();
 		}
-		if(_loadingBackground.getAlpha() == 100) {
-			_loadingBackground.setAlpha(0);
-		}
+
+		_loadingBackground.setAlpha(0);
 	}
 
 	private void _setSplashScreen() {
@@ -385,9 +386,9 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	private void _setActionBar() {
 
-		_mActionBar = getSupportActionBar();
+		_actionBar = getSupportActionBar();
 
-		_mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+		_actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 
 		View actionBarView = getLayoutInflater().inflate(R.layout.actionbar, null);
 
@@ -398,7 +399,9 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		_actionBarSubtitleTextView = (TextView) actionBarView.findViewById(R.id.textView_subtitle_actionBar);
 		_actionBarSubtitleTextView.setTypeface(_mTypeface);
 
-		_mActionBar.setCustomView(actionBarView);
+		_actionBarQueryHeaderLinearLayout = (LinearLayout) actionBarView.findViewById(R.id.linearLayout_query);
+
+		_actionBar.setCustomView(actionBarView);
 
 		_changeActionBarStyle(getResources().getColor(R.color.mtplease_color_primary), getResources().getString(R.string.actionbar_title), null);
 
@@ -410,7 +413,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			}
 		});
 
-		_mActionBar.hide();
+		_actionBar.hide();
 	}
 
 	/*private void _switchSearchMode() {
@@ -1031,7 +1034,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			@Override
 			public void onResponse(JSONObject response) {
 				_splashScreenLayout.setVisibility(View.GONE);
-				_mActionBar.show();
+				_actionBar.show();
 
 				endLoadingProgress();
 				// create the _timelineFragment with the Interface ScrollTabHolder
@@ -1056,7 +1059,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				_splashScreenLayout.setVisibility(View.GONE);
-				_mActionBar.show();
+				_actionBar.show();
 
 				_subTabLinearLayout.setVisibility(View.INVISIBLE);
 				_roomCountText.setVisibility(View.VISIBLE);
@@ -1080,7 +1083,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			public void onResponse(JSONObject response) {
 				if(_isApplicationOnCreateState) {
 					_splashScreenLayout.setVisibility(View.GONE);
-					_mActionBar.show();
+					_actionBar.show();
 				}
 
 				if(swipeRefreshLayout != null)
@@ -1129,7 +1132,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			public void onErrorResponse(VolleyError error) {
 				if(_isApplicationOnCreateState) {
 					_splashScreenLayout.setVisibility(View.GONE);
-					_mActionBar.show();
+					_actionBar.show();
 					_isApplicationOnCreateState = false;
 				}
 				_subTabLinearLayout.setVisibility(View.INVISIBLE);
@@ -1546,6 +1549,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 		_mHeader.setTranslationY(Math.max(-scrollY, _minHeaderTranslation));
 
+		_actionBarQueryHeaderLinearLayout.setTranslationY(Math.max(-scrollY, _minHeaderTranslation));
+
 		float ratio = clamp(_mHeader.getTranslationY() / _minHeaderTranslation, 0.0F, 1.0F);
 
 		return clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F);
@@ -1574,18 +1579,18 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		switch (visibleFragment) {
 			case TIMELINE_FRAGMENT_VISIBLE:
 				_spannableStringAppTitle.setSpan(_alphaForegroundColorSpan, 0, _spannableStringAppTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				//_mActionBar.setTitle(_spannableStringAppTitle);
+				//_actionBar.setTitle(_spannableStringAppTitle);
 				break;
 			case RESULT_FRAGMENT_VISIBLE:
 				break;
 			case SPECIFIC_INFO_FRAGMENT_VISIBLE:
 				/*_spannableStringVariable = new SpannableString(getSupportActionBar().getTitle());
 				_spannableStringVariable.setSpan(_alphaForegroundColorSpan, 0, _spannableStringVariable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				_mActionBar.setTitle(_spannableStringVariable);
+				_actionBar.setTitle(_spannableStringVariable);
 				_spannableStringVariable = null;
 				_spannableStringVariable = new SpannableString(getSupportActionBar().getSubtitle());
 				_spannableStringVariable.setSpan(_alphaForegroundColorSpan, 0, _spannableStringVariable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				_mActionBar.setSubtitle(_spannableStringVariable);*/
+				_actionBar.setSubtitle(_spannableStringVariable);*/
 				break;
 			case SHOPPINGITEMLIST_FRAGMENT_VISIBLE:
 				break;
@@ -1915,11 +1920,11 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	}
 
 	private void _changeActionBarStyle(int color, String titleText, String subtitleText) {
-		_actionBarBackgroundColor = new ColorDrawable(color);
-		_mActionBar.setBackgroundDrawable(_actionBarBackgroundColor);
+		/*_actionBarBackgroundColor = new ColorDrawable(color);
+		_actionBar.setBackgroundDrawable(_actionBarBackgroundColor);*/
 
-		//_mActionBar.setTitle(titleText);
-		//_mActionBar.setSubtitle(subtitleText);
+		//_actionBar.setTitle(titleText);
+		//_actionBar.setSubtitle(subtitleText);
 		_setActionBarTitle(titleText, subtitleText);
 	}
 
@@ -2465,7 +2470,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	@Override
 	public void onCreateVersionCheckFragmentView() {
-		_mActionBar.hide();
+		_actionBar.hide();
+		_mHeader.setVisibility(View.GONE);
 		_currentPage = _pageStateStack.peekFirst();
 	}
 
@@ -2475,13 +2481,14 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			_pageStateStack.pop();
 			_restorePreviousPageState();
 		}
-		_mActionBar.show();
+		_actionBar.show();
+		_mHeader.setVisibility(View.VISIBLE);
 		_isBackButtonPressed = false;
 	}
 
 	@Override
 	public void onCreateGuideFragmentView() {
-		_mActionBar.hide();
+		_actionBar.hide();
 		_mHeader.setVisibility(View.GONE);
 		_currentPage = _pageStateStack.peekFirst();
 	}
@@ -2498,7 +2505,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			_pageStateStack.pop();
 			_restorePreviousPageState();
 		}
-		_mActionBar.show();
+		_actionBar.show();
 		_mHeader.setVisibility(View.VISIBLE);
 		_isBackButtonPressed = false;
 	}
@@ -2595,7 +2602,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			switch (_currentPage) {
 				case TIMELINE_PAGE_STATE:
 					if(!_searchTurtorialPopped) {
-						_mActionBar.hide();
+						_actionBar.hide();
 						_splashScreenLayout.setBackgroundResource(R.drawable.scrn_tutorial_2);
 						_splashScreenLayout.setOnClickListener(new View.OnClickListener() {
 							@Override
@@ -2610,7 +2617,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 											public void onClick(View v) {
 												v.setVisibility(View.GONE);
 												v.setOnClickListener(null);
-												_mActionBar.show();
+												_actionBar.show();
 												_doubleSideSlidingMenu.toggle(true);
 											}
 										});
@@ -2644,14 +2651,14 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	}
 
 	private void _setTutorial(int resid) {
-		_mActionBar.hide();
+		_actionBar.hide();
 		_splashScreenLayout.setBackgroundResource(resid);
 		_splashScreenLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				v.setVisibility(View.GONE);
 				v.setOnClickListener(null);
-				_mActionBar.show();
+				_actionBar.show();
 			}
 		});
 	}

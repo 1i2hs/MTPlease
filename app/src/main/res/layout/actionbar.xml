@@ -3,30 +3,81 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayout_actionbar"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/linearLayout_query"
+        android:background="@color/mtplease_color_primary">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/textView"/>
+
+            <EditText
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/textView3"/>
+
+            <EditText
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText2"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="?android:attr/actionBarSize"
+        android:id="@+id/relativeLayout_actionbar"
+        android:background="@color/mtplease_color_primary">
 
         <ImageView
             android:id="@+id/imageView_icon_drawer"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
             android:clickable="true"
             android:src="@drawable/ic_drawer"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="16dp"/>
+            android:layout_marginLeft="16dp"
+            android:layout_centerVertical="true"/>
 
         <LinearLayout
             android:id="@+id/layout_title_actionbar"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_centerInParent="true">
 
             <TextView
                 android:id="@+id/textView_title_actionBar"
@@ -47,6 +98,17 @@
         </LinearLayout>
 
     </RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView2"
+        android:layout_marginTop="88dp"
+        android:src="@drawable/ic_app_title"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="false"
+        android:layout_marginRight="40dp"
+        android:visibility="gone"/>
 
 </RelativeLayout>
 

@@ -81,6 +81,7 @@ public class GuideFragment extends Fragment {
 		_guideImageViewPager = (ViewPager) guideFragmentView.findViewById(R.id.viewpager_image_guide);
 		_mGuideImageAdapter = new GuideImageAdapter(getActivity());
 		_guideImageViewPager.setAdapter(_mGuideImageAdapter);
+		_guideImageViewPager.setOffscreenPageLimit(3);
 		_guideImageViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override
 			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

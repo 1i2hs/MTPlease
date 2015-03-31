@@ -139,7 +139,8 @@
         android:layout_height="match_parent"
         android:background="@android:color/black"
         android:focusable="true"
-        android:focusableInTouchMode="true">
+        android:focusableInTouchMode="true"
+        >
 
         <ProgressBar
             android:id="@+id/progressBar_condition_search"
@@ -154,7 +155,8 @@
         android:id="@+id/relativelayout_splash"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/mtplease_main_background_color">
+        android:background="@color/mtplease_main_background_color"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/imageView_text_top"
@@ -187,11 +189,11 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_main"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/mtplease_color_primary"
+        android:layout_height="wrap_content"
         android:minHeight="?android:attr/actionBarSize"
         app:contentInsetEnd="0dp"
         app:contentInsetStart="0dp"
-        android:elevation="4dp"/>
+        android:elevation="4dp"
+        />
 
 </RelativeLayout>
