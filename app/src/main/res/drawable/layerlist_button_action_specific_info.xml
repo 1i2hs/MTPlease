@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/ic_action_specific_info_page_background"
+        android:id="@+id/background_btn_action_info_specific"/>
+
+    <item
+        android:drawable="@drawable/ic_action_specific_info_page"
+        android:id="@+id/btn_action_info_specific"/>
+
+</layer-list>

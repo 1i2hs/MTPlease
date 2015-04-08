@@ -11,10 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.owo.mtplease.Activity.MainActivity;
 import com.owo.mtplease.R;
 import com.owo.mtplease.ScrollTabHolder;
 import com.owo.mtplease.ShoppingItemListRecyclerViewAdapter;
+import com.owo.mtplease.activity.MainActivity;
 
 ;
 

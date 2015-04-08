@@ -16,6 +16,9 @@ public class QueryDataModelController {
 	private int _region;
 	private String _date;
 	private String _dateWrittenLang;
+	private int _nights;
+	private int _numRooms;
+	private int _numToilets;
 	private int _people;
 
 	private String _keyword;
@@ -64,6 +67,30 @@ public class QueryDataModelController {
 
 	public void setDateWrittenLang(String _dateWrittenLang) {
 		this._dateWrittenLang = _dateWrittenLang;
+	}
+
+	public int get_nights() {
+		return _nights;
+	}
+
+	public void set_nights(int _nights) {
+		this._nights = _nights;
+	}
+
+	public int get_numRooms() {
+		return _numRooms;
+	}
+
+	public void set_numRooms(int _numRooms) {
+		this._numRooms = _numRooms;
+	}
+
+	public int get_numToilets() {
+		return _numToilets;
+	}
+
+	public void set_numToilets(int _numToilets) {
+		this._numToilets = _numToilets;
 	}
 
 	public int getPeople() {

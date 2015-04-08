@@ -53,7 +53,7 @@ MERGED from com.android.support:support-v4:21.0.3:16:5
 		ADDED from AndroidManifest.xml:13:9
 	android:name
 		ADDED from AndroidManifest.xml:11:9
-activity#com.owo.mtplease.Activity.MainActivity
+activity#com.owo.mtplease.activity.MainActivity
 ADDED from AndroidManifest.xml:15:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:18:13
@@ -73,7 +73,7 @@ category#android.intent.category.LAUNCHER
 ADDED from AndroidManifest.xml:23:17
 	android:name
 		ADDED from AndroidManifest.xml:23:27
-activity#com.owo.mtplease.Activity.LoginActivity
+activity#com.owo.mtplease.activity.LoginActivity
 ADDED from AndroidManifest.xml:26:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:29:13
@@ -83,7 +83,7 @@ ADDED from AndroidManifest.xml:26:9
 		ADDED from AndroidManifest.xml:30:13
 	android:name
 		ADDED from AndroidManifest.xml:27:13
-activity#com.owo.mtplease.Activity.SignUpActivity
+activity#com.owo.mtplease.activity.SignUpActivity
 ADDED from AndroidManifest.xml:33:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:36:13

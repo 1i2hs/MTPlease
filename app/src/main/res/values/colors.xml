@@ -2,10 +2,12 @@
 <resources>
     <color name="mtplease_color_primary">#05BAD8</color>
     <color name="mtplease_color_primary_dark">#0097A7</color>
+    <color name="mtplease_color_primary_light">#00BCD4</color>
     <color name="mtplease_main_background_color">#F2F2F2</color>
     <color name="mtplease_subtab_background_color">#FFFF64</color>
     <color name="mtplease_main_button_color">#05BAD8</color>
     <color name="mtplease_main_text_color">#707070</color>
+    <color name="mtplease_text_color_white_primary_light">#C8e1e1e1</color>
     <color name="mtplease_table_cell_color">#FFEDC0</color>
     <color name="mtplease_date_select_button_color">#FFFCA1</color>
     <color name="kakao_button_color">#FFE600</color>

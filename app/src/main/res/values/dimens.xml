@@ -5,9 +5,15 @@
 
     <dimen name="cardView_padding">16dp</dimen>
 
-    <dimen name="header_height">220dp</dimen>
-    <dimen name="max_header_height">290dp</dimen>
-    <dimen name="recyclerview_placeholder_height">290dp</dimen>
+    <dimen name="min_actionbar_height">56dp</dimen>
+    <dimen name="query_view_height">294dp</dimen>
+    <dimen name="max_query_view_height">294dp</dimen>
+    <dimen name="query_input_layout_height">270dp</dimen>
+    <dimen name="query_btns_layout_height">294dp</dimen>
+    <dimen name="additional_query_layout_height">384dp</dimen>
+
+    <dimen name="recyclerview_placeholder_height">272dp</dimen>
+
     <dimen name="query_status_bar_height">40dp</dimen>
     <dimen name="header_toggle_button_height">30dp</dimen>
 
@@ -15,4 +21,6 @@
     <dimen name="slidingmenu_offset">80dp</dimen>
 
     <dimen name="cell_vertical_padding">8dp</dimen>
+
+    <dimen name="dialog_height">400dp</dimen>
 </resources>

@@ -65,7 +65,6 @@ public class ChangeItemNumberInPlanDialogFragment extends DialogFragment {
 	 * @param _itemCountUnit Count of the item
 	 * @return A new instance of fragment ChangeItemCountInPlanDialogFragment.
 	 */
-	// TODO: Rename and change types and number of parameters
 	public static ChangeItemNumberInPlanDialogFragment newInstance(int _itemType, String _itemName, String _itemUnit, int _itemUnitPrice,
 																   int _itemCount, String _itemCountUnit) {
 		ChangeItemNumberInPlanDialogFragment fragment = new ChangeItemNumberInPlanDialogFragment();

@@ -4,22 +4,20 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.owo.mtplease.Activity.MainActivity;
 import com.owo.mtplease.R;
 import com.owo.mtplease.RoomInfoModelController;
 import com.owo.mtplease.RoomListRecyclerViewAdapter;
 import com.owo.mtplease.ScrollTabHolder;
+import com.owo.mtplease.activity.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,12 +42,7 @@ public class ResultFragment extends Fragment {
 	private LinearLayoutManager _mLayoutManager;
 	// End of User Interface Views
 
-	// Controller: Adapters for User Interface Views
-	private RecyclerView.Adapter _mAdapter;
-	// End of Controller;
-
 	// Model: Data variables for User Interface Views
-	private String _jsonStringRoomList;
 	private JSONArray _roomArray;
 	private String _mtDate;
 	private int _listType;
@@ -61,11 +54,11 @@ public class ResultFragment extends Fragment {
 
 	// Listeners
 	private OnResultFragmentListener _mOnResultFragmentListener;
-	protected ScrollTabHolder mScrollTabHolder;
+	protected ScrollTabHolder _mScrollTabHolder;
 	// End of the Listeners
 
 	// Others
-	private ActionBarActivity _actionBarActivity;
+	private Activity _mActivity;
 	//private FragmentManager mFragmentManager;
 	// End of the Others
 
@@ -100,9 +93,9 @@ public class ResultFragment extends Fragment {
 		_mRecyclerView.setHasFixedSize(true);
 		_mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-		_mAdapter = new RoomListRecyclerViewAdapter(getActivity(),
+		RecyclerView.Adapter adapter = new RoomListRecyclerViewAdapter(getActivity(),
 				_roomArray, _mtDate, _mOnResultFragmentListener, _listType);
-		_mRecyclerView.setAdapter(_mAdapter);
+		_mRecyclerView.setAdapter(adapter);
 
 		_mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -114,8 +107,8 @@ public class ResultFragment extends Fragment {
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
-				if(mScrollTabHolder != null) {
-					mScrollTabHolder.onScroll(recyclerView, _mLayoutManager.findFirstVisibleItemPosition(), 0, MainActivity.RESULT_FRAGMENT_VISIBLE);
+				if(_mScrollTabHolder != null) {
+					_mScrollTabHolder.onScroll(recyclerView, _mLayoutManager.findFirstVisibleItemPosition(), 0, MainActivity.RESULT_FRAGMENT_VISIBLE);
 				}
 			}
 		});
@@ -128,13 +121,13 @@ public class ResultFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			_jsonStringRoomList = getArguments().getString(ARG_JSONSTRING_OF_ROOMS);
+			String jsonStringRoomList = getArguments().getString(ARG_JSONSTRING_OF_ROOMS);
 			_mtDate = getArguments().getString(ARG_DATE_OF_MT);
 			_listType = getArguments().getInt(ARG_TYPE_OF_LIST);
-			Log.i(TAG, _jsonStringRoomList);
+			Log.i(TAG, jsonStringRoomList);
 
 			try {
-				JSONObject roomObject = new JSONObject(_jsonStringRoomList);
+				JSONObject roomObject = new JSONObject(jsonStringRoomList);
 				_roomArray = new JSONArray(roomObject.getString("roomResultList"));
 			} catch(JSONException e) {
 				Toast.makeText(getActivity(), R.string.fail_loading_room_results, Toast.LENGTH_SHORT).show();
@@ -154,6 +147,9 @@ public class ResultFragment extends Fragment {
 		if(_mOnResultFragmentListener != null && _roomArray != null)
 			_mOnResultFragmentListener.onCreateResultFragmentView(_roomArray.length(), _listType);
 
+		if(_mScrollTabHolder == null)
+			_mScrollTabHolder = (ScrollTabHolder) _mActivity;
+
 		return resultView;
 	}
 
@@ -168,8 +164,8 @@ public class ResultFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			_actionBarActivity = (ActionBarActivity) activity;
-			mScrollTabHolder = (ScrollTabHolder) activity;
+			_mActivity =  activity;
+			_mScrollTabHolder = (ScrollTabHolder) activity;
 			_mOnResultFragmentListener = (OnResultFragmentListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
@@ -180,14 +176,14 @@ public class ResultFragment extends Fragment {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-//		Log.d(TAG, "ResultFragmentView detached");
+		Log.d(TAG, "ResultFragmentView detached");
 		_mOnResultFragmentListener = null;
 	}
 
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-//		Log.d(TAG, "ResultFragmentView destroyed");
+		_mScrollTabHolder = null;
 		_mOnResultFragmentListener.onDestroyResultFragmentView();
 	}
 
@@ -198,47 +194,5 @@ public class ResultFragment extends Fragment {
 		public void onPostLoadSpecificInfoFragment();
 		public void onDestroyResultFragmentView();
 		public void onResumeResultFragmentView(LinearLayoutManager linearLayoutManager, int defaultPosition);
-	}
-
-	@Override
-	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		Log.d(TAG, "onActivityCreated");
-	}
-
-	@Override
-	public void onHiddenChanged(boolean hidden) {
-		super.onHiddenChanged(hidden);
-		Log.d(TAG, "onHiddenChanged");
-	}
-
-	@Override
-	public void onInflate(Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
-		super.onInflate(activity, attrs, savedInstanceState);
-		Log.d(TAG, "onInflate");
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		Log.d(TAG, "onPause");
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		Log.d(TAG, "onStart");
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		Log.d(TAG, "onStop");
-	}
-
-	@Override
-	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-		super.onViewStateRestored(savedInstanceState);
-		Log.d(TAG, "onViewStateRestored");
 	}
 }

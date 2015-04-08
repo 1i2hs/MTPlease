@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:color="@android:color/white" android:state_selected="true"/>
+    <item android:color="@android:color/white" android:state_pressed="true"/>
+    <item app:state_current_month="false" android:color="@android:color/darker_gray"/>
+    <item app:state_today="true" android:color="@android:color/white"/>
+    <item app:state_selectable="false" android:color="@android:color/darker_gray"/>
+    <item app:state_selectable="true" android:color="@android:color/black"/>
+<!--    <item android:color="@color/custom_background_today"/>-->
+
+</selector>

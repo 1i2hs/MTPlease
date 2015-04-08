@@ -16,19 +16,19 @@ import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.owo.mtplease.Activity.MainActivity;
 import com.owo.mtplease.Analytics;
+import com.owo.mtplease.HomePostListRecyclerViewAdapter;
 import com.owo.mtplease.R;
 import com.owo.mtplease.ScrollTabHolder;
-import com.owo.mtplease.TimelinePostListRecyclerViewAdapter;
+import com.owo.mtplease.activity.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class TimelineFragment extends Fragment {
+public class HomeFragment extends Fragment {
 
-	private static final String TAG = "TimelineFragment";
+	private static final String TAG = "HomeFragment";
 
 	private static final String ARG_JSONSTRING_POST_LIST = "param1";
 
@@ -38,35 +38,33 @@ public class TimelineFragment extends Fragment {
 	private SwipeRefreshLayout _mSwipeRefreshLayout;
 	// End of User Interface Views
 
-	// Controller: Adapters for User Interface Views
-	private TimelinePostListRecyclerViewAdapter _mAdapter;
-	// End of User Interface Views;
-
 	// Model: Data variables for User Interface Views
-	private String _jsonStringPostList;
 	private JSONObject _postObject;
 	private JSONArray _postArray;
 
 	// Listeners
-	private OnTimelineFragmentListener _mTimelineFragmentListener;
+	private OnHomeFragmentListener _mHomeFragmentListener;
 	protected ScrollTabHolder _mScrollTabHolder;
+
+	// others
+	private Activity _mActivity;
 
 	/**
 	 * Use this factory method to create a new instance of
 	 * this fragment using the provided parameters.
 	 *
 	 * @param jsonString Parameter 1.
-	 * @return A new instance of fragment TimelineFragement.
+	 * @return A new instance of fragment HomeFragement.
 	 */
-	public static TimelineFragment newInstance(String jsonString) {
-		TimelineFragment fragment = new TimelineFragment();
+	public static HomeFragment newInstance(String jsonString) {
+		HomeFragment fragment = new HomeFragment();
 		Bundle args = new Bundle();
 		args.putString(ARG_JSONSTRING_POST_LIST, jsonString);
 		fragment.setArguments(args);
 		return fragment;
 	}
 
-	public TimelineFragment() {
+	public HomeFragment() {
 		// Required empty public constructor
 	}
 
@@ -77,8 +75,8 @@ public class TimelineFragment extends Fragment {
 		_mRecyclerView.setHasFixedSize(true);
 		_mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-		_mAdapter = new TimelinePostListRecyclerViewAdapter(getActivity(), _postArray);
-		_mRecyclerView.setAdapter(_mAdapter);
+		HomePostListRecyclerViewAdapter adapter = new HomePostListRecyclerViewAdapter(getActivity(), _postArray);
+		_mRecyclerView.setAdapter(adapter);
 		_mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
 			@Override
@@ -90,17 +88,17 @@ public class TimelineFragment extends Fragment {
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
 				if (_mScrollTabHolder != null)
-					_mScrollTabHolder.onScroll(recyclerView, _mLayoutManager.findFirstVisibleItemPosition(), 0, MainActivity.TIMELINE_FRAGMENT_VISIBLE);
+					_mScrollTabHolder.onScroll(recyclerView, _mLayoutManager.findFirstVisibleItemPosition(), 0, MainActivity.HOME_FRAGMENT_VISIBLE);
 			}
 		});
 
 
-		_mSwipeRefreshLayout.setProgressViewOffset(false, _convertDpToPx(220, getActivity()), _convertDpToPx(290, getActivity()));
+		_mSwipeRefreshLayout.setProgressViewOffset(false, _convertDpToPx(260, getActivity()), _convertDpToPx(280, getActivity()));
 		_mSwipeRefreshLayout.setColorSchemeResources(R.color.mtplease_color_primary, R.color.mtplease_date_select_button_color, R.color.mtplease_call_subbutton_color);
 		_mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				_mTimelineFragmentListener.onRefreshTimelineFragment(_mSwipeRefreshLayout);
+				_mHomeFragmentListener.onRefreshHomeFragment(_mSwipeRefreshLayout);
 			}
 		});
 
@@ -111,12 +109,13 @@ public class TimelineFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			_jsonStringPostList = getArguments().getString(ARG_JSONSTRING_POST_LIST);
-			Log.i(TAG, _jsonStringPostList + "");
+			String jsonStringPostList = getArguments().getString(ARG_JSONSTRING_POST_LIST);
+			Log.i(TAG, jsonStringPostList + "");
 
 			try {
-				_postObject = new JSONObject(_jsonStringPostList);
+				_postObject = new JSONObject(jsonStringPostList);
 				_postArray = new JSONArray(_postObject.getString("timeline"));
+				Log.d(TAG, "Latest Application Version: " + _postObject.optInt("version"));
 			} catch(Exception e) {
 				Toast.makeText(getActivity(), R.string.notify_fail_loading_timeline, Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
@@ -128,24 +127,27 @@ public class TimelineFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		Log.d(TAG, "TimelineFragmentView created");
-		View timelineView = inflater.inflate(R.layout.fragment_timeline, container, false);
-		_mRecyclerView = (RecyclerView) timelineView.findViewById(R.id.list_timeline);
+		Log.d(TAG, "HomeFragmentView created");
+		View HomeView = inflater.inflate(R.layout.fragment_home, container, false);
+		_mRecyclerView = (RecyclerView) HomeView.findViewById(R.id.list_home);
 
-		_mSwipeRefreshLayout = (SwipeRefreshLayout) timelineView.findViewById(R.id.swiperefreshlayout_timeline);
+		_mSwipeRefreshLayout = (SwipeRefreshLayout) HomeView.findViewById(R.id.swiperefreshlayout_home);
 
-		if(_mTimelineFragmentListener != null) {
+		if(_mHomeFragmentListener != null) {
 			try {
 				if(_postObject != null)
-					_mTimelineFragmentListener.onCreateTimelineFragmentView(_postObject.getString("roomCount"));
+					_mHomeFragmentListener.onCreateHomeFragmentView(_postObject.getString("roomCount"));
 				else
-					_mTimelineFragmentListener.onCreateTimelineFragmentView("0");
+					_mHomeFragmentListener.onCreateHomeFragmentView("0");
 			} catch(JSONException e) {
 				e.printStackTrace();
 			}
 		}
 
-		return timelineView;
+		if(_mScrollTabHolder == null)
+			_mScrollTabHolder = (ScrollTabHolder) _mActivity;
+
+		return HomeView;
 	}
 
 	@Override
@@ -154,10 +156,10 @@ public class TimelineFragment extends Fragment {
 		Log.d(TAG, "onAttach()");
 		try {
 			_mScrollTabHolder = (ScrollTabHolder) activity;
-			_mTimelineFragmentListener = (OnTimelineFragmentListener) activity;
+			_mHomeFragmentListener = (OnHomeFragmentListener) activity;
 
 			Tracker t = ((Analytics) getActivity().getApplication()).getTracker();
-			t.setScreenName("Timeline Page View");
+			t.setScreenName("Home Page View");
 			t.send(new HitBuilders.AppViewBuilder().build());
 
 		} catch (ClassCastException e) {
@@ -176,20 +178,15 @@ public class TimelineFragment extends Fragment {
 	public void onDetach() {
 		super.onDetach();
 		Log.d(TAG, "onDetach()");
-		_mTimelineFragmentListener = null;
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		Log.d(TAG, "onStop");
+		_mHomeFragmentListener = null;
 	}
 
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		Log.d(TAG, "TimelineFragmentView destroyed");
-		_mTimelineFragmentListener.onDestroyTimelineFragmentView();
+		Log.d(TAG, "HomeFragmentView destroyed");
+		_mScrollTabHolder = null;
+		_mHomeFragmentListener.onDestroyHomeFragmentView();
 	}
 
 	private static int _convertDpToPx(int dp, Context context) {
@@ -198,9 +195,10 @@ public class TimelineFragment extends Fragment {
 		return px;
 	}
 
-	public interface OnTimelineFragmentListener {
-		public void onCreateTimelineFragmentView(String roomCount);
-		public void onDestroyTimelineFragmentView();
-		public void onRefreshTimelineFragment(SwipeRefreshLayout swipeRefreshLayout);
+	public interface OnHomeFragmentListener {
+		public void onCreateHomeFragmentView(String roomCount);
+		public void onResumeHomeFragmentView();
+		public void onDestroyHomeFragmentView();
+		public void onRefreshHomeFragment(SwipeRefreshLayout swipeRefreshLayout);
 	}
 }

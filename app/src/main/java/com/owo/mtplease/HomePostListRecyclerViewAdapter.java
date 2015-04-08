@@ -28,7 +28,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by In-Ho on 2015-01-07.
  */
-public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class HomePostListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 	private static final String TAG = "TimelinePostListRecyclerViewAdapter";
 
@@ -41,7 +41,7 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 	private static String imageUrl;
 
-	public TimelinePostListRecyclerViewAdapter(Context context, JSONArray jsonArray) {
+	public HomePostListRecyclerViewAdapter(Context context, JSONArray jsonArray) {
 		mContext = context;
 		postArray = jsonArray;
 
@@ -86,14 +86,14 @@ public class TimelinePostListRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 			if(postArray != null) {
 				itemView = LayoutInflater.from(parent.getContext())
-						.inflate(R.layout.card_timeline, parent, false);
+						.inflate(R.layout.card_home, parent, false);
 				return new PostCard(itemView, mContext);
 			} else {
 				itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_swipe_to_refresh, parent, false);
 				return new SwipeToRefreshCard(itemView);
 			}
 		} else if(viewType == TYPE_TITLE) {
-			View titleView = LayoutInflater.from(parent.getContext()).inflate(R.layout.frame_timeline_title, parent, false);
+			View titleView = LayoutInflater.from(parent.getContext()).inflate(R.layout.frame_home_title, parent, false);
 			return new BlankHeader(titleView);
 		} else if(viewType == TYPE_HEADER) {
 			View headerView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_header_placeholder_large, parent, false);

@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/header_height"
+        android:layout_height="@dimen/query_view_height"
         android:gravity="center"
         android:layout_marginTop="20dp">
 
