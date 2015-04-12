@@ -1,18 +1,19 @@
 package com.owo.mtplease.Activity;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -42,7 +43,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -70,12 +70,13 @@ import com.owo.mtplease.fragment.AddItemToPlanDialogFragment;
 import com.owo.mtplease.fragment.CalendarDialogFragment;
 import com.owo.mtplease.fragment.ChangeItemNumberInPlanDialogFragment;
 import com.owo.mtplease.fragment.GuideFragment;
+import com.owo.mtplease.fragment.HomeFragment;
 import com.owo.mtplease.fragment.MyPageFragment;
 import com.owo.mtplease.fragment.ResultFragment;
+import com.owo.mtplease.fragment.SelectNightsDialogFragment;
 import com.owo.mtplease.fragment.SettingsFragment;
 import com.owo.mtplease.fragment.ShoppingItemListFragment;
 import com.owo.mtplease.fragment.SpecificInfoFragment;
-import com.owo.mtplease.fragment.TimelineFragment;
 import com.owo.mtplease.fragment.UserInfoModificationFragment;
 import com.owo.mtplease.fragment.VersionCheckFragment;
 import com.owo.mtplease.view.TypefaceLoader;
@@ -92,7 +93,7 @@ import notboringactionbar.AlphaForegroundColorSpan;
 
 
 public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
-		TimelineFragment.OnTimelineFragmentListener, ResultFragment.OnResultFragmentListener,
+		HomeFragment.OnHomeFragmentListener, ResultFragment.OnResultFragmentListener,
 		CalendarDialogFragment.OnDateConfirmedListener, SpecificInfoFragment.OnSpecificInfoFragmentListener,
 		AddItemToPlanDialogFragment.OnAddItemToPlanDialogFragmentListener,
 		ShoppingItemListFragment.OnShoppingItemListFragmentListener,
@@ -102,21 +103,22 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		UserInfoModificationFragment.OnUserInfoModificationFragmentListener,
 		VersionCheckFragment.OnVersionCheckFragmentListener,
 		GuideFragment.OnGuideFragmentListener,
-		SettingsFragment.OnSettingsFragmentListener {
+		SettingsFragment.OnSettingsFragmentListener, SelectNightsDialogFragment.OnNightsConfirmedListener {
 
 	// String for application version
 	private static final int APPLICATION_VERSION = 20;
 
 	// Flags and Strings
-	public static final int TIMELINE_FRAGMENT_VISIBLE = 1;
-	public static final int RESULT_FRAGMENT_VISIBLE = 2;
-	public static final int SPECIFIC_INFO_FRAGMENT_VISIBLE = 3;
-	public static final int GUIDE_FRAGMENT_VISIBLE = 4;
-	public static final int VERSION_FRAGMENT_VISIBLE = 5;
-	public static final int SHOPPINGITEMLIST_FRAGMENT_VISIBLE = 4;
+	public static final int HOME_FRAGMENT_VISIBLE = 1;
+	public static final int RESULT_FRAGMENT_VISIBLE_LIST_OF_ROOMS_AFTER_SEARCH = 2;
+	public static final int RESULT_FRAGMENT_VISIBLE_CASE_LIST_OF_ROOMS_OF_PENSION = 3;
+	public static final int SPECIFIC_INFO_FRAGMENT_VISIBLE = 4;
+	public static final int GUIDE_FRAGMENT_VISIBLE = 5;
+	public static final int VERSION_FRAGMENT_VISIBLE = 6;
+	public static final int SHOPPINGITEMLIST_FRAGMENT_VISIBLE = 7;
 	private static final String TAG = "MainActivity";
 
-	public static final int TIMELINE_PAGE_STATE = 1;
+	public static final int HOME_PAGE_STATE = 1;
 	public static final int RESULT_PAGE_STATE = 2;
 	public static final int SPECIFIC_INFO_PAGE_STATE = 3;
 	public static final int GUIDE_PAGE_STATE = 4;
@@ -125,11 +127,9 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	public static final int SETTINGS_PAGE_STATE = 7;
 	public static final int USER_INFO_MODIFICATION_PAGE_STATE = 8;
 
-	private static final int CONDITION_SEARCH_MODE = 1;
+	private static final int CONDITION_SEARCH_MODE = 0;
 	private static final int KEYWORD_SEARCH_MODE = 2;
 	private static final int NETWORK_CONNECTION_FAILED = -1;
-	private static final int TIMELINE = 1;
-	private static final int RESULT = 2;
 	private static final int CALL_FROM_CONDITIONAL_QUERY = 1;
 	private static final int CALL_FROM_PLAN = 2;
 	private static final int CALL_FROM_ADD_ITEM_TO_PLAN_DIALOG = 3;
@@ -151,42 +151,44 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	private SpannableString _spannableStringAppTitle;
 	private SpannableString _spannableStringVariable;
 	private ColorDrawable _actionBarBackgroundColor;
-	private int _minHeaderHeightForTimelineFragment;
-	private int _minHeaderHeightForResultFragment;
-	private int _headerHeight;
-	private int _minHeaderTranslation;
+	private int _minActionBarHeight;
+	private int _maxActionBarHeight;
+	private int _additionalQueryHeight;
+	private int _queryAdditionalQueryHeightDifference;
+	private int _minQueryViewHeightForHomeFragment;
+	private int _minQueryViewHeightForResultFragment;
+	private int _queryViewHeight;
+	private int _minQueryViewTranslation;
 	// End of the Graphical transitions
 
 	// User Interface Views
 	private RelativeLayout _splashScreenLayout;
 	private Toolbar _toolbar;
 	private ActionBar _actionBar;
+	private RelativeLayout _actionBarRelativeLayout;
+	private RelativeLayout _additionalQueryRelativeLayout;
+	private ImageView _openDrawerButton;
 	private TextView _actionBarTitleTextView;
 	private TextView _actionBarSubtitleTextView;
-	private LinearLayout _actionBarQueryHeaderLinearLayout;
+	private ImageView _additionalQueryButton;
+	private ImageView _querySearchButton;
 	private ImageButton _actionBarMenuButton;
 	private SlidingMenu _doubleSideSlidingMenu;
 
-	private RadioGroup _searchModeSwitchRadioGroup;
-	private RadioButton _searchModeConditionalSearchRadioButton;
-	private RadioButton _searchModeKeywordSearchRadioButton;
-
 	private Button _dateSelectButton;
+	private Button _nightSelectButton;
 	private Spinner _regionSelectSpinner;
-	private EditText _numberOfPeopleSelectEditText;
-	private ImageButton _roomSearchButton;
-	private LinearLayout _subTabLinearLayout;
-	private TextView _querySubtabText;
-	private FrameLayout _headerToggleImageViewFrameLayout;
-	private ImageView _headerToggleImageView;
+	private EditText _selectNumberOfPeopleEditText;
+
+	private RadioGroup _selectNumberOfRoomsRadioGroup;
+	private RadioGroup _selectNumberOfToiletsRadioGroup;
 
 	private EditText _keywordInputEditText;
 	private ImageButton _keywordSearchButton;
 
-	private FrameLayout _loadingLayout;
-	private Drawable _loadingBackground;
+	//	private FrameLayout _loadingLayout;
+//	private Drawable _loadingBackground;
 	private ProgressBar _loadingProgressBar;
-	private View _mHeader;
 	private LinearLayout _homeButton;
 	private FrameLayout _homeButtonIndicator;
 	private LinearLayout _compareButton;
@@ -228,7 +230,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	private TextView _totalPlanCost;
 	private TextView _tempItemTotalPricePlanTextView;    // temporary TextView instance
 	private Button _tempNumberPickerCallButton;
-	private Typeface _mTypeface;
+	//private Typeface _mTypeface;
 	// End of User Interface Views
 
 	// Model
@@ -269,14 +271,15 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	// Others
 	private boolean _isApplicationOnCreateState = true;
 	private boolean _isBackButtonPressed = false;
-	private boolean _isHeaderOpened = false;
+	private boolean _isAdditionalQueryShown = false;
+
 	private Calendar _calendar = Calendar.getInstance();
+
 	private String _modifiedDate;
-	private float _clampValue;
 	private int _searchMode;
 	private LinkedList<Integer> _pageStateStack = null;
 	private LinkedList<QueryDataModelController> _conditionDataStack = null;
-	private static int _currentPage = TIMELINE_PAGE_STATE;
+	private static int _currentPage = HOME_PAGE_STATE;
 	private static int _firstVisibleItemPosition = 0;
 
 	private boolean _searchTurtorialPopped = false;
@@ -306,12 +309,16 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			}
 
 			// configure font type of the activity
-			_mTypeface = TypefaceLoader.getInstance(getApplicationContext()).getTypeface();
+			//_mTypeface = TypefaceLoader.getInstance(getApplicationContext()).getTypeface();
 			// end of the configuration
 
 			// configure splash screen(will be deleted later)
 			_setSplashScreen();
 			// end of the configuration
+
+			// configure the query view
+			_setActionBarQueryViewDimen();
+			// end of the configuration of query view
 
 			// configure actionbar
 			_setActionBar();
@@ -321,20 +328,16 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			_setSlidingMenu();
 			// end of the configuration of the SlidingMenu
 
-			// configure the QueryHeader
-			_setQueryHeader();
-			// end of the configuration of QueryHeader
-
 			// configure the side menu buttons
 			_setSideMenuButtons();
 			// end of the configuration of the side menu buttons
 
 			// configure the conditional query UIs
-			_setConditionalQueryInput();
+			//_setConditionalQueryInput();
 			// end of the configuration of the conditional query UIs
 
-			// configure the subtab of the query header
-			_setSubtab();
+			// configure the subtab of the query view
+			//_setSubtab();
 			// end of the configuration of the subtab
 
 			// configure the Plan UIs
@@ -357,7 +360,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			_checkApplicationVersion();
 			// end of checking
 
-			_loadTimelineFragment(null);
+			_loadHomeFragment(null);
 			_toggleMenuButton(R.id.layout_btn_home);
 		}
 	}
@@ -365,19 +368,19 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (_mTypeface == null) {
+		/*if (_mTypeface == null) {
 			_mTypeface = TypefaceLoader.getInstance(getApplicationContext()).getTypeface();
-		}
+		}*/
 
 		if (_conditionDataStack == null) {
 			_conditionDataStack = new LinkedList();
 		}
 
-		if(_pageStateStack == null) {
+		if (_pageStateStack == null) {
 			_pageStateStack = new LinkedList();
 		}
 
-		_loadingBackground.setAlpha(0);
+//		_loadingBackground.setAlpha(0);
 	}
 
 	private void _setSplashScreen() {
@@ -392,53 +395,81 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 		View actionBarView = getLayoutInflater().inflate(R.layout.actionbar, null);
 
-		_actionBarTitleTextView = (TextView) actionBarView.findViewById(R.id.textView_title_actionBar);
-		_actionBarTitleTextView.setTypeface(_mTypeface);
-		_actionBarTitleTextView.setText(getResources().getString(R.string.actionbar_title));
-
-		_actionBarSubtitleTextView = (TextView) actionBarView.findViewById(R.id.textView_subtitle_actionBar);
-		_actionBarSubtitleTextView.setTypeface(_mTypeface);
-
-		_actionBarQueryHeaderLinearLayout = (LinearLayout) actionBarView.findViewById(R.id.linearLayout_query);
-
-		_actionBar.setCustomView(actionBarView);
-
-		_changeActionBarStyle(getResources().getColor(R.color.mtplease_color_primary), getResources().getString(R.string.actionbar_title), null);
-
-		ImageView openDrawerButton = (ImageView) actionBarView.findViewById(R.id.imageView_icon_drawer);
-		openDrawerButton.setOnClickListener(new View.OnClickListener() {
+		_openDrawerButton = (ImageView) actionBarView.findViewById(R.id.imageView_icon_drawer);
+		_openDrawerButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				_doubleSideSlidingMenu.showMenu(true);
 			}
 		});
 
+		_actionBarTitleTextView = (TextView) actionBarView.findViewById(R.id.textView_title_actionBar);
+		_actionBarTitleTextView.setTypeface(TypefaceLoader.getInstance(this).getTypeface());
+		_actionBarTitleTextView.setText(getResources().getString(R.string.actionbar_title));
+
+		_actionBarSubtitleTextView = (TextView) actionBarView.findViewById(R.id.textView_subtitle_actionBar);
+		_actionBarSubtitleTextView.setTypeface(TypefaceLoader.getInstance(this).getTypeface());
+
+		_actionBarRelativeLayout = (RelativeLayout) actionBarView.findViewById(R.id.relativeLayout_actionbar);
+
+		_additionalQueryButton = (ImageView) actionBarView.findViewById(R.id.imageView_btn_query_additional);
+		_additionalQueryButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (_isAdditionalQueryShown) {
+					_toggleAdditionalQuery(v, 0.0F, 45.0F, -_queryAdditionalQueryHeightDifference, 0.0F);
+				} else {
+					//_toggleAdditionalQuery(v, 45.0F, 0.0F, 0.0F, -_queryAdditionalQueryHeightDifference);
+					_toggleAdditionalQuery(v, 0.0F, 45.0F, -_queryAdditionalQueryHeightDifference, 0.0F);
+				}
+			}
+		});
+
+		_additionalQueryRelativeLayout = (RelativeLayout) actionBarView.findViewById(R.id.relativeLayout_query_additional);
+		_additionalQueryRelativeLayout.setTranslationY(-_queryAdditionalQueryHeightDifference);
+
+		_isAdditionalQueryShown = false;
+
+		_setConditionalQueryInput(actionBarView);
+
+		_setAdditionalQueryInput(actionBarView);
+
+		_actionBar.setCustomView(actionBarView);
+
+		_changeActionBarStyle(getResources().getColor(R.color.mtplease_color_primary), getResources().getString(R.string.actionbar_title), null);
+
 		_actionBar.hide();
 	}
 
-	/*private void _switchSearchMode() {
-		((RelativeLayout) _mHeader).removeViewAt(0);
-		if (_searchMode == CONDITION_SEARCH_MODE) {
-			_setKeywordQueryInput();
-			_searchMode = KEYWORD_SEARCH_MODE;
-		} else {
-			_setConditionalQueryInput();
-			_searchMode = CONDITION_SEARCH_MODE;
-		}
-		_popTutorial();
-	}*/
+	private void _toggleAdditionalQuery(View animationTargetView, float rotationStartValue, float rotationEndValue,
+										float translationYStartValue, float translationYEndValue) {
 
-	/*private void _switchSearchMode(final int targetMode) {
-		((RelativeLayout) _mHeader).removeViewAt(0);
-		if (targetMode == CONDITION_SEARCH_MODE) {
-			_setConditionalQueryInput();
-		} else {
-			_setKeywordQueryInput();
-		}
-		_searchMode = targetMode;
+		AnimatorSet animatorSet = new AnimatorSet();
+		ObjectAnimator buttonAnimator;
+		ObjectAnimator additionalQueryAnimator;
 
-		_popTutorial();
-	}*/
+		Log.d(TAG, "Additional Query shown: " + _isAdditionalQueryShown);
+
+		if (_isAdditionalQueryShown) {
+			buttonAnimator = ObjectAnimator.ofFloat(animationTargetView, "rotation", rotationEndValue, rotationStartValue);
+			additionalQueryAnimator = ObjectAnimator.ofFloat(_additionalQueryRelativeLayout,
+					"translationY", translationYEndValue, translationYStartValue);
+			animatorSet.play(buttonAnimator).with(additionalQueryAnimator);
+			animatorSet.start();
+
+			_isAdditionalQueryShown = false;
+		} else {
+			buttonAnimator = ObjectAnimator.ofFloat(animationTargetView, "rotation", rotationStartValue, rotationEndValue);
+			additionalQueryAnimator = ObjectAnimator.ofFloat(_additionalQueryRelativeLayout,
+					"translationY", translationYStartValue, translationYEndValue);
+			animatorSet.play(buttonAnimator).with(additionalQueryAnimator);
+			animatorSet.start();
+
+			_isAdditionalQueryShown = true;
+		}
+
+	}
+
 
 	private void _setActionBarTitle(String title, String subtitle) {
 		_actionBarTitleTextView.setText(title);
@@ -467,6 +498,22 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		_doubleSideSlidingMenu.setFadeDegree(0.70f);
 		_doubleSideSlidingMenu.setMenu(R.layout.menu_side);
 //		_doubleSideSlidingMenu.setSecondaryMenu(R.layout.plan_side);
+
+		_doubleSideSlidingMenu.setOnOpenListener(new SlidingMenu.OnOpenListener() {
+			@Override
+			public void onOpen() {
+				ObjectAnimator drawerAnimator = ObjectAnimator.ofFloat(_openDrawerButton, "rotation", 0.0F, 90.0F);
+				drawerAnimator.start();
+			}
+		});
+
+		_doubleSideSlidingMenu.setOnCloseListener(new SlidingMenu.OnCloseListener() {
+			@Override
+			public void onClose() {
+				ObjectAnimator drawerAnimator = ObjectAnimator.ofFloat(_openDrawerButton, "rotation", 90.0F, 0.0F);
+				drawerAnimator.start();
+			}
+		});
 	}
 
 	private void _setPlan() {
@@ -486,7 +533,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			@Override
 			public void onClick(View v) {
 				_numberOfPeopleSelectPlanEditText.clearFocus();
-				_callCalendarDialogFragment(CALL_FROM_PLAN);
+				_callDialogFragment(CalendarDialogFragment.newInstance(CALL_FROM_PLAN));
 			}
 		});
 
@@ -720,13 +767,18 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		_sexRatioPlanSeekBar.setProgress(sexRatioProgress);
 	}*/
 
-	private void _setQueryHeader() {
-		_minHeaderHeightForTimelineFragment = getResources().getDimensionPixelSize(R.dimen.max_header_height);
-		_minHeaderHeightForResultFragment = getResources().getDimensionPixelOffset(R.dimen.header_height);
-		_headerHeight = getResources().getDimensionPixelSize(R.dimen.header_height);
-		_mHeader = findViewById(R.id.header);
+	private void _setActionBarQueryViewDimen() {
+		_maxActionBarHeight = getResources().getDimensionPixelSize(R.dimen.max_query_view_height);
+		_minActionBarHeight = getResources().getDimensionPixelSize(R.dimen.min_actionbar_height);
+		_additionalQueryHeight = getResources().getDimensionPixelSize(R.dimen.additional_query_layout_height);
+		_queryAdditionalQueryHeightDifference = getResources().getDimensionPixelSize(R.dimen.additional_query_layout_height)
+				- getResources().getDimensionPixelSize(R.dimen.query_input_layout_height);
+		_minQueryViewHeightForHomeFragment = getResources().getDimensionPixelSize(R.dimen.max_query_view_height);
+		_minQueryViewHeightForResultFragment = getResources().getDimensionPixelOffset(R.dimen.query_view_height);
+		_queryViewHeight = getResources().getDimensionPixelSize(R.dimen.query_view_height);
 		_spannableStringAppTitle = new SpannableString(getString(R.string.actionbar_title));
 		_alphaForegroundColorSpan = new AlphaForegroundColorSpan(0xffffffff);
+
 		/*_searchModeSwitchRadioGroup = (RadioGroup) findViewById(R.id.radioGroup_switch_search_mode);
 		_searchModeConditionalSearchRadioButton = (RadioButton) findViewById(R.id.radioButton_search_mode_conditional);
 		_searchModeKeywordSearchRadioButton = (RadioButton) findViewById(R.id.radioButton_search_mode_keyword);
@@ -758,7 +810,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		_homeButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				_loadTimelineFragment(null);
+				_loadHomeFragment(null);
 				_doubleSideSlidingMenu.toggle(true);
 				_toggleMenuButton(R.id.layout_btn_home);
 			}
@@ -845,7 +897,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		_settingButton.setBackgroundColor(Color.TRANSPARENT);
 		_helpButton.setBackgroundColor(Color.TRANSPARENT);
 
-		switch(buttonResId) {
+		switch (buttonResId) {
 			case R.id.layout_btn_home:
 				_homeButton.setBackgroundColor(Color.GRAY);
 				_homeButtonIndicator.setVisibility(View.VISIBLE);
@@ -865,46 +917,39 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		}
 	}
 
-	private void _setConditionalQueryInput() {
+	private void _setConditionalQueryInput(View queryView) {
 
-		View conditionalSearchHeaderView = getLayoutInflater().inflate(R.layout.frame_conditional_search, (RelativeLayout) _mHeader, false);
-
-		TextView weTextView = (TextView) conditionalSearchHeaderView.findViewById(R.id.textView_we);
-		weTextView.setTypeface(_mTypeface);
-
-		TextView postpositionTextView = (TextView) conditionalSearchHeaderView.findViewById(R.id.textView_postposition);
-		postpositionTextView.setTypeface(_mTypeface);
-
-		TextView withTextView = (TextView) conditionalSearchHeaderView.findViewById(R.id.textView_with);
-		withTextView.setTypeface(_mTypeface);
-
-		TextView goMTTextView = (TextView) conditionalSearchHeaderView.findViewById(R.id.textView_go_MT);
-		goMTTextView.setTypeface(_mTypeface);
-
-		_dateSelectButton = (Button) conditionalSearchHeaderView.findViewById(R.id.btn_select_date);
-		_modifiedDate = _calendar.get(Calendar.YEAR) + "년 " + (_calendar.get(Calendar.MONTH) + 1)
-				+ "월 " + _calendar.get(Calendar.DATE) + "일";
+		_dateSelectButton = (Button) queryView.findViewById(R.id.btn_select_depart_date);
+		_modifiedDate = getResources().getString(R.string.whenever);
 		_dateSelectButton.setText(_modifiedDate);
-		_dateSelectButton.setTypeface(_mTypeface);
+		//_dateSelectButton.setTypeface(_mTypeface);
 		_dateSelectButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				_callCalendarDialogFragment(CALL_FROM_CONDITIONAL_QUERY);
+				_callDialogFragment(CalendarDialogFragment.newInstance(CALL_FROM_CONDITIONAL_QUERY));
 			}
 		});
 
-		_regionSelectSpinner = (Spinner) conditionalSearchHeaderView.findViewById(R.id.spinner_select_region);
-		/*ArrayAdapter<CharSequence> regionSpinnerAdapter =
+		_nightSelectButton = (Button) queryView.findViewById(R.id.btn_select_nights);
+		_nightSelectButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				_callDialogFragment(SelectNightsDialogFragment.newInstance(CALL_FROM_CONDITIONAL_QUERY));
+			}
+		});
+
+		/*_regionSelectSpinner = (Spinner) queryView.findViewById(R.id.spinner_select_region);
+		ArrayAdapter<CharSequence> regionSpinnerAdapter =
 				ArrayAdapter.createFromResource(this, R.array.array_region, R.layout.spinner_region);
-		regionSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);*/
+		regionSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		ArrayList<String> regionNameList = new ArrayList<String>();
 		regionNameList.add(getResources().getString(R.string.daesungri));
 		SpinnerArrayAdapter spinnerArrayAdapter = new SpinnerArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, regionNameList);
-		_regionSelectSpinner.setAdapter(spinnerArrayAdapter);
+		_regionSelectSpinner.setAdapter(spinnerArrayAdapter);*/
 
-		_numberOfPeopleSelectEditText = (EditText) conditionalSearchHeaderView.findViewById(R.id.editText_input_number_people);
-		_numberOfPeopleSelectEditText.setTypeface(_mTypeface);
-		_numberOfPeopleSelectEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+		_selectNumberOfPeopleEditText = (EditText) queryView.findViewById(R.id.editText_number_of_people_query);
+		//_selectNumberOfPeopleEditText.setTypeface(_mTypeface);
+		_selectNumberOfPeopleEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				Log.d(TAG, "onFocusChange");
@@ -914,26 +959,26 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			}
 		});
 
-		_roomSearchButton = (ImageButton) conditionalSearchHeaderView.findViewById(R.id.btn_search_room);
-		_roomSearchButton.setOnClickListener(new View.OnClickListener() {
+		_querySearchButton = (ImageView) queryView.findViewById(R.id.imageView_btn_query_search);
+		_querySearchButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				_searchMode = CONDITION_SEARCH_MODE;
 				_loadResultFragment();
 			}
 		});
-
-		((RelativeLayout) _mHeader).addView(conditionalSearchHeaderView, 0);
-
-//		_searchModeConditionalSearchRadioButton.setChecked(true);
 	}
 
+	private void _setAdditionalQueryInput(View queryView) {
+
+		_selectNumberOfRoomsRadioGroup = (RadioGroup) queryView.findViewById(R.id.radioGroup_select_number_of_rooms);
+		_selectNumberOfToiletsRadioGroup = (RadioGroup) queryView.findViewById(R.id.radioGroup_select_number_of_toilets);
+	}
 
 	private void _setKeywordQueryInput() {
-//		View keywordSearchHeaderView = getLayoutInflater().inflate(R.layout.frame_keyword_search, (RelativeLayout) _mHeader, false);
 
 		_keywordInputEditText = (EditText) findViewById(R.id.editText_search_keyword);
-		_keywordInputEditText.setTypeface(_mTypeface);
+		//_keywordInputEditText.setTypeface(_mTypeface);
 		_keywordInputEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -946,7 +991,6 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 					} else {
 						Toast.makeText(v.getContext(), R.string.please_type_keyword, Toast.LENGTH_SHORT).show();
 					}
-
 					return false;
 				}
 				return false;
@@ -976,17 +1020,13 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				}
 			}
 		});
-
-//		((RelativeLayout) _mHeader).addView(keywordSearchHeaderView, 0);
-
-//		_searchModeKeywordSearchRadioButton.setChecked(true);
 	}
 
-	private void _setSubtab() {
+/*	private void _setSubtab() {
 
 		// configure the number of the room that our service have inside our database
-		/*_roomCountText = (TextView) findViewById(R.id.text_room_count);
-		_roomCountText.setTypeface(_mTypeface);*/
+		*//*_roomCountText = (TextView) findViewById(R.id.text_room_count);
+		_roomCountText.setTypeface(_mTypeface);*//*
 		// end of the configuration
 
 		_subTabLinearLayout = (LinearLayout) findViewById(R.id.layout_subtab);
@@ -1000,13 +1040,13 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			public void onClick(View v) {
 				if (_currentPage == RESULT_PAGE_STATE) {
 					if (!_isHeaderOpened) {
-						_mHeader.animate().translationYBy(_minHeaderHeightForResultFragment);
+						//_mHeader.animate().translationYBy(_minQueryViewHeightForResultFragment);
 						_subTabLinearLayout.setAlpha(0.0F);
 						_headerToggleImageView.animate().rotationBy(180F);
 						v.animate().translationYBy(-getResources().getDimension(R.dimen.query_status_bar_height));
 						_isHeaderOpened = true;
 					} else {
-						_mHeader.animate().translationYBy(-_minHeaderHeightForResultFragment);
+						//_mHeader.animate().translationYBy(-_minQueryViewHeightForResultFragment);
 						_subTabLinearLayout.setAlpha(1.0F);
 						_headerToggleImageView.animate().rotationBy(180F);
 						v.animate().translationYBy(getResources().getDimension(R.dimen.query_status_bar_height));
@@ -1015,20 +1055,18 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				}
 			}
 		});
-
-
-	}
+	}*/
 
 	private void _setLoadingAnimation() {
-		_loadingLayout = (FrameLayout) findViewById(R.id.framelayout_loading);
+/*		_loadingLayout = (FrameLayout) findViewById(R.id.framelayout_loading);
 		_loadingBackground = _loadingLayout.getBackground();
-		_loadingBackground.setAlpha(0);
+		_loadingBackground.setAlpha(0);*/
 
 		_loadingProgressBar = (ProgressBar) findViewById(R.id.progressBar_condition_search);
 		_loadingProgressBar.setVisibility(View.GONE);
 	}
 
-	private void _loadTimelineFragment(final SwipeRefreshLayout swipeRefreshLayout) {
+	private void _loadHomeFragment(final SwipeRefreshLayout swipeRefreshLayout) {
 		// get timeline data from the server and create the _timelineFragment
 		/*MTPleaseJsonObjectRequest getRequest = new MTPleaseJsonObjectRequest(Request.Method.GET, MTPLEASE_URL, null, new Response.Listener<JSONObject>() {
 			@Override
@@ -1081,15 +1119,16 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, getResources().getString(R.string.mtplease_url), (String) null, new Response.Listener<JSONObject>() {
 			@Override
 			public void onResponse(JSONObject response) {
-				if(_isApplicationOnCreateState) {
+				if (_isApplicationOnCreateState) {
 					_splashScreenLayout.setVisibility(View.GONE);
 					_actionBar.show();
 				}
 
-				if(swipeRefreshLayout != null)
+				if (swipeRefreshLayout != null) {
 					swipeRefreshLayout.setRefreshing(false);
-				else
+				} else {
 					endLoadingProgress();
+				}
 
 				// create the _timelineFragment with the Interface ScrollTabHolder
 				try {
@@ -1099,17 +1138,17 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 //					_roomCountText.setText(mJSONObject.getString("roomCount") + "개의 방이 함께하고 있습니다.");
 
-					TimelineFragment timelineFragment = TimelineFragment.newInstance(mJSONObject.toString());
+					HomeFragment homeFragment = HomeFragment.newInstance(mJSONObject.toString());
 					// end of creation of the _timelineFragment
 
 					// commit the timelineFragment to the current view
-					_beginFragmentTransaction(timelineFragment, R.id.body_background);
+					_beginFragmentTransaction(homeFragment, R.id.body_background);
 					// end of commission
 
 					// pop tutorial if the use of the application is first time or right after any application update
 					_popTutorial();
 
-					if(_isApplicationOnCreateState) {
+					if (_isApplicationOnCreateState) {
 
 						// left menu opening animation to show users that there is a menu on left side of the application
 						_doubleSideSlidingMenu.toggle(true);
@@ -1130,24 +1169,25 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		}, new Response.ErrorListener() {
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				if(_isApplicationOnCreateState) {
+				if (_isApplicationOnCreateState) {
 					_splashScreenLayout.setVisibility(View.GONE);
 					_actionBar.show();
 					_isApplicationOnCreateState = false;
 				}
-				_subTabLinearLayout.setVisibility(View.INVISIBLE);
+//				_subTabLinearLayout.setVisibility(View.INVISIBLE);
 //				_roomCountText.setVisibility(View.VISIBLE);
 
-				if(swipeRefreshLayout != null)
+				if (swipeRefreshLayout != null) {
 					swipeRefreshLayout.setRefreshing(false);
-				else
+				} else {
 					endLoadingProgress();
+				}
 
-				TimelineFragment timelineFragment = TimelineFragment.newInstance(null);
+				HomeFragment homeFragment = HomeFragment.newInstance(null);
 				// end of creation of the _timelineFragment
 
 				// commit the timelineFragment to the current view
-				_beginFragmentTransaction(timelineFragment, R.id.body_background);
+				_beginFragmentTransaction(homeFragment, R.id.body_background);
 				// end of commission
 
 				Log.d(TAG, error.toString());
@@ -1155,8 +1195,9 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			}
 		});
 
-		if(swipeRefreshLayout == null)
+		if (swipeRefreshLayout == null) {
 			startLoadingProgress();
+		}
 
 		ServerCommunicationManager.getInstance(this).addToRequestQueue(getRequest);
 		// end of getting the data from the server and the creation of the fragment
@@ -1175,7 +1216,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 					.build());
 
 			if (_searchMode == CONDITION_SEARCH_MODE) {
-				_numberOfPeopleSelectEditText.clearFocus();
+				_selectNumberOfPeopleEditText.clearFocus();
 					/*if (_conditionDataForRequest.getFlag() == CONDITION_SEARCH_MODE) {
 						setAutoCompleteBasicInfoPlan();
 					}*/
@@ -1215,8 +1256,12 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			// else if the search mode is set on conditional query, the queryDataModelController.getDate() will return input date
 			_requestRoomResultFromServer(queryDataModelController, ResultFragment.LIST_OF_ROOMS_AFTER_SEARCH);
 
+			if (_isAdditionalQueryShown) {
+				_toggleAdditionalQuery(_additionalQueryButton, 0.0F, 45.0F, -_queryAdditionalQueryHeightDifference, 0.0F);
+			}
+
 		} catch (NumberFormatException e) {
-			if (_numberOfPeopleSelectEditText.getText().toString().equals("")) {
+			if (_selectNumberOfPeopleEditText.getText().toString().equals("")) {
 				Toast.makeText(MainActivity.this,
 						R.string.please_number_of_people_input, Toast.LENGTH_SHORT).show();
 			} else {
@@ -1287,9 +1332,8 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		}
 	}
 
-	private void _callCalendarDialogFragment(int callerFlag) {
-		CalendarDialogFragment _calendarDialogFragment = CalendarDialogFragment.newInstance(callerFlag);
-		_calendarDialogFragment.show(_fragmentManager, "_calendar_dialog_popped");
+	private void _callDialogFragment(DialogFragment targetDialogFragment) {
+		targetDialogFragment.show(_fragmentManager, null);
 	}
 
 	@Override
@@ -1331,38 +1375,27 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	@Override
 	public void onCreateResultFragmentView(int numRoom, int listType) {
-		Log.d("ResultFragemnt Life Cycle: ", "onCreateResultFragmentView");
-
 		_currentPage = _pageStateStack.peekFirst();
 
-		if(listType == ResultFragment.LIST_OF_ROOMS_AFTER_SEARCH) {
+		if (listType == ResultFragment.LIST_OF_ROOMS_AFTER_SEARCH) {
 			_popTutorial();
 
-			_mHeader.setVisibility(View.VISIBLE);
-			_subTabLinearLayout.setVisibility(View.VISIBLE);
-			_headerToggleImageViewFrameLayout.setVisibility(View.VISIBLE);
+			_showQueryView();
 
-			// configure actionbar and query header for the result page
+			// configure actionbar and query view for the result page
 			_changeActionBarStyle(getResources().getColor(R.color.mtplease_color_primary), getResources().getString(R.string.results), String.valueOf(numRoom) + "개의 방");
-			_subTabLinearLayout.setBackgroundColor(getResources().getColor(R.color.mtplease_subtab_background_color));
 
 			if (numRoom < 2) {
-				_mHeader.setTranslationY(0);
-				_subTabLinearLayout.setAlpha(0.0F);
-				_headerToggleImageViewFrameLayout.setAlpha(0.0F);
+				_toolbar.setTranslationY(0);
+//				_subTabLinearLayout.setAlpha(0.0F);
 			} else {
-				_mHeader.setTranslationY(-_minHeaderHeightForResultFragment);
-				_subTabLinearLayout.setAlpha(1.0F);
-				_headerToggleImageViewFrameLayout.setAlpha(1.0F);
+				_toolbar.setTranslationY(_minActionBarHeight - _minQueryViewHeightForResultFragment);
+				RelativeLayout.LayoutParams actionbarParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, _minActionBarHeight);
+				actionbarParams.setMargins(0, _minQueryViewHeightForResultFragment - _minActionBarHeight, 0, 0);
+				_actionBarRelativeLayout.setLayoutParams(actionbarParams);
+//				_subTabLinearLayout.setAlpha(1.0F);
 			}
 			// end of the configuration
-
-			// if header was opened before searching, translate toggle button vertically with the height of the subtab bar
-			if (_isHeaderOpened) {
-				_isHeaderOpened = false;
-				_headerToggleImageViewFrameLayout.animate().translationYBy(getResources().getDimension(R.dimen.query_status_bar_height));
-				_headerToggleImageView.animate().rotationBy(180F);
-			}
 
 			/*if (_isBackButtonPressed) {
 				Log.d(TAG, "back button clicked");
@@ -1376,11 +1409,10 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			String queryString = "";
 			// configure subtab for result page
 			if (queryDataModelController.getFlag() == CONDITION_SEARCH_MODE) {
-//			_switchSearchMode(queryDataModelController.getFlag());
-				queryString += getResources().getString(R.string.we) + " ";
-				queryString += queryDataModelController.getDateWrittenLang() + getResources().getString(R.string.postposition_1);
+				queryString += getResources().getString(R.string.input_date) + ": "
+						+ queryDataModelController.getDateWrittenLang() + " / ";
 				_dateSelectButton.setText(queryDataModelController.getDateWrittenLang());
-				int regionCode = queryDataModelController.getRegion();
+				/*int regionCode = queryDataModelController.getRegion();
 				switch (regionCode) {
 					case 1:
 						queryString += " " + getResources().getString(R.string.daesungri);
@@ -1394,43 +1426,83 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 						queryString += " " + getResources().getString(R.string.gapyung);
 						_regionSelectSpinner.setSelection(2);
 						break;
-				}
-				queryString += " " + queryDataModelController.getPeople() + getResources().getString(R.string.postposition_2);
-				_numberOfPeopleSelectEditText.setText(String.valueOf(queryDataModelController.getPeople()));
+				}*/
+				String nights = queryDataModelController.get_nights()
+						+ getResources().getString(R.string.unit_night)
+						+ (queryDataModelController.get_nights() + 1)
+						+ getResources().getString(R.string.unit_day);
 
-				queryString += " " + getResources().getString(R.string.go_MT);
+				_nightSelectButton.setText(nights);
+				queryString += getResources().getString(R.string.input_nights) + ": "
+						+ nights + " / ";
+
+				_selectNumberOfPeopleEditText.setText(String.valueOf(queryDataModelController.getPeople()));
+				queryString += getResources().getString(R.string.input_number_of_people) + ": "
+						+ queryDataModelController.getPeople() + getResources().getString(R.string.postposition_2);
+
+				switch (queryDataModelController.get_numRooms()) {
+					case 1:
+						_selectNumberOfRoomsRadioGroup.check(R.id.radioButton_one_room);
+						break;
+					case 2:
+						_selectNumberOfRoomsRadioGroup.check(R.id.radioButton_two_room);
+						break;
+					case 3:
+						_selectNumberOfRoomsRadioGroup.check(R.id.radioButton_three_more_room);
+						break;
+					case 0:
+						_selectNumberOfRoomsRadioGroup.check(R.id.radioButton_any_room);
+				}
+
+				switch (queryDataModelController.get_numToilets()) {
+					case 1:
+						_selectNumberOfToiletsRadioGroup.check(R.id.radioButton_one_toilet);
+						break;
+					case 2:
+						_selectNumberOfToiletsRadioGroup.check(R.id.radioButton_two_more_toilet);
+						break;
+					case 0:
+						_selectNumberOfToiletsRadioGroup.check(R.id.radioButton_any_toilet);
+						break;
+				}
+
 			} else {
 //			_switchSearchMode(queryDataModelController.getFlag());
 				_keywordInputEditText.setText(queryDataModelController.getKeyword());
 				queryString += "\"" + queryDataModelController.getKeyword() + "\"" + getResources().getString(R.string.results_for);
 			}
 
-			_querySubtabText.setText(queryString);
+//			_querySubtabText.setText(queryString);
 			// end of the configuration
 		} else {
 			QueryDataModelController queryDataModelController = _conditionDataStack.peekFirst();
 
-			_mHeader.setVisibility(View.GONE);
-			_subTabLinearLayout.setVisibility(View.GONE);
-			_headerToggleImageViewFrameLayout.setVisibility(View.GONE);
+			_hideQueryView();
+//			_subTabLinearLayout.setVisibility(View.GONE);
 
-			// configure actionbar and query header for the result page
+			// configure actionbar and query view for the result page
 			_changeActionBarStyle(getResources().getColor(R.color.mtplease_color_primary), queryDataModelController.getKeyword(), String.valueOf(numRoom) + "개의 방");
 		}
 	}
 
 	@Override
-	public void onResumeResultFragmentView(LinearLayoutManager layoutManager, int defaultPosition) {
-		if (_isBackButtonPressed) {
-			Log.d(TAG, "firstVisibleItemPosition: " + _firstVisibleItemPosition);
-			if (_firstVisibleItemPosition == 0 || _firstVisibleItemPosition == -1) {
-				_mHeader.setTranslationY(0);
-				_subTabLinearLayout.setAlpha(0.0F);
-				_headerToggleImageViewFrameLayout.setAlpha(0.0F);
+	public void onResumeResultFragmentView(LinearLayoutManager layoutManager, int defaultPosition, int listType) {
+		if(listType == ResultFragment.LIST_OF_ROOMS_AFTER_SEARCH) {
+			if (_isBackButtonPressed) {
+				Log.d(TAG, "firstVisibleItemPosition: " + _firstVisibleItemPosition);
+				if (_firstVisibleItemPosition == 0 || _firstVisibleItemPosition == -1) {
+					_showQueryView();
+//				_subTabLinearLayout.setAlpha(0.0F);
+				}
+				layoutManager.scrollToPosition(_firstVisibleItemPosition);
+			} else {
+				layoutManager.scrollToPosition(defaultPosition);
 			}
-			layoutManager.scrollToPosition(_firstVisibleItemPosition);
 		} else {
-			layoutManager.scrollToPosition(defaultPosition);
+			if(_isBackButtonPressed) {
+				_hideQueryView();
+				layoutManager.scrollToPosition(_firstVisibleItemPosition);
+			}
 		}
 
 		_isBackButtonPressed = false;
@@ -1438,14 +1510,12 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	@Override
 	public void onDestroyResultFragmentView() {
-		Log.d("ResultFragemnt Life Cycle: ", "onDestroyResultFragmentView");
 		if (_isBackButtonPressed) {
 			_firstVisibleItemPosition = _conditionDataStack.pop().getLastRoomCardPosition();
 			_pageStateStack.pop();
 			_restorePreviousPageState();
 		}
-		_mHeader.setVisibility(View.GONE);
-		_headerToggleImageViewFrameLayout.setVisibility(View.GONE);
+		_hideQueryView();
 	}
 
 	@Override
@@ -1468,37 +1538,40 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	}
 
 	@Override
-	public void onCreateTimelineFragmentView(String roomCount) {
+	public void onCreateHomeFragmentView(String roomCount) {
 
 		_currentPage = _pageStateStack.peekFirst();
 
 		_conditionDataStack.clear();
 
-		_mHeader.setVisibility(View.VISIBLE);
+		_showQueryView();
 
-		_subTabLinearLayout.setVisibility(View.INVISIBLE);
+//		_subTabLinearLayout.setVisibility(View.INVISIBLE);
 //		_roomCountText.setVisibility(View.VISIBLE);
 
 		_changeActionBarStyle(getResources().getColor(R.color.mtplease_color_primary),
 				getResources().getString(R.string.actionbar_title), roomCount + getResources().getString(R.string.with_number_of_rooms));
 
-		_mHeader.setTranslationY(0);
-
 		_isBackButtonPressed = false;
 	}
 
 	@Override
-	public void onDestroyTimelineFragmentView() {
-//		_roomCountText.setVisibility(View.GONE);
-		if(_isBackButtonPressed) {
-			_pageStateStack.pop();
-		}
-		_mHeader.setVisibility(View.GONE);
+	public void onResumeHomeFragmentView() {
+		_showQueryView();
 	}
 
 	@Override
-	public void onRefreshTimelineFragment(SwipeRefreshLayout swipeRefreshLayout) {
-		_loadTimelineFragment(swipeRefreshLayout);
+	public void onDestroyHomeFragmentView() {
+//		_roomCountText.setVisibility(View.GONE);
+		if (_isBackButtonPressed) {
+			_pageStateStack.pop();
+		}
+		_hideQueryView();
+	}
+
+	@Override
+	public void onRefreshHomeFragment(SwipeRefreshLayout swipeRefreshLayout) {
+		_loadHomeFragment(swipeRefreshLayout);
 	}
 
 	@Override
@@ -1510,28 +1583,20 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		_firstVisibleItemPosition = firstVisibleItem;
 		int scrollY = getScrollY(recyclerView, firstVisibleItem);
 		float ratio;
+		float clampValue;
+		Log.d(TAG, "visibleFragment:" + visibleFragment);
 		switch (visibleFragment) {
-			case TIMELINE_FRAGMENT_VISIBLE:
-				_clampValue = _changeHeaderTranslation(scrollY, _minHeaderHeightForTimelineFragment);
+			case HOME_FRAGMENT_VISIBLE:
+				clampValue = _changeQueryViewTranslation(scrollY, _minQueryViewHeightForHomeFragment);
 				return;
-			case RESULT_FRAGMENT_VISIBLE:
-				if (!_isHeaderOpened) {
-					_clampValue = _changeHeaderTranslation(scrollY, _minHeaderHeightForResultFragment);
-					_subTabLinearLayout.setAlpha(_clampValue);
-					_headerToggleImageViewFrameLayout.setAlpha(_clampValue);
-					//subTabBackgroundColor.setAlpha((int) (_clampValue * 255));
-				} else {
-					if (scrollY == 0) {
-						_headerToggleImageViewFrameLayout.setAlpha(0.0F);
-						_headerToggleImageView.animate().rotationBy(180F);
-						_headerToggleImageViewFrameLayout.animate().translationYBy(getResources().getDimension(R.dimen.query_status_bar_height));
-						_isHeaderOpened = false;
-					}
-				}
+			case RESULT_FRAGMENT_VISIBLE_LIST_OF_ROOMS_AFTER_SEARCH:
+				clampValue = _changeQueryViewTranslation(scrollY, _minQueryViewHeightForResultFragment);
+				break;
+			case RESULT_FRAGMENT_VISIBLE_CASE_LIST_OF_ROOMS_OF_PENSION:
 				break;
 			/*case SPECIFIC_INFO_FRAGMENT_VISIBLE:
 				ratio = (float) getSupportActionBar().getHeight() / (float) (scrollY + 1);
-				_clampValue = clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F);
+				clampValue = clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F);
 				break;*/
 			case SPECIFIC_INFO_FRAGMENT_VISIBLE:
 			case SHOPPINGITEMLIST_FRAGMENT_VISIBLE:
@@ -1540,18 +1605,21 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		}
 
 		//_setTitleAlpha(_clampValue, visibleFragment);
+
+		if (_isAdditionalQueryShown) {
+			_toggleAdditionalQuery(_additionalQueryButton, 0.0F, 45.0F, -_queryAdditionalQueryHeightDifference, 0.0F);
+		}
 	}
 
-	private float _changeHeaderTranslation(int scrollY, int minHeaderHeight) {
-		_minHeaderTranslation = -minHeaderHeight;
+	private float _changeQueryViewTranslation(int scrollY, int minQueryViewHeight) {
+		Log.d(TAG, "_changeQueryViewTranslation");
+		_minQueryViewTranslation = /*-minQueryViewHeight*/ -_additionalQueryHeight + _minActionBarHeight;
+		_toolbar.setTranslationY(Math.max(-scrollY, _minQueryViewTranslation));
+		RelativeLayout.LayoutParams actionbarParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, _minActionBarHeight);
+		actionbarParams.setMargins(0, -Math.max(-scrollY, _minQueryViewTranslation), 0, 0);
+		_actionBarRelativeLayout.setLayoutParams(actionbarParams);
 
-		//Log.i(TAG, -scrollY + "dp / " + _minHeaderTranslation + "dp");
-
-		_mHeader.setTranslationY(Math.max(-scrollY, _minHeaderTranslation));
-
-		_actionBarQueryHeaderLinearLayout.setTranslationY(Math.max(-scrollY, _minHeaderTranslation));
-
-		float ratio = clamp(_mHeader.getTranslationY() / _minHeaderTranslation, 0.0F, 1.0F);
+		float ratio = clamp(_toolbar.getTranslationY() / _minQueryViewTranslation, 0.0F, 1.0F);
 
 		return clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F);
 	}
@@ -1565,23 +1633,25 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		int firstVisiblePosition = firstVisibleItem;
 		int top = c.getTop();
 
-		int headerHeight = 0;
+		int queryViewHeight = 0;
 		if (firstVisiblePosition >= 1) {
-			headerHeight = _headerHeight;
+			queryViewHeight = _queryViewHeight;
 		}
 
-		return -top + firstVisiblePosition * c.getHeight() + headerHeight;
+		return -top + firstVisiblePosition * c.getHeight() + queryViewHeight;
 	}
 
 	private void _setTitleAlpha(float alpha, int visibleFragment) {
 		_alphaForegroundColorSpan.setAlpha(alpha);
 
 		switch (visibleFragment) {
-			case TIMELINE_FRAGMENT_VISIBLE:
+			case HOME_FRAGMENT_VISIBLE:
 				_spannableStringAppTitle.setSpan(_alphaForegroundColorSpan, 0, _spannableStringAppTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				//_actionBar.setTitle(_spannableStringAppTitle);
 				break;
-			case RESULT_FRAGMENT_VISIBLE:
+			case RESULT_FRAGMENT_VISIBLE_LIST_OF_ROOMS_AFTER_SEARCH:
+				break;
+			case RESULT_FRAGMENT_VISIBLE_CASE_LIST_OF_ROOMS_OF_PENSION:
 				break;
 			case SPECIFIC_INFO_FRAGMENT_VISIBLE:
 				/*_spannableStringVariable = new SpannableString(getSupportActionBar().getTitle());
@@ -1600,7 +1670,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	}
 
 	@Override
-	public void onDateConfirmButtonClicked(String dateSelected, int callerFlag) {
+	public void onClickDateConfirmButton(String dateSelected, int callerFlag) {
 		if (dateSelected != null) {
 			_modifiedDate = dateSelected;
 			switch (callerFlag) {
@@ -1629,28 +1699,71 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		queryDataModelController.setLastRoomCardPosition(_firstVisibleItemPosition);
 
 		if (_searchMode == CONDITION_SEARCH_MODE) {
-			String regionName = (String) _regionSelectSpinner.getSelectedItem();
 
-			if (regionName.equals(getResources().getString(R.string.daesungri))) {
+			// main query input part *******
+			//String regionName = (String) _regionSelectSpinner.getSelectedItem();
+
+			/*if (regionName.equals(getResources().getString(R.string.daesungri))) {
 				queryDataModelController.setRegion(INDEX_OF_DAESUNGRI + 1);
 			} else if (regionName.equals(getResources().getString(R.string.cheongpyung))) {
 				queryDataModelController.setRegion(INDEX_OF_CHEONGPYUNG + 1);
 			} else {
 				queryDataModelController.setRegion(INDEX_OF_GAPYUNG + 1);
-			}
-
+			}*/
+			queryDataModelController.setRegion(INDEX_OF_DAESUNGRI + 1);
 
 			queryDataModelController
-					.setPeople(Integer.parseInt(_numberOfPeopleSelectEditText.getText().toString()));
-			Log.i(TAG, queryDataModelController.getPeople() + "");
-
+					.setPeople(Integer.parseInt(_selectNumberOfPeopleEditText.getText().toString()));
 
 			queryDataModelController.setDateWrittenLang(_modifiedDate);
 
-			String[] tmp = _modifiedDate.split(" ");
-			queryDataModelController.setDate(tmp[0].substring(0, 4) + "-"
-					+ tmp[1].split("월")[0] + "-" + tmp[2].split("일")[0]);
-			Log.i(TAG, queryDataModelController.getDate());
+			if (_modifiedDate.equals(getResources().getString(R.string.whenever))) {
+				queryDataModelController.setDate(_calendar.get(Calendar.YEAR) + "-" + (_calendar.get(Calendar.MONTH) + 1)
+						+ "-" + _calendar.get(Calendar.DATE));
+			} else {
+				String[] tmp = _modifiedDate.split(" ");
+				queryDataModelController.setDate(tmp[0].substring(0, 4) + "-"
+						+ tmp[1].split("월")[0] + "-" + tmp[2].split("일")[0]);
+				Log.i(TAG, queryDataModelController.getDate());
+			}
+
+			String[] tmp = _nightSelectButton.getText().toString().split("박");
+			Log.d(TAG, tmp[0]);
+
+			queryDataModelController.set_nights(Integer.parseInt(tmp[0]));
+
+			// additional input query part ******
+			int checkedButtonId = _selectNumberOfRoomsRadioGroup.getCheckedRadioButtonId();
+			switch (checkedButtonId) {
+				case R.id.radioButton_one_room:
+					queryDataModelController.set_numRooms(1);
+					break;
+				case R.id.radioButton_two_room:
+					queryDataModelController.set_numRooms(2);
+					break;
+				case R.id.radioButton_three_more_room:
+					queryDataModelController.set_numRooms(3);
+					break;
+				/*case R.id.radioButton_four_more_room:
+					queryDataModelController.set_numRooms(4);
+					break;*/
+				case R.id.radioButton_any_room:
+					queryDataModelController.set_numRooms(0);
+					break;
+			}
+
+			checkedButtonId = _selectNumberOfToiletsRadioGroup.getCheckedRadioButtonId();
+			switch (checkedButtonId) {
+				case R.id.radioButton_one_toilet:
+					queryDataModelController.set_numToilets(1);
+					break;
+				case R.id.radioButton_two_more_toilet:
+					queryDataModelController.set_numToilets(2);
+					break;
+				case R.id.radioButton_any_toilet:
+					queryDataModelController.set_numToilets(0);
+					break;
+			}
 
 			queryDataModelController.setFlag(CONDITION_SEARCH_MODE);
 		} else {
@@ -1665,7 +1778,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	@Override
 	public void onCreateSpecificInfoFragmentView(String roomName, String pensionName) {
-		_mHeader.setVisibility(View.GONE);
+		_hideQueryView();
 
 		_currentPage = _pageStateStack.peekFirst();
 
@@ -1681,8 +1794,9 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	@Override
 	public void onDestroySpecificInfoFragmentView() {
-		if(_isBackButtonPressed)
+		if (_isBackButtonPressed) {
 			_pageStateStack.pop();
+		}
 	}
 
 	@Override
@@ -1805,8 +1919,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	private void _addDirectInputRoomPriceToPlan(final int directInputRoomPrice) {
 
-		final int directInputRoomDataCount = _planModelController.getRoomDataCount();
-		final int directInputRoomPlanViewIndex = directInputRoomDataCount;
+		final int directInputRoomPlanViewIndex = _planModelController.getRoomDataCount();
 		// "directInputRoomDataCount + FIRST_INDEX_OF_EACH_SHOPPING_ITEM_IN_PLAN" -> used this notation, because
 		// there is a gap, between first index of the roomDataLinkedList(inside PlanModel class)
 		// and first index of the _roomPlanLinearLayout(starts the index from 2), which is 2.
@@ -1873,7 +1986,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				_doubleSideSlidingMenu.showSecondaryMenu(true);
 			}*/
 
-			if (_currentPage == TIMELINE_PAGE_STATE) {
+			if (_currentPage == HOME_PAGE_STATE) {
 				new AlertDialog.Builder(this)
 						.setMessage(R.string.do_you_want_end_the_app)
 						.setPositiveButton(R.string.yes,
@@ -1939,7 +2052,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		// configure progress bar
 		_loadingProgressBar.setVisibility(View.VISIBLE);
 		_loadingProgressBar.setProgress(0);
-		_loadingBackground.setAlpha(100);
+		//_loadingBackground.setAlpha(100);
 		// end of the configuration of the progress bar
 	}
 
@@ -1947,7 +2060,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 		// configure progress bar
 		_loadingProgressBar.setVisibility(View.GONE);
 		_loadingProgressBar.setProgress(100);
-		_loadingBackground.setAlpha(0);
+		//_loadingBackground.setAlpha(0);
 		// end of the configuration of the progress bar
 	}
 
@@ -1955,13 +2068,13 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 		FragmentTransaction fragmentTransaction = _fragmentManager.beginTransaction();
 
-		if (targetFragment instanceof TimelineFragment) {
+		if (targetFragment instanceof HomeFragment) {
 			fragmentTransaction.setCustomAnimations(R.anim.abc_fade_in, R.anim.abc_fade_out, R.anim.abc_fade_in, R.anim.abc_fade_out);
 			fragmentTransaction.replace(containerViewId, targetFragment);
 		}/* else if (targetFragment instanceof VersionCheckFragment || targetFragment instanceof GuideFragment) {
 			fragmentTransaction.add(containerViewId, targetFragment);
 			fragmentTransaction.addToBackStack(null);
-		}*/else if(targetFragment instanceof SpecificInfoFragment) {
+		}*/ else if (targetFragment instanceof SpecificInfoFragment) {
 			fragmentTransaction.setCustomAnimations(R.anim.abc_slide_in_bottom, R.anim.abc_fade_out, R.anim.abc_fade_in, R.anim.abc_slide_out_bottom);
 			fragmentTransaction.replace(containerViewId, targetFragment);
 			fragmentTransaction.addToBackStack(null);
@@ -1971,9 +2084,9 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 			fragmentTransaction.addToBackStack(null);
 		}
 
-		if (targetFragment instanceof TimelineFragment) {
+		if (targetFragment instanceof HomeFragment) {
 			_pageStateStack.clear();
-			_pageStateStack.push(TIMELINE_PAGE_STATE);
+			_pageStateStack.push(HOME_PAGE_STATE);
 		} else if (targetFragment instanceof VersionCheckFragment) {
 			_pageStateStack.push(VERSION_PAGE_STATE);
 		} else if (targetFragment instanceof GuideFragment) {
@@ -1998,7 +2111,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 		_currentPage = _pageStateStack.peekFirst();
 
-		_mHeader.setVisibility(View.GONE);
+		_hideQueryView();
 		// configure actionbar for specific info page
 		String itemTypeString = null;
 
@@ -2021,8 +2134,9 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	@Override
 	public void onDestroyShoppingItemListFragmentView() {
-		if(_isBackButtonPressed)
+		if (_isBackButtonPressed) {
 			_pageStateStack.pop();
+		}
 		_shoppingItemListFragment = null;
 	}
 
@@ -2430,7 +2544,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	@Override
 	public void onCreateMyPageFragmentView() {
-		_mHeader.setVisibility(View.GONE);
+		_hideQueryView();
 		// configure actionbar for my page
 		_changeActionBarStyle(getResources().getColor(R.color.mtplease_color_primary), getResources().getString(R.string.my_page), null);
 		// end of the configuration
@@ -2448,7 +2562,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	public void onCreateUserInfoModificationFragmentView() {
 		_currentPage = _pageStateStack.peekFirst();
 
-		_mHeader.setVisibility(View.GONE);
+		_hideQueryView();
 		// configure actionbar for user info modification page
 		_changeActionBarStyle(getResources().getColor(R.color.mtplease_color_primary), getResources().getString(R.string.user_info_modification), null);
 		// end of the configuration
@@ -2459,8 +2573,9 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	@Override
 	public void onDestroyUserInfoModificationFragmentView() {
-		if(_isBackButtonPressed)
+		if (_isBackButtonPressed) {
 			_pageStateStack.pop();
+		}
 	}
 
 	@Override
@@ -2471,25 +2586,25 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	@Override
 	public void onCreateVersionCheckFragmentView() {
 		_actionBar.hide();
-		_mHeader.setVisibility(View.GONE);
+		_hideQueryView();
 		_currentPage = _pageStateStack.peekFirst();
 	}
 
 	@Override
 	public void onDestroyVersionCheckFragmentView() {
-		if(_isBackButtonPressed) {
+		if (_isBackButtonPressed) {
 			_pageStateStack.pop();
 			_restorePreviousPageState();
 		}
 		_actionBar.show();
-		_mHeader.setVisibility(View.VISIBLE);
+		_showQueryView();
 		_isBackButtonPressed = false;
 	}
 
 	@Override
 	public void onCreateGuideFragmentView() {
 		_actionBar.hide();
-		_mHeader.setVisibility(View.GONE);
+		_hideQueryView();
 		_currentPage = _pageStateStack.peekFirst();
 	}
 
@@ -2501,29 +2616,29 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	@Override
 	public void onDestroyGuideFragmentView() {
-		if(_isBackButtonPressed) {
+		if (_isBackButtonPressed) {
 			_pageStateStack.pop();
 			_restorePreviousPageState();
 		}
 		_actionBar.show();
-		_mHeader.setVisibility(View.VISIBLE);
+		_showQueryView();
 		_isBackButtonPressed = false;
 	}
 
 	@Override
 	public void onCreateSettingsFragmentView() {
 		_setActionBarTitle(getResources().getString(R.string.action_settings), null);
-		_mHeader.setVisibility(View.GONE);
+		_hideQueryView();
 		_currentPage = _pageStateStack.peekFirst();
 	}
 
 	@Override
 	public void onDestroySettingsFragmentView() {
-		if(_isBackButtonPressed) {
+		if (_isBackButtonPressed) {
 			_pageStateStack.pop();
 			_restorePreviousPageState();
 		}
-		_mHeader.setVisibility(View.VISIBLE);
+		_showQueryView();
 		_isBackButtonPressed = false;
 	}
 
@@ -2531,6 +2646,11 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	public void onLoadVersionCheckFragmentView() {
 		VersionCheckFragment versionCheckFragment = VersionCheckFragment.newInstance();
 		_beginFragmentTransaction(versionCheckFragment, R.id.body_background);
+	}
+
+	@Override
+	public void onClickNightsConfirmButton(int nights) {
+		_nightSelectButton.setText(nights + getResources().getString(R.string.unit_night) + (nights + 1) + getResources().getString(R.string.unit_day));
 	}
 
 	private class SpinnerArrayAdapter extends ArrayAdapter<String> {
@@ -2553,7 +2673,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 			TextView regionName = (TextView) spinnerItemView.findViewById(R.id.spinner_item);
 
-			regionName.setTypeface(_mTypeface);
+			//regionName.setTypeface(_mTypeface);
 			regionName.setText(regionNameList.get(position));
 
 			return spinnerItemView;
@@ -2566,7 +2686,7 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 			TextView regionName = (TextView) spinnerItemView.findViewById(R.id.spinner_item);
 
-			regionName.setTypeface(_mTypeface);
+			//regionName.setTypeface(_mTypeface);
 			regionName.setText(regionNameList.get(position));
 
 			return spinnerItemView;
@@ -2575,9 +2695,9 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 
 	private void _restorePreviousPageState() {
 		Log.i(TAG, "page stack state: " + _pageStateStack.toString());
-		Log.d(TAG,  "_restorePreviousPageState(): " + "previous page: " +_pageStateStack.peekFirst());
-		switch(_pageStateStack.peekFirst()) {
-			case TIMELINE_PAGE_STATE:
+		Log.d(TAG, "_restorePreviousPageState(): " + "previous page: " + _pageStateStack.peekFirst());
+		switch (_pageStateStack.peekFirst()) {
+			case HOME_PAGE_STATE:
 			case RESULT_PAGE_STATE:
 				_toggleMenuButton(R.id.layout_btn_home);
 				break;
@@ -2594,14 +2714,14 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 	}
 
 	private void _popTutorial() {
-		if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getResources().getString(R.string.pref_first_use), false)) {
+		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getResources().getString(R.string.pref_first_use), false)) {
 
 			Log.d(TAG, "_currentPage: " + _currentPage + " / _search: " + _searchTurtorialPopped
 					+ " / _resultPage: " + _resultPageTutorialPopped + " / _specificInfoPage: " + _specificInfoPageTutorialPopped);
 
 			switch (_currentPage) {
-				case TIMELINE_PAGE_STATE:
-					if(!_searchTurtorialPopped) {
+				case HOME_PAGE_STATE:
+					if (!_searchTurtorialPopped) {
 						_actionBar.hide();
 						_splashScreenLayout.setBackgroundResource(R.drawable.scrn_tutorial_2);
 						_splashScreenLayout.setOnClickListener(new View.OnClickListener() {
@@ -2626,26 +2746,32 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 							}
 						});
 						_searchTurtorialPopped = true;
-					} else return;
+					} else {
+						return;
+					}
 					break;
 				case RESULT_PAGE_STATE:
-					if(!_resultPageTutorialPopped) {
+					if (!_resultPageTutorialPopped) {
 						_setTutorial(R.drawable.scrn_tutorial_5);
 						_resultPageTutorialPopped = true;
-					} else return;
+					} else {
+						return;
+					}
 					break;
 				case SPECIFIC_INFO_PAGE_STATE:
-					if(!_specificInfoPageTutorialPopped) {
+					if (!_specificInfoPageTutorialPopped) {
 						_setTutorial(R.drawable.scrn_tutorial_6);
 						_specificInfoPageTutorialPopped = true;
-					} else return;
+					} else {
+						return;
+					}
 					break;
 				default:
 					return;
 			}
 
 			_splashScreenLayout.setVisibility(View.VISIBLE);
-			for(int i = 0; i < _splashScreenLayout.getChildCount(); i++)
+			for (int i = 0; i < _splashScreenLayout.getChildCount(); i++)
 				_splashScreenLayout.getChildAt(i).setVisibility(View.GONE);
 		}
 	}
@@ -2661,6 +2787,22 @@ public class MainActivity extends ActionBarActivity implements ScrollTabHolder,
 				_actionBar.show();
 			}
 		});
+	}
+
+	private void _showQueryView() {
+		Log.d(TAG, "_showQueryView");
+		_toolbar.setTranslationY(0);
+		RelativeLayout.LayoutParams actionbarParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, _minActionBarHeight);
+		actionbarParams.setMargins(0, 0, 0, 0);
+		_actionBarRelativeLayout.setLayoutParams(actionbarParams);
+	}
+
+	private void _hideQueryView() {
+		Log.d(TAG, "_hideQueryView");
+		_toolbar.setTranslationY(_minActionBarHeight - /*_minQueryViewHeightForResultFragment*/_additionalQueryHeight);
+		RelativeLayout.LayoutParams actionbarParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, _minActionBarHeight);
+		actionbarParams.setMargins(0, _additionalQueryHeight - _minActionBarHeight, 0, 0);
+		_actionBarRelativeLayout.setLayoutParams(actionbarParams);
 	}
 
 	@Override

@@ -22,11 +22,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.owo.mtplease.Activity.MainActivity;
 import com.owo.mtplease.R;
 import com.owo.mtplease.RoomInfoModelController;
 import com.owo.mtplease.ScrollTabHolder;
 import com.owo.mtplease.SpecificInfoRoomRecyclerViewAdapter;
-import com.owo.mtplease.activity.MainActivity;
 
 
 public class SpecificInfoFragment extends Fragment {

@@ -16,11 +16,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.owo.mtplease.Activity.MainActivity;
 import com.owo.mtplease.Analytics;
 import com.owo.mtplease.HomePostListRecyclerViewAdapter;
 import com.owo.mtplease.R;
 import com.owo.mtplease.ScrollTabHolder;
-import com.owo.mtplease.activity.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
