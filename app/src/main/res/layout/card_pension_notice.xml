@@ -30,10 +30,11 @@
                 android:layout_height="wrap_content"
                 android:text="@string/our_pension_is"
                 android:textSize="20sp"
-                android:textColor="@color/mtplease_main_text_color"
+                android:textColor="@color/mtplease_color_text_primary"
                 android:id="@+id/textView_title_pension_description"
                 android:layout_marginBottom="12dp"
-                android:enabled="true"/>
+                android:enabled="true"
+                android:textStyle="bold"/>
 
         </LinearLayout>
 

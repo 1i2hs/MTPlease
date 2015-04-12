@@ -3,6 +3,7 @@ package com.owo.mtplease.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import com.owo.mtplease.R;
  * create an instance of this fragment.
  */
 public class SettingsFragment extends Fragment {
+
+	private static final String TAG = "SettingsFragment";
 
 	private OnSettingsFragmentListener _onSettingsFragmentListener;
 
@@ -57,6 +60,7 @@ public class SettingsFragment extends Fragment {
 		appVersionButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				Log.d(TAG, "App version view clicked");
 				_onSettingsFragmentListener.onLoadVersionCheckFragmentView();
 			}
 		});

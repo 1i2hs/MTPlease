@@ -60,13 +60,13 @@
                     android:paddingLeft="8dp"
                     android:paddingTop="8dp"
                     android:singleLine="true"
-                    android:textColor="@color/mtplease_main_text_color"
+                    android:textColor="@color/mtplease_color_text_primary"
                     android:textSize="16sp"
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@+id/imageButton_search_keyword"
                     android:layout_centerVertical="true"
                     android:paddingBottom="4dp"
-                    android:textColorHint="@color/mtplease_main_text_color"/>
+                    android:textColorHint="@color/mtplease_color_text_primary"/>
 
                 <ImageButton
                     android:id="@+id/imageButton_search_keyword"
@@ -141,8 +141,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/layout_btn_home"
-            android:visibility="gone"
-            android:background="@android:color/darker_gray">
+            android:background="@android:color/darker_gray"
+            android:visibility="gone">
         </FrameLayout>
 
         <!--<ImageView
@@ -203,7 +203,7 @@
                 android:clickable="true"
                 android:text="@string/menu_btn_mypage"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/mtplease_main_text_color"/>
+                android:textColor="@color/mtplease_color_text_primary"/>
 
         </LinearLayout>
 
@@ -322,7 +322,7 @@
         android:layout_marginBottom="40dp"
         android:background="@android:color/transparent"
         android:text="@string/menu_btn_logout"
-        android:textColor="@color/mtplease_main_text_color"
+        android:textColor="@color/mtplease_color_text_primary"
         android:visibility="gone"/>
 
 </RelativeLayout>

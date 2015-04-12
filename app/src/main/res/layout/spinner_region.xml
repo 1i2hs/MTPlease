@@ -12,7 +12,7 @@
         android:paddingBottom="8dp"
         android:paddingRight="8dp"
         android:paddingTop="8dp"
-        android:textColor="@color/mtplease_main_text_color"
+        android:textColor="@color/mtplease_color_text_primary"
         android:textSize="20sp">
 
     </TextView>

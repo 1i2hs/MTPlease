@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/ceo_info"
                 android:id="@+id/textView_info_ceo"
-                android:textColor="@color/mtplease_main_text_color"
+                android:textColor="@color/mtplease_color_text_primary"
                 android:textSize="20sp"
                 android:layout_marginBottom="12dp"/>
 
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_name_ceo"
                 android:textSize="16sp"
-                android:textColor="@color/mtplease_main_text_color"
+                android:textColor="@color/mtplease_color_text_primary"
                 android:layout_marginBottom="12dp"/>
 
             <TextView
@@ -48,7 +48,7 @@
                 android:id="@+id/textView_account_ceo"
                 android:textIsSelectable="false"
                 android:textSize="16sp"
-                android:textColor="@color/mtplease_main_text_color"/>
+                android:textColor="@color/mtplease_color_text_primary"/>
         </LinearLayout>
 
 

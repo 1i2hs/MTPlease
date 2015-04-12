@@ -49,7 +49,7 @@
         <item>가평으로</item>
         -->
     </string-array>
-    <string name="howMany">몇</string>
+    <string name="howMany">몇   명?</string>
     <string name="postposition_2">명이서</string>
     <string name="postposition_3">로</string>
     <string name="postposition_4">으로</string>
@@ -63,17 +63,17 @@
     <string name="gapyung">가평으로</string>
 
     <string name="when_do_you_go_mt">MT 언제 갈래?</string>
-    <string name="input_date">날짜:</string>
+    <string name="input_date">날짜</string>
     <string name="whenever">아무때나</string>
-    <string name="input_nights">숙박일수:</string>
+    <string name="input_nights">숙박일수</string>
     <string name="input_one_nights">1박 2일</string>
     <string name="unit_night">박</string>
     <string name="unit_day">일</string>
     <string name="days_of_stay">몇 박 몇 일?</string>
-    <string name="input_number_of_people">인원수:</string>
+    <string name="input_number_of_people">인원수</string>
     <string name="input_number_of_people_unit">명</string>
-    <string name="input_number_of_rooms">방 개수:</string>
-    <string name="input_number_of_toilets">화장실 개수:</string>
+    <string name="input_number_of_rooms">방 개수</string>
+    <string name="input_number_of_toilets">화장실 개수</string>
     <string name="any">상관없음</string>
 
     <!-- For queries with keyword -->

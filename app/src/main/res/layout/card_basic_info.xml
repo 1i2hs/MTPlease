@@ -24,10 +24,11 @@
             android:text="@string/basic_info"
             android:id="@+id/textView_info_basic"
             android:textSize="20sp"
-            android:textColor="@color/mtplease_main_text_color"
+            android:textColor="@color/mtplease_color_text_primary"
             android:layout_marginBottom="12dp"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp"
+            android:textStyle="bold"/>
 
         <TableLayout
             android:layout_width="match_parent"
@@ -47,8 +48,8 @@
                     android:layout_height="wrap_content"
                     android:text="A"
                     android:id="@+id/textView_time_checkin"
-                    android:textSize="20sp"
-                    android:textColor="@color/mtplease_main_text_color"
+                    android:textSize="16sp"
+                    android:textColor="@color/mtplease_color_text_primary"
                     android:password="false"
                     android:layout_alignParentLeft="true"
                     android:layout_weight="1"/>
@@ -59,8 +60,8 @@
                     android:id="@+id/textView_time_checkout"
                     android:layout_alignParentRight="true"
                     android:text="Z"
-                    android:textColor="@color/mtplease_main_text_color"
-                    android:textSize="20sp"
+                    android:textColor="@color/mtplease_color_text_primary"
+                    android:textSize="16sp"
                     android:layout_weight="1"/>
             </TableRow>
 
@@ -73,8 +74,8 @@
                     android:id="@+id/textView_num_rooms"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:textColor="@color/mtplease_main_text_color"
+                    android:textSize="16sp"
+                    android:textColor="@color/mtplease_color_text_primary"
                     android:text="A"
                     android:layout_alignParentLeft="true"
                     android:layout_weight="1"/>
@@ -84,8 +85,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="B"
-                    android:textSize="20sp"
-                    android:textColor="@color/mtplease_main_text_color"
+                    android:textSize="16sp"
+                    android:textColor="@color/mtplease_color_text_primary"
                     android:layout_alignParentRight="true"
                     android:layout_weight="1"/>
             </TableRow>
@@ -101,8 +102,8 @@
                     android:text="A"
                     android:id="@+id/textView_people_number_std"
                     android:layout_alignParentLeft="true"
-                    android:textSize="20sp"
-                    android:textColor="@color/mtplease_main_text_color"
+                    android:textSize="16sp"
+                    android:textColor="@color/mtplease_color_text_primary"
                     android:layout_weight="1"/>
 
                 <TextView
@@ -111,8 +112,8 @@
                     android:text="B"
                     android:id="@+id/textView_people_number_max"
                     android:layout_alignParentRight="true"
-                    android:textColor="@color/mtplease_main_text_color"
-                    android:textSize="20sp"
+                    android:textColor="@color/mtplease_color_text_primary"
+                    android:textSize="16sp"
                     android:layout_weight="1"/>
             </TableRow>
 
@@ -127,8 +128,8 @@
                     android:text="A"
                     android:id="@+id/textView_structure_room"
                     android:layout_alignParentLeft="true"
-                    android:textColor="@color/mtplease_main_text_color"
-                    android:textSize="20sp"
+                    android:textColor="@color/mtplease_color_text_primary"
+                    android:textSize="16sp"
                     android:layout_weight="1"/>
             </TableRow>
 
@@ -142,8 +143,8 @@
                     android:text="A"
                     android:id="@+id/textView_size_room"
                     android:layout_alignParentLeft="true"
-                    android:textColor="@color/mtplease_main_text_color"
-                    android:textSize="20sp"
+                    android:textColor="@color/mtplease_color_text_primary"
+                    android:textSize="16sp"
                     style="1"/>
             </TableRow>
         </TableLayout>

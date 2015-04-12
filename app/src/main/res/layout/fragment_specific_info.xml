@@ -20,24 +20,43 @@
     </FrameLayout>
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="24dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        >
+        android:layout_alignParentRight="true">
 
-        <ImageView
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView_btn_other_rooms"
-            android:src="@drawable/ic_action_specific_info_page_other_rooms"
-            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:layout_alignParentRight="true"
+            android:id="@+id/linearLayout_btn_other_rooms"
             android:clickable="true"
-            android:layout_alignParentRight="false"
-            android:layout_toLeftOf="@+id/imageView_btn_action_info_specific"
-            android:layout_marginRight="24dp"/>
+            android:layout_above="@+id/imageView_btn_action_info_specific"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/see_other_rooms"
+                android:id="@+id/textView_btn_other_rooms"
+                android:layout_marginRight="16dp"
+                android:textColor="@android:color/white"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView_btn_other_rooms"
+                android:src="@drawable/ic_action_other_rooms"
+                android:layout_centerVertical="true"
+                android:clickable="false"
+                android:layout_toLeftOf="@+id/imageView_btn_action_info_specific" />
+
+        </LinearLayout>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -45,8 +64,7 @@
             android:id="@+id/imageView_background_btn_action_info_specific"
             android:src="@drawable/ic_action_specific_info_page_background"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            />
+            android:layout_alignParentBottom="true"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -54,9 +72,8 @@
             android:id="@+id/imageView_btn_action_info_specific"
             android:src="@drawable/ic_action_specific_info_page"
             android:clickable="true"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="2dp"/>
+            android:layout_alignParentBottom="true"/>
 
     </RelativeLayout>
 

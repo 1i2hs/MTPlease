@@ -17,7 +17,6 @@ import com.owo.mtplease.R;
 import com.owo.mtplease.RoomInfoModelController;
 import com.owo.mtplease.RoomListRecyclerViewAdapter;
 import com.owo.mtplease.ScrollTabHolder;
-import com.owo.mtplease.activity.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,8 +33,8 @@ public class ResultFragment extends Fragment {
 
 	private static final int DEFAULT_FIRST_ITEM_POSITION = 1;
 
-	public static final int LIST_OF_ROOMS_AFTER_SEARCH = 1;
-	public static final int LIST_OF_ROOMS_OF_PENSION = 2;
+	public static final int LIST_OF_ROOMS_AFTER_SEARCH = 2;
+	public static final int LIST_OF_ROOMS_OF_PENSION = 3;
 
 	// View: User Interface Views
 	private RecyclerView _mRecyclerView;
@@ -108,7 +107,7 @@ public class ResultFragment extends Fragment {
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
 				if(_mScrollTabHolder != null) {
-					_mScrollTabHolder.onScroll(recyclerView, _mLayoutManager.findFirstVisibleItemPosition(), 0, MainActivity.RESULT_FRAGMENT_VISIBLE);
+					_mScrollTabHolder.onScroll(recyclerView, _mLayoutManager.findFirstVisibleItemPosition(), 0, _listType);
 				}
 			}
 		});
@@ -157,7 +156,7 @@ public class ResultFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		Log.d(TAG, "onResume");
-		_mOnResultFragmentListener.onResumeResultFragmentView(_mLayoutManager, DEFAULT_FIRST_ITEM_POSITION);
+		_mOnResultFragmentListener.onResumeResultFragmentView(_mLayoutManager, DEFAULT_FIRST_ITEM_POSITION, _listType);
 	}
 
 	@Override
@@ -193,6 +192,6 @@ public class ResultFragment extends Fragment {
 		public void onLoadSpecificInfoFragment(RoomInfoModelController roomInfoModelController, JSONArray _roomArray);
 		public void onPostLoadSpecificInfoFragment();
 		public void onDestroyResultFragmentView();
-		public void onResumeResultFragmentView(LinearLayoutManager linearLayoutManager, int defaultPosition);
+		public void onResumeResultFragmentView(LinearLayoutManager linearLayoutManager, int defaultPosition, int listType);
 	}
 }

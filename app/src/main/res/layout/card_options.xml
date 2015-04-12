@@ -30,7 +30,7 @@
                 android:text="@string/option"
                 android:textSize="20sp"
                 android:layout_marginBottom="12dp"
-                android:textColor="@color/mtplease_main_text_color"
+                android:textColor="@color/mtplease_color_text_primary"
                 android:id="@+id/textView_title_option"/>
 
             <FrameLayout
@@ -64,7 +64,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/option_playground"
                         android:id="@+id/textView_playground"
-                        android:textColor="@color/mtplease_main_text_color"
+                        android:textColor="@color/mtplease_color_text_primary"
                         android:layout_gravity="center_horizontal"
                         android:textSize="16sp"/>
                 </LinearLayout>
@@ -86,14 +86,14 @@
                             android:layout_height="wrap_content"
                             android:text="@string/type"
                             android:id="@+id/textView_type_playground"
-                            android:textColor="@color/mtplease_main_text_color"
+                            android:textColor="@color/mtplease_color_text_primary"
                             android:textSize="16sp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView_type_playground_specific_info"
-                            android:textColor="@color/mtplease_main_text_color"
+                            android:textColor="@color/mtplease_color_text_primary"
                             android:textSize="16sp"/>
                     </LinearLayout>
 
@@ -108,13 +108,13 @@
                             android:text="@string/description"
                             android:id="@+id/textView_description_playground"
                             android:textSize="16sp"
-                            android:textColor="@color/mtplease_main_text_color"/>
+                            android:textColor="@color/mtplease_color_text_primary"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView_description_playground_specific_info"
-                            android:textColor="@color/mtplease_main_text_color"
+                            android:textColor="@color/mtplease_color_text_primary"
                             android:textSize="16sp"
                             android:layout_gravity="center"/>
                     </LinearLayout>
@@ -155,7 +155,7 @@
                         android:id="@+id/textView_pickup"
                         android:layout_gravity="center_horizontal"
                         android:textSize="16sp"
-                        android:textColor="@color/mtplease_main_text_color"/>
+                        android:textColor="@color/mtplease_color_text_primary"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -175,14 +175,14 @@
                             android:layout_height="wrap_content"
                             android:text="@string/price"
                             android:id="@+id/textView_price_pickup"
-                            android:textColor="@color/mtplease_main_text_color"
+                            android:textColor="@color/mtplease_color_text_primary"
                             android:textSize="16sp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView_price_pickup_specific_info"
-                            android:textColor="@color/mtplease_main_text_color"
+                            android:textColor="@color/mtplease_color_text_primary"
                             android:textSize="16sp"/>
                     </LinearLayout>
 
@@ -198,14 +198,14 @@
                             android:text="@string/location"
                             android:id="@+id/textView_location_pickup"
                             android:textSize="16sp"
-                            android:textColor="@color/mtplease_main_text_color"/>
+                            android:textColor="@color/mtplease_color_text_primary"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView_location_pickup_specific_info"
                             android:layout_gravity="center"
-                            android:textColor="@color/mtplease_main_text_color"
+                            android:textColor="@color/mtplease_color_text_primary"
                             android:textSize="16sp"/>
 
                     </LinearLayout>
@@ -222,14 +222,14 @@
                             android:text="@string/description"
                             android:id="@+id/textView_description_pickup"
                             android:textSize="16sp"
-                            android:textColor="@color/mtplease_main_text_color"/>
+                            android:textColor="@color/mtplease_color_text_primary"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView_description_pickup_specific_info"
                             android:layout_gravity="center"
-                            android:textColor="@color/mtplease_main_text_color"
+                            android:textColor="@color/mtplease_color_text_primary"
                             android:textSize="16sp"/>
                     </LinearLayout>
 
@@ -269,7 +269,7 @@
                         android:text="@string/option_barbecue"
                         android:id="@+id/textView_barbecue"
                         android:layout_gravity="center_horizontal"
-                        android:textColor="@color/mtplease_main_text_color"
+                        android:textColor="@color/mtplease_color_text_primary"
                         android:textSize="16sp"/>
                 </LinearLayout>
 
@@ -290,14 +290,14 @@
                             android:layout_height="wrap_content"
                             android:text="@string/price"
                             android:id="@+id/textView_price_barbecue"
-                            android:textColor="@color/mtplease_main_text_color"
+                            android:textColor="@color/mtplease_color_text_primary"
                             android:textSize="16sp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView_price_barbecue_specific_info"
-                            android:textColor="@color/mtplease_main_text_color"
+                            android:textColor="@color/mtplease_color_text_primary"
                             android:textSize="16sp"/>
                     </LinearLayout>
 
@@ -313,14 +313,14 @@
                             android:text="@string/component"
                             android:id="@+id/textView_component_barbecue"
                             android:textSize="16sp"
-                            android:textColor="@color/mtplease_main_text_color"/>
+                            android:textColor="@color/mtplease_color_text_primary"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView_component_barbecue_specific_info"
                             android:layout_gravity="center"
-                            android:textColor="@color/mtplease_main_text_color"
+                            android:textColor="@color/mtplease_color_text_primary"
                             android:textSize="16sp"/>
 
                     </LinearLayout>
@@ -337,14 +337,14 @@
                             android:text="@string/location"
                             android:id="@+id/textView_location_barbecue"
                             android:textSize="16sp"
-                            android:textColor="@color/mtplease_main_text_color"/>
+                            android:textColor="@color/mtplease_color_text_primary"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView_location_barbecue_specific_info"
                             android:layout_gravity="center"
-                            android:textColor="@color/mtplease_main_text_color"
+                            android:textColor="@color/mtplease_color_text_primary"
                             android:textSize="16sp"/>
 
                     </LinearLayout>
@@ -361,14 +361,14 @@
                             android:text="@string/description"
                             android:id="@+id/textView_description_barbecue"
                             android:textSize="16sp"
-                            android:textColor="@color/mtplease_main_text_color"/>
+                            android:textColor="@color/mtplease_color_text_primary"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView_description_barbecue_specific_info"
                             android:textSize="16sp"
-                            android:textColor="@color/mtplease_main_text_color"
+                            android:textColor="@color/mtplease_color_text_primary"
                             android:layout_gravity="center"/>
                     </LinearLayout>
 
@@ -409,7 +409,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/option_valley"
                         android:id="@+id/textView_valley"
-                        android:textColor="@color/mtplease_main_text_color"
+                        android:textColor="@color/mtplease_color_text_primary"
                         android:textSize="16sp"
                         android:layout_gravity="center_horizontal"/>
                 </LinearLayout>
@@ -431,14 +431,14 @@
                             android:layout_height="wrap_content"
                             android:text="@string/distance"
                             android:id="@+id/textView_distance_valley"
-                            android:textColor="@color/mtplease_main_text_color"
+                            android:textColor="@color/mtplease_color_text_primary"
                             android:textSize="16sp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView_distance_valley_specific_info"
-                            android:textColor="@color/mtplease_main_text_color"
+                            android:textColor="@color/mtplease_color_text_primary"
                             android:textSize="16sp"/>
                     </LinearLayout>
 
@@ -454,14 +454,14 @@
                             android:text="@string/depth"
                             android:id="@+id/textView_depth_valley"
                             android:textSize="16sp"
-                            android:textColor="@color/mtplease_main_text_color"/>
+                            android:textColor="@color/mtplease_color_text_primary"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView_depth_valley_specific_info"
                             android:layout_gravity="center"
-                            android:textColor="@color/mtplease_main_text_color"
+                            android:textColor="@color/mtplease_color_text_primary"
                             android:textSize="16sp"/>
 
                     </LinearLayout>
@@ -478,14 +478,14 @@
                             android:text="@string/description"
                             android:id="@+id/textView_description_valley"
                             android:textSize="16sp"
-                            android:textColor="@color/mtplease_main_text_color"/>
+                            android:textColor="@color/mtplease_color_text_primary"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView_description_valley_specific_info"
                             android:layout_gravity="center"
-                            android:textColor="@color/mtplease_main_text_color"
+                            android:textColor="@color/mtplease_color_text_primary"
                             android:textSize="16sp"/>
 
                     </LinearLayout>

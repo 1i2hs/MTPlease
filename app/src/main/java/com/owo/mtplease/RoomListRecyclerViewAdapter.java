@@ -21,7 +21,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.owo.mtplease.fragment.ResultFragment;
-import com.owo.mtplease.view.TypefaceLoader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -227,18 +226,18 @@ public class RoomListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 			realPictureSticker = (ImageView) cardView.findViewById(R.id.imageView_sticker_real);
 			realPictureSticker.setAlpha(0.0F);
 			roomName = (TextView) cardView.findViewById(R.id.textView_name_room_card);
-			roomName.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			//roomName.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
 			pensionName = (TextView) cardView.findViewById(R.id.textView_name_pension_card);
-			pensionName.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			//pensionName.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
 			rangeNumberOfPeople = (TextView) cardView.findViewById(R.id.textView_number_range_of_people_card);
-			rangeNumberOfPeople.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			//rangeNumberOfPeople.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
 			airConditionerIcon = (ImageView) cardView.findViewById(R.id.imageView_option_aircon_card);
 			pickUpIcon = (ImageView) cardView.findViewById(R.id.imageView_option_pickup_card);
 			playgroundIcon = (ImageView) cardView.findViewById(R.id.imageView_option_playground_card);
 			barbecueIcon = (ImageView) cardView.findViewById(R.id.imageView_option_barbecue_card);
 			valleyIcon = (ImageView) cardView.findViewById(R.id.imageView_option_valley_card);
 			roomPrice = (TextView) cardView.findViewById(R.id.textView_price_room_card);
-			roomPrice.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			//roomPrice.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
 		}
 
 		public void setComponents(final JSONObject roomData) throws JSONException {

@@ -1,6 +1,5 @@
 package com.owo.mtplease;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -33,10 +32,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapView;
 import com.owo.mtplease.fragment.SpecificInfoFragment;
-import com.owo.mtplease.view.TypefaceLoader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,13 +60,13 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 	private static final int CARD_OPTIONS = 5;
 	private static final int CARD_ADDRESS_AND_ROUTE_AND_MAP = 6;
 	private static final int CARD_PRICE_AND_DATE_SELECTION = 7;
-	private static final int CARD_OWNER_INFO = 8;
-	//	private static final int CARD_VISITED_SCHOOLS = 5;
-//	private static final int CARD_REVIEWS = 6;
-	private static final int CARD_EQUIPMENT = 9;
-	private static final int CARD_FACILITY_AND_SERVICE = 10;
-	private static final int CARD_CAUTIONS = 11;
-	private static final int CARD_OTHER_ROOMS = 12;
+	//private static final int CARD_OWNER_INFO = 8;
+	//private static final int CARD_VISITED_SCHOOLS = 5;
+    //private static final int CARD_REVIEWS = 6;
+	private static final int CARD_EQUIPMENT = 8;
+	private static final int CARD_FACILITY_AND_SERVICE = 9;
+	private static final int CARD_CAUTIONS = 10;
+	//private static final int CARD_OTHER_ROOMS = 11;
 	// End of series of cards
 
 	private static View _basicInfoCardView;
@@ -176,9 +176,9 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			case CARD_PRICE_AND_DATE_SELECTION:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_price_and_period, parent, false);
 				return new PriceAndDateSelectionCard(cardView, _mContext);
-			case CARD_OWNER_INFO:
+			/*case CARD_OWNER_INFO:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_owner_info, parent, false);
-				return new OwnerInfoCard(cardView, _mContext);
+				return new OwnerInfoCard(cardView, _mContext);*/
 			case CARD_EQUIPMENT:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_equipment, parent, false);
 				return new EquipmentCard(cardView, _mContext);
@@ -188,9 +188,9 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			case CARD_CAUTIONS:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_cautions, parent, false);
 				return new CautionsCard(cardView, _mContext);
-			case CARD_OTHER_ROOMS:
+			/*case CARD_OTHER_ROOMS:
 				cardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_other_rooms, parent, false);
-				return new OtherRoomsCard(cardView, _mContext, _mOnSpecificInfoFragmentListener);
+				return new OtherRoomsCard(cardView, _mContext, _mOnSpecificInfoFragmentListener);*/
 		}
 
 		throw new RuntimeException("there is no type that matches the type " + cardViewType + "make sure your using types correctly");
@@ -232,9 +232,9 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 				case CARD_PRICE_AND_DATE_SELECTION:
 					((PriceAndDateSelectionCard) cardViewHolder).setComponents();
 					break;
-				case CARD_OWNER_INFO:
+				/*case CARD_OWNER_INFO:
 					((OwnerInfoCard) cardViewHolder).setComponents();
-					break;
+					break;*/
 				case CARD_EQUIPMENT:
 					((EquipmentCard) cardViewHolder).setComponents();
 					break;
@@ -252,7 +252,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 	@Override
 	public int getItemCount() {
-		return 13;
+		return 11;
 	}
 
 	@Override
@@ -278,16 +278,16 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 				return CARD_ADDRESS_AND_ROUTE_AND_MAP;
 			case 7:
 				return CARD_PRICE_AND_DATE_SELECTION;
+			/*case 8:
+				return CARD_OWNER_INFO;*/
 			case 8:
-				return CARD_OWNER_INFO;
-			case 9:
 				return CARD_EQUIPMENT;
-			case 10:
+			case 9:
 				return CARD_FACILITY_AND_SERVICE;
-			case 11:
+			case 10:
 				return CARD_CAUTIONS;
-			case 12:
-				return CARD_OTHER_ROOMS;
+			/*case 11:
+				return CARD_OTHER_ROOMS;*/
 			default:
 				return position;
 		}
@@ -322,7 +322,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 				final int numPicture = _mRoomInfoModelController.getNum_images();
 				roomImageCarouselAdapter = new PictureCarouselAdapter(_mContext, numPicture);
 				roomImageViewPager.setAdapter(roomImageCarouselAdapter);
-				roomImageViewPager.setOffscreenPageLimit(3);
+				roomImageViewPager.setOffscreenPageLimit(5);
 				roomImageViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 					@Override
 					public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -476,7 +476,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		public PriceAndRateCard(View cardView, Context context) {
 			super(cardView);
 			roomPriceTextView = (TextView) cardView.findViewById(R.id.text_price_room);
-			roomPriceTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//roomPriceTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			_mContext= context;
 		}
 	}
@@ -496,22 +496,22 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			contactButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if(!isContactButtonClicked) {
+					/*if(!isContactButtonClicked) {
 						expand(phoneAndKakaotalkButtonsCardView, convertDpToPx(72 + 4 + 50 + 4, _mContext), contactButton);
 
 						callMtpleaseButton.animate().setListener(null);
 						callPensionButton.animate().setListener(null);
 						callMtpleaseButton.setAlpha(0.0F);
 						callMtpleaseButton.setVisibility(View.VISIBLE);
-						callMtpleaseButton.animate().alpha(1.0F);
+						callMtpleaseButton.animate().setDuration(200).alpha(1.0F);
 						callPensionButton.setAlpha(0.0F);
 						callPensionButton.setVisibility(View.VISIBLE);
-						callPensionButton.animate().alpha(1.0F);
-						callPensionButton.animate().translationYBy(convertDpToPx(72 + 4, _mContext));
+						callPensionButton.animate().setDuration(200).alpha(1.0F);
+						callPensionButton.animate().setDuration(200).translationYBy(convertDpToPx(72 + 4, _mContext));
 
 						isContactButtonClicked = true;
 					} else {
-						callMtpleaseButton.animate().alpha(0.0F).
+						callMtpleaseButton.animate().setDuration(200).alpha(0.0F).
 								setListener(new Animator.AnimatorListener() {
 									@Override
 									public void onAnimationStart(Animator animation) {
@@ -534,8 +534,8 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 									}
 								});
 
-						callPensionButton.animate().alpha(0.0F);
-						callPensionButton.animate().translationYBy(-(convertDpToPx(72 + 4, _mContext))).
+						callPensionButton.animate().setDuration(200).alpha(0.0F);
+						callPensionButton.animate().setDuration(200).translationYBy(-(convertDpToPx(72 + 4, _mContext))).
 								setListener(new Animator.AnimatorListener() {
 									@Override
 									public void onAnimationStart(Animator animation) {
@@ -561,15 +561,27 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 						collapse(phoneAndKakaotalkButtonsCardView, convertDpToPx(72 + 4 + 50 + 4, _mContext), contactButton);
 
 						isContactButtonClicked = false;
-					}
+					}*/
+					Tracker tracker = ((Analytics) _mContext.getApplicationContext()).getTracker();
+					tracker.send(new HitBuilders.EventBuilder()
+							.setCategory("#Button Click")
+							.setAction("Call MTPlease Button Clicked")
+							.build());
+
+					Uri phoneNumber = Uri.parse("tel:" + "01092055132");
+					Intent contactIntent = new Intent(Intent.ACTION_DIAL, phoneNumber);
+					_mContext.startActivity(contactIntent);
 				}
 			});
 			kakaoTalkButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					/*Uri webLink = Uri.parse(_mRoomInfoModelController.getPen_homepage());
-					Intent webBrowseIntent = new Intent(Intent.ACTION_VIEW, webLink);
-					_mContext.startActivity(webBrowseIntent);*/
+					Tracker tracker = ((Analytics) _mContext.getApplicationContext()).getTracker();
+					tracker.send(new HitBuilders.EventBuilder()
+							.setCategory("#Button Click")
+							.setAction("KAKAO Yellow ID Contact Button Clicked")
+							.build());
+
 					Uri webLink = Uri.parse("http://goto.kakao.com/@%EC%97%A0%ED%8B%B0%EB%A5%BC%EB%B6%80%ED%83%81%ED%95%B4");
 					Intent webBrowseIntent = new Intent(Intent.ACTION_VIEW, webLink);
 					_mContext.startActivity(webBrowseIntent);
@@ -579,6 +591,12 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			callMtpleaseButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					Tracker tracker = ((Analytics) _mContext.getApplicationContext()).getTracker();
+					tracker.send(new HitBuilders.EventBuilder()
+							.setCategory("#Button Click")
+							.setAction("Call MTPlease Button Clicked")
+							.build());
+
 					Uri phoneNumber = Uri.parse("tel:" + "01092055132");
 					Intent contactIntent = new Intent(Intent.ACTION_DIAL, phoneNumber);
 					_mContext.startActivity(contactIntent);
@@ -644,7 +662,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
 			}
 		});
-		a.setDuration(500);
+		a.setDuration(200);
 		v.startAnimation(a);
 	}
 
@@ -683,7 +701,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			}
 		});
 
-		a.setDuration(500);
+		a.setDuration(200);
 		v.startAnimation(a);
 	}
 
@@ -730,23 +748,23 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		public BasicInfoCard(View cardView, Context context) {
 			super(cardView);
 			basicInfoTitleTextView = (TextView) cardView.findViewById(R.id.textView_info_basic);
-			basicInfoTitleTextView.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//basicInfoTitleTextView.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			checkinTimeTextView = (TextView) cardView.findViewById(R.id.textView_time_checkin);
-			checkinTimeTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//checkinTimeTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			checkoutTimeTextView = (TextView) cardView.findViewById(R.id.textView_time_checkout);
-			checkoutTimeTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//checkoutTimeTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			numberRoomsTextView = (TextView) cardView.findViewById(R.id.textView_num_rooms);
-			numberRoomsTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//numberRoomsTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			numberToiletsTextView = (TextView) cardView.findViewById(R.id.textView_num_toilets);
-			numberToiletsTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//numberToiletsTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			numberPeopleStdTextView = (TextView) cardView.findViewById(R.id.textView_people_number_std);
-			numberPeopleStdTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//numberPeopleStdTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			numberPeopleMaxTextView = (TextView) cardView.findViewById(R.id.textView_people_number_max);
-			numberPeopleMaxTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//numberPeopleMaxTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			structureRoomTextView = (TextView) cardView.findViewById(R.id.textView_structure_room);
-			structureRoomTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//structureRoomTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			sizeRoomTextView = (TextView) cardView.findViewById(R.id.textView_size_room);
-			sizeRoomTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//sizeRoomTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			_mContext = context;
 		}
 	}
@@ -788,7 +806,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		public PensionNoticeCard(View cardView, Context context) {
 			super(cardView);
 			pensionDescriptionTitleTextView = (TextView) cardView.findViewById(R.id.textView_title_pension_description);
-			pensionDescriptionTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//pensionDescriptionTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			pensionDescriptionLinearLayout = (LinearLayout) cardView.findViewById(R.id.layout_description_pension);
 			_mContext = context;
 		}
@@ -896,28 +914,28 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		public OptionsCard(View cardView, Context context) {
 			super(cardView);
 			optionTitle = (TextView) cardView.findViewById(R.id.textView_title_option);
-			optionTitle.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//optionTitle.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			playgroundIconImageView = (ImageView) cardView.findViewById(R.id.imageView_option_playground_specific_info);
 			playgroundTextView = (TextView) cardView.findViewById(R.id.textView_playground);
-			playgroundTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//playgroundTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			playgroundTypeTextView = (TextView) cardView.findViewById(R.id.textView_type_playground_specific_info);
 			playgroundDescriptionTextView = (TextView) cardView.findViewById(R.id.textView_description_playground_specific_info);
 			pickupIconImageView = (ImageView) cardView.findViewById(R.id.imageView_option_pickup_specific_info);
 			pickupTextView = (TextView) cardView.findViewById(R.id.textView_pickup);
-			pickupTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//pickupTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			pickupPriceTextView = (TextView) cardView.findViewById(R.id.textView_price_pickup_specific_info);
 			pickupLocationTextView = (TextView) cardView.findViewById(R.id.textView_location_pickup_specific_info);
 			pickupDescriptionTextView = (TextView) cardView.findViewById(R.id.textView_description_pickup_specific_info);
 			barbecueIconImageView = (ImageView) cardView.findViewById(R.id.imageView_option_barbecue_specific_info);
 			barbecueTextView = (TextView) cardView.findViewById(R.id.textView_barbecue);
-			barbecueTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//barbecueTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			barbecuePriceTextView = (TextView) cardView.findViewById(R.id.textView_price_barbecue_specific_info);
 			barbecueComponentTextView = (TextView) cardView.findViewById(R.id.textView_component_barbecue_specific_info);
 			barbecueLocationTextView = (TextView) cardView.findViewById(R.id.textView_location_barbecue_specific_info);
 			barbecueDescriptionTextView = (TextView) cardView.findViewById(R.id.textView_description_barbecue_specific_info);
 			valleyIconImageView = (ImageView) cardView.findViewById(R.id.imageView_option_valley_specific_info);
 			valleyTextView = (TextView) cardView.findViewById(R.id.textView_valley);
-			valleyTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//valleyTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			valleyDistanceTextView = (TextView) cardView.findViewById(R.id.textView_distance_valley_specific_info);
 			valleyDepthTextView = (TextView) cardView.findViewById(R.id.textView_depth_valley_specific_info);
 			valleyDescriptionTextView = (TextView) cardView.findViewById(R.id.textView_description_valley_specific_info);
@@ -1021,26 +1039,26 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		public AddressAndRouteAndMapCard(View cardView, Context context) {
 			super(cardView);
 			routeTitleTextView = (TextView) cardView.findViewById(R.id.textView_title_route);
-			routeTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//routeTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			lookLargerMapButton = (Button) cardView.findViewById(R.id.btn_look_larger_map);
-			lookLargerMapButton.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//lookLargerMapButton.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			pensionRoadAddress = (TextView) cardView.findViewById(R.id.textView_address_road);
-			pensionRoadAddress.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//pensionRoadAddress.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			pensionRoadAddressTitleTextView = (TextView) cardView.findViewById(R.id.textView_title_address_road);
-			pensionRoadAddressTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//pensionRoadAddressTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			pensionParcelAddressTextView = (TextView) cardView.findViewById(R.id.textView_address_parcel);
-			pensionParcelAddressTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//pensionParcelAddressTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			pensionParcelAddressTitleTextView = (TextView) cardView.findViewById(R.id.textView_title_address_parcel);
-			pensionParcelAddressTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//pensionParcelAddressTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			mapWebView = (WebView) cardView.findViewById(R.id.webView_map);
 			walkFromStationTitleTextView = (TextView) cardView.findViewById(R.id.textView_from_train_station);
-			walkFromStationTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//walkFromStationTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			walkFromStationTimeTextView = (TextView) cardView.findViewById(R.id.textView_walk_station);
-			walkFromStationTimeTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//walkFromStationTimeTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			walkFromTerminalTitleTextView = (TextView) cardView.findViewById(R.id.textView_from_bus_terminal);
-			walkFromTerminalTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//walkFromTerminalTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			walkFromTerminalTimeTextView = (TextView) cardView.findViewById(R.id.textView_walk_terminal);
-			walkFromTerminalTimeTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//walkFromTerminalTimeTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			_mContext = context;
 		}
 	}
@@ -1122,7 +1140,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 							periodCell.setGravity(Gravity.CENTER);
 							periodCell.setPadding(0, (int) _mContext.getResources().getDimension(R.dimen.cell_vertical_padding), 0, (int) _mContext.getResources().getDimension(R.dimen.cell_vertical_padding));
 							periodCell.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT));
-							periodCell.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+							//periodCell.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 
 							if (pen_period_division.equals(_mContext.getResources().getString(R.string.off_season))) {
 								Log.d(TAG, "비수기");
@@ -1172,53 +1190,53 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		public PriceAndDateSelectionCard(View cardView, Context context) {
 			super(cardView);
 			priceInfoTitleTextView = (TextView) cardView.findViewById(R.id.textView_info_price);
-			priceInfoTitleTextView.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceInfoTitleTextView.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell12 = (TextView) cardView.findViewById(R.id.cell12_price);
-			priceCell12.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell12.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell13 = (TextView) cardView.findViewById(R.id.cell13_price);
-			priceCell13.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell13.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell14 = (TextView) cardView.findViewById(R.id.cell14_price);
-			priceCell14.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell14.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell21 = (TextView) cardView.findViewById(R.id.cell21_price);
-			priceCell21.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell21.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell31 = (TextView) cardView.findViewById(R.id.cell31_price);
-			priceCell31.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell31.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell41 = (TextView) cardView.findViewById(R.id.cell41_price);
-			priceCell41.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell41.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell51 = (TextView) cardView.findViewById(R.id.cell51_price);
-			priceCell51.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell51.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell22 = (TextView) cardView.findViewById(R.id.cell22_price);
-			priceCell22.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell22.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell23 = (TextView) cardView.findViewById(R.id.cell23_price);
-			priceCell23.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell23.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell24 = (TextView) cardView.findViewById(R.id.cell24_price);
-			priceCell24.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell24.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell32 = (TextView) cardView.findViewById(R.id.cell32_price);
-			priceCell32.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell32.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell33 = (TextView) cardView.findViewById(R.id.cell33_price);
-			priceCell33.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell33.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell34 = (TextView) cardView.findViewById(R.id.cell34_price);
-			priceCell34.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell34.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell42 = (TextView) cardView.findViewById(R.id.cell42_price);
-			priceCell42.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell42.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell43 = (TextView) cardView.findViewById(R.id.cell43_price);
-			priceCell43.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell43.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell44 = (TextView) cardView.findViewById(R.id.cell44_price);
-			priceCell44.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell44.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell52 = (TextView) cardView.findViewById(R.id.cell52_price);
-			priceCell52.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell52.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell53 = (TextView) cardView.findViewById(R.id.cell53_price);
-			priceCell53.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell53.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			priceCell54 = (TextView) cardView.findViewById(R.id.cell54_price);
-			priceCell54.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//priceCell54.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			periodTable = (TableLayout) cardView.findViewById(R.id.tablelayout_period_room);
 			periodCell2 = (TextView) cardView.findViewById(R.id.cell12_period);
-			periodCell2.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//periodCell2.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			_mContext = context;
 		}
 	}
 
-	private static class OwnerInfoCard extends RecyclerView.ViewHolder {
+	/*private static class OwnerInfoCard extends RecyclerView.ViewHolder {
 		private TextView ceoInfoTitleTextView;
 		private TextView ceoNameTextView;
 		private TextView ceoAccountTextView;
@@ -1240,14 +1258,14 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		public OwnerInfoCard(View cardView, Context context) {
 			super(cardView);
 			ceoInfoTitleTextView = (TextView) cardView.findViewById(R.id.textView_info_ceo);
-			ceoInfoTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//ceoInfoTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			ceoNameTextView = (TextView) cardView.findViewById(R.id.textView_name_ceo);
-			ceoNameTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//ceoNameTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			ceoAccountTextView = (TextView) cardView.findViewById(R.id.textView_account_ceo);
-			ceoAccountTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//ceoAccountTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			_mContext = context;
 		}
-	}
+	}*/
 
 	private static class EquipmentCard extends RecyclerView.ViewHolder {
 		private TextView equipmentTitleTextView;
@@ -1263,9 +1281,9 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		public EquipmentCard(View cardView, Context context) {
 			super(cardView);
 			equipmentTitleTextView = (TextView) cardView.findViewById(R.id.textView_equipment);
-			equipmentTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//equipmentTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			equipmentTextView = (TextView) cardView.findViewById(R.id.textView_list_equipment);
-			equipmentTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//equipmentTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 		}
 	}
 
@@ -1382,7 +1400,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			cell.setGravity(Gravity.LEFT);
 			cell.setPadding(0, (int) _mContext.getResources().getDimension(R.dimen.cell_vertical_padding), 0, (int) _mContext.getResources().getDimension(R.dimen.cell_vertical_padding));
 			cell.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT));
-			cell.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+			//cell.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 			cell.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
 			return cell;
 		}
@@ -1390,13 +1408,13 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		public FacilityAndServiceCard(View cardView, Context context) {
 			super(cardView);
 			facilityAndServiceTitleTextView = (TextView) cardView.findViewById(R.id.textView_facility_and_service);
-			facilityAndServiceTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//facilityAndServiceTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			facilityTitleTextView = (TextView) cardView.findViewById(R.id.textView_facility);
-			facilityTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//facilityTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			facilityTable = (TableLayout) cardView.findViewById(R.id.tableLayout_facility);
 			serviceTitleTextView = (TextView) cardView.findViewById(R.id.textView_service);
-			serviceTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
-			serviceTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//serviceTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//serviceTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			serviceTable = (TableLayout) cardView.findViewById(R.id.tableLayout_service);
 			_mContext = context;
 		}
@@ -1475,7 +1493,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 							stdRefundCell.setGravity(Gravity.CENTER);
 							stdRefundCell.setPadding(0, (int) _mContext.getResources().getDimension(R.dimen.cell_vertical_padding), 0, (int) _mContext.getResources().getDimension(R.dimen.cell_vertical_padding));
 							stdRefundCell.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
-							stdRefundCell.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
+							//stdRefundCell.setTypeface(TypefaceLoader.getInstance(_mContext).getTypeface());
 							stdRefundCell.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
 							stdRefundCell.setText(stdRefundStringList[j]);
 							if(j == 0)
@@ -1495,15 +1513,15 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 		public CautionsCard(View cardView, Context context) {
 			super(cardView);
 			cautionsTitleTextView = (TextView) cardView.findViewById(R.id.textView_cautions);
-			cautionsTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//cautionsTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			roomUsageTitleTextView = (TextView) cardView.findViewById(R.id.textView_usage_room);
-			roomUsageTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//roomUsageTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			roomUsageLinearLayout = (LinearLayout) cardView.findViewById(R.id.layout_usage_room);
 			reservationTitleTextView = (TextView) cardView.findViewById(R.id.textView_reservation);
-			reservationTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//reservationTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			reservationLinearLayout = (LinearLayout) cardView.findViewById(R.id.layout_reservation);
 			stdRefundTitleTextView = (TextView) cardView.findViewById(R.id.textView_std_refund);
-			stdRefundTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//stdRefundTitleTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 			stdRefundTable = (TableLayout) cardView.findViewById(R.id.tableLayout_refund_std);
 
 			_mContext = context;
@@ -1522,7 +1540,7 @@ public class SpecificInfoRoomRecyclerViewAdapter extends RecyclerView.Adapter<Re
 			});
 
 			TextView otherRoomsCardTextView = (TextView) cardView.findViewById(R.id.textview_rooms_other);
-			otherRoomsCardTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
+			//otherRoomsCardTextView.setTypeface(TypefaceLoader.getInstance(context).getTypeface());
 		}
 	}
 

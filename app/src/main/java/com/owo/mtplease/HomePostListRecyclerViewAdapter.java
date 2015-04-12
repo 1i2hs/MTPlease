@@ -17,7 +17,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
-import com.owo.mtplease.view.TypefaceLoader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,12 +44,13 @@ public class HomePostListRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 		mContext = context;
 		postArray = jsonArray;
 
-		if(jsonArray != null)
+		if (jsonArray != null) {
 			preLoadImage();
+		}
 	}
 
 	private void preLoadImage() {
-		for(int i = 0; i < postArray.length(); i++) {
+		for (int i = 0; i < postArray.length(); i++) {
 			try {
 				JSONObject timelinePostData = postArray.getJSONObject(i);
 
@@ -58,7 +58,7 @@ public class HomePostListRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
 				Log.d(TAG, imageUrl);
 
-				if(!ServerCommunicationManager.getInstance(mContext).containsImage(imageUrl)) {
+				if (!ServerCommunicationManager.getInstance(mContext).containsImage(imageUrl)) {
 					ImageRequest imageRequest = new ImageRequest(imageUrl, new Response.Listener<Bitmap>() {
 						@Override
 						public void onResponse(Bitmap response) {
@@ -73,7 +73,7 @@ public class HomePostListRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
 					ServerCommunicationManager.getInstance(mContext).addToRequestQueue(imageRequest);
 				}
-			} catch(JSONException e) {
+			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
@@ -81,10 +81,10 @@ public class HomePostListRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		if(viewType == TYPE_ITEM) {
+		if (viewType == TYPE_ITEM) {
 			View itemView;
 
-			if(postArray != null) {
+			if (postArray != null) {
 				itemView = LayoutInflater.from(parent.getContext())
 						.inflate(R.layout.card_home, parent, false);
 				return new PostCard(itemView, mContext);
@@ -92,10 +92,10 @@ public class HomePostListRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 				itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_swipe_to_refresh, parent, false);
 				return new SwipeToRefreshCard(itemView);
 			}
-		} else if(viewType == TYPE_TITLE) {
+		} else if (viewType == TYPE_TITLE) {
 			View titleView = LayoutInflater.from(parent.getContext()).inflate(R.layout.frame_home_title, parent, false);
 			return new BlankHeader(titleView);
-		} else if(viewType == TYPE_HEADER) {
+		} else if (viewType == TYPE_HEADER) {
 			View headerView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_header_placeholder_large, parent, false);
 			return new BlankHeader(headerView);
 		}
@@ -105,15 +105,15 @@ public class HomePostListRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-		if(holder instanceof PostCard) {
+		if (holder instanceof PostCard) {
 			try {
-				if(postArray != null) {
+				if (postArray != null) {
 					JSONObject postData = postArray.getJSONObject(position - 2);
 					((PostCard) holder).setItem(postData);
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
-			} catch(NullPointerException e) {
+			} catch (NullPointerException e) {
 				e.printStackTrace();
 			}
 		}
@@ -121,20 +121,22 @@ public class HomePostListRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
 	@Override
 	public int getItemCount() {
-		if(postArray != null)
+		if (postArray != null) {
 			return postArray.length() + 2;
-		else
+		} else {
 			return 2;
+		}
 	}
 
 	@Override
 	public int getItemViewType(int position) {
-		if (position == 0)
+		if (position == 0) {
 			return TYPE_HEADER;
-		else if(position == 1)
+		} else if (position == 1) {
 			return TYPE_TITLE;
-		else
+		} else {
 			return TYPE_ITEM;
+		}
 	}
 
 	private static class PostCard extends RecyclerView.ViewHolder {
@@ -148,11 +150,11 @@ public class HomePostListRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 		public PostCard(View cardView, Context context) {
 			super(cardView);
 			postCard = (CardView) cardView;
-			imageViewReference = new WeakReference<ImageView>((ImageView) cardView.findViewById(R.id.image_post));
-			postTitle = (TextView) cardView.findViewById(R.id.text_post_title);
-			postTitle.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
-			postDate = (TextView) cardView.findViewById(R.id.text_post_date);
-			postDate.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			imageViewReference = new WeakReference<ImageView>((ImageView) cardView.findViewById(R.id.imageView_post));
+			postTitle = (TextView) cardView.findViewById(R.id.textView_post_title);
+			//postTitle.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
+			postDate = (TextView) cardView.findViewById(R.id.textView_post_date);
+			//postDate.setTypeface(TypefaceLoader.getInstance(mContext).getTypeface());
 			mContext = context;
 		}
 
@@ -164,22 +166,22 @@ public class HomePostListRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 			final ImageView postImage = imageViewReference.get();
 
 			ServerCommunicationManager.getInstance(mContext).getImage(imageUrl, new ImageLoader.ImageListener() {
-						@Override
-						public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-							if(response.getBitmap() != null) {
-								postImage.setAlpha(0.0F);
-								postImage.setImageBitmap(response.getBitmap());
-								postImage.animate().alpha(1.0F);
-							} else {
-								postImage.setImageResource(R.drawable.scrn_room_img_place_holder);
-							}
-						}
+				@Override
+				public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+					if (response.getBitmap() != null) {
+						postImage.setAlpha(0.0F);
+						postImage.setImageBitmap(response.getBitmap());
+						postImage.animate().alpha(1.0F);
+					} else {
+						postImage.setImageResource(R.drawable.scrn_room_img_place_holder);
+					}
+				}
 
-						@Override
-						public void onErrorResponse(VolleyError error) {
-							postImage.setImageResource(R.drawable.scrn_room_img_error);
-						}
-					});
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					postImage.setImageResource(R.drawable.scrn_room_img_error);
+				}
+			});
 
 			postTitle.setText(postData.optString("timeline_title"));
 			postDate.setText(postData.optString("timeline_datetime"));

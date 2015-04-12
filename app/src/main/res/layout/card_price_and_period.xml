@@ -31,8 +31,9 @@
                 android:text="@string/price_info"
                 android:id="@+id/textView_info_price"
                 android:textSize="20sp"
-                android:textColor="@color/mtplease_main_text_color"
-                android:layout_marginBottom="12dp"/>
+                android:textColor="@color/mtplease_color_text_primary"
+                android:layout_marginBottom="12dp"
+                android:textStyle="bold"/>
 
             <TableLayout
                 android:id="@+id/tablelayout_price_room"
@@ -60,7 +61,7 @@
                         android:gravity="center"
                         android:text="@string/weekdays"
                         android:textSize="16sp"
-                        android:textColor="@color/mtplease_main_text_color"
+                        android:textColor="@color/mtplease_color_text_primary"
                         android:background="@drawable/shape_background_cell"
                         android:paddingBottom="@dimen/cell_vertical_padding"
                         android:paddingTop="@dimen/cell_vertical_padding">
@@ -72,7 +73,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:text="@string/friday"
-                        android:textColor="@color/mtplease_main_text_color"
+                        android:textColor="@color/mtplease_color_text_primary"
                         android:textSize="16sp"
                         android:background="@drawable/shape_background_cell"
                         android:paddingTop="@dimen/cell_vertical_padding"
@@ -86,7 +87,7 @@
                         android:gravity="center"
                         android:text="@string/weekends"
                         android:textSize="16sp"
-                        android:textColor="@color/mtplease_main_text_color"
+                        android:textColor="@color/mtplease_color_text_primary"
                         android:background="@drawable/shape_background_cell"
                         android:paddingBottom="@dimen/cell_vertical_padding"
                         android:paddingTop="@dimen/cell_vertical_padding">
@@ -105,7 +106,7 @@
                         android:gravity="center"
                         android:text="@string/off_season"
                         android:textSize="16sp"
-                        android:textColor="@color/mtplease_main_text_color"
+                        android:textColor="@color/mtplease_color_text_primary"
                         android:background="@drawable/shape_background_cell"
                         android:paddingTop="@dimen/cell_vertical_padding"
                         android:paddingBottom="@dimen/cell_vertical_padding">
@@ -158,7 +159,7 @@
                         android:gravity="center"
 
                         android:text="@string/semi_on_season"
-                        android:textColor="@color/mtplease_main_text_color"
+                        android:textColor="@color/mtplease_color_text_primary"
                         android:textSize="16sp"
                         android:background="@drawable/shape_background_cell"
                         android:paddingTop="@dimen/cell_vertical_padding"
@@ -211,7 +212,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:text="@string/on_season"
-                        android:textColor="@color/mtplease_main_text_color"
+                        android:textColor="@color/mtplease_color_text_primary"
                         android:textSize="16sp"
                         android:background="@drawable/shape_background_cell"
                         android:paddingTop="@dimen/cell_vertical_padding"
@@ -264,7 +265,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:text="@string/extreme_on_season"
-                        android:textColor="@color/mtplease_main_text_color"
+                        android:textColor="@color/mtplease_color_text_primary"
                         android:textIsSelectable="false"
                         android:textSize="16sp"
                         android:background="@drawable/shape_background_cell"
@@ -332,7 +333,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textSize="16sp"
-                        android:textColor="@color/mtplease_main_text_color"
+                        android:textColor="@color/mtplease_color_text_primary"
                         android:background="@drawable/shape_background_cell"
                         android:text="@string/period"
                         android:paddingTop="@dimen/cell_vertical_padding"

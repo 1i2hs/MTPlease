@@ -30,9 +30,9 @@
                 android:text="@string/facility_and_service"
                 android:id="@+id/textView_facility_and_service"
                 android:textSize="20sp"
-                android:textColor="@color/mtplease_main_text_color"
+                android:textColor="@color/mtplease_color_text_primary"
                 android:layout_marginBottom="12dp"
-                />
+                android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -40,8 +40,8 @@
                 android:text="@string/facility"
                 android:id="@+id/textView_facility"
                 android:layout_marginBottom="12dp"
-                android:textColor="@color/mtplease_main_text_color"
-                android:textSize="20sp"/>
+                android:textColor="@color/mtplease_color_text_primary"
+                android:textSize="18sp"/>
 
             <TableLayout
                 android:layout_width="match_parent"
@@ -67,8 +67,8 @@
                 android:text="@string/service"
                 android:id="@+id/textView_service"
                 android:layout_marginBottom="12dp"
-                android:textSize="20sp"
-                android:textColor="@color/mtplease_main_text_color"/>
+                android:textSize="18sp"
+                android:textColor="@color/mtplease_color_text_primary"/>
 
             <TableLayout
                 android:layout_width="match_parent"

@@ -10,7 +10,7 @@ import java.net.URLEncoder;
  */
 public class QueryDataModelController {
 
-	private static final int CONDITION_SEARCH_MODE = 1;
+	private static final int CONDITION_SEARCH_MODE = 0;
 	private static final int KEYWORD_SEARCH_MODE = 2;
 
 	private int _region;
@@ -131,7 +131,8 @@ public class QueryDataModelController {
 	public String makeHttpGetURL() {
 		if(this._flag == CONDITION_SEARCH_MODE && isVariableSet()) {
 			return _mContext.getResources().getString(R.string.mtplease_url) + "pensions" + "?region=" + _region + "&date="
-					+ _date + "&people=" + _people + "&flag=" + CONDITION_SEARCH_MODE;
+					+ _date + "&nights=" + _nights + "&people=" + _people + "&rooms=" + _numRooms + "&toilets="
+					+ _numToilets + "&flag=" + CONDITION_SEARCH_MODE;
 		} else if(this._flag == KEYWORD_SEARCH_MODE && isVariableSet()) {
 			try {
 				return _mContext.getResources().getString(R.string.mtplease_url) + "pensions"

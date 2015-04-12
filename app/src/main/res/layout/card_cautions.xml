@@ -32,16 +32,17 @@
                 android:text="@string/cautions"
                 android:id="@+id/textView_cautions"
                 android:layout_marginBottom="12dp"
-                android:textColor="@color/mtplease_main_text_color"
-                android:textSize="20sp"/>
+                android:textColor="@color/mtplease_color_text_primary"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/usage_of_room_related"
                 android:id="@+id/textView_usage_room"
-                android:textColor="@color/mtplease_main_text_color"
-                android:textSize="20sp"
+                android:textColor="@color/mtplease_color_text_primary"
+                android:textSize="18sp"
                 android:layout_marginBottom="12dp"/>
 
             <LinearLayout
@@ -63,8 +64,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/reservation_related"
                 android:id="@+id/textView_reservation"
-                android:textColor="@color/mtplease_main_text_color"
-                android:textSize="20sp"
+                android:textColor="@color/mtplease_color_text_primary"
+                android:textSize="18sp"
                 android:layout_marginBottom="12sp"/>
 
             <LinearLayout
@@ -85,8 +86,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/refund_standard"
                 android:id="@+id/textView_std_refund"
-                android:textColor="@color/mtplease_main_text_color"
-                android:textSize="20sp"
+                android:textColor="@color/mtplease_color_text_primary"
+                android:textSize="18sp"
                 android:layout_marginBottom="12sp"/>
 
             <TableLayout

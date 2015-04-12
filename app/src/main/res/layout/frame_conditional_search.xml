@@ -18,7 +18,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="8dp"
             android:text="@string/we"
-            android:textColor="@color/mtplease_main_text_color"
+            android:textColor="@color/mtplease_color_text_primary"
             android:textSize="20sp"/>
 
         <RelativeLayout
@@ -40,7 +40,7 @@
                 android:background="@drawable/shape_button_date"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:textColor="@color/mtplease_main_text_color"
+                android:textColor="@color/mtplease_color_text_primary"
                 android:textSize="20sp"/>
 
             <TextView
@@ -50,7 +50,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/btn_select_date"
                 android:text="@string/postposition_1"
-                android:textColor="@color/mtplease_main_text_color"
+                android:textColor="@color/mtplease_color_text_primary"
                 android:textSize="20sp"/>
 
             <Spinner
@@ -89,7 +89,7 @@
                 android:inputType="numberDecimal"
                 android:maxLength="3"
                 android:singleLine="true"
-                android:textColor="@color/mtplease_main_text_color"
+                android:textColor="@color/mtplease_color_text_primary"
                 android:textSize="20sp"/>
 
             <TextView
@@ -100,7 +100,7 @@
                 android:layout_marginRight="4dp"
                 android:layout_toRightOf="@id/editText_input_number_people"
                 android:text="@string/postposition_2"
-                android:textColor="@color/mtplease_main_text_color"
+                android:textColor="@color/mtplease_color_text_primary"
                 android:textSize="20sp"/>
 
             <TextView
@@ -112,7 +112,7 @@
                 android:layout_toRightOf="@+id/textView_with"
                 android:singleLine="false"
                 android:text="@string/go_MT"
-                android:textColor="@color/mtplease_main_text_color"
+                android:textColor="@color/mtplease_color_text_primary"
                 android:textSize="20sp"/>
 
         </RelativeLayout>

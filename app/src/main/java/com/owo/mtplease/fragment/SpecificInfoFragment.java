@@ -20,12 +20,13 @@ import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
-import com.owo.mtplease.Activity.MainActivity;
 import com.owo.mtplease.R;
 import com.owo.mtplease.RoomInfoModelController;
 import com.owo.mtplease.ScrollTabHolder;
 import com.owo.mtplease.SpecificInfoRoomRecyclerViewAdapter;
+import com.owo.mtplease.activity.MainActivity;
 
 
 public class SpecificInfoFragment extends Fragment {
@@ -41,15 +42,11 @@ public class SpecificInfoFragment extends Fragment {
 	private FrameLayout _grayFrameLayout;
 	private Drawable _grayBackground;
 	private ImageView _actionButton;
-	private ImageView _otherRoomsButton;
+	private LinearLayout _otherRoomsButton;
 	private Button _compareButton;
 	private Button _planButton;
 	private Button _mineButton;
 	// End of User Interface Views
-
-	// Controller: Adapters for User Interface Views
-	private RecyclerView.Adapter _mAdapter;
-	// End of the Controller
 
 	// Model: Data variables for User Interface Views
 	private RoomInfoModelController _mRoomInfoModelController;
@@ -62,6 +59,7 @@ public class SpecificInfoFragment extends Fragment {
 
 	// Others
 	private boolean _isActionButtonClicked = false;
+	private Activity _mActivity;
 
 	public SpecificInfoFragment() {
 		// Required empty public constructor
@@ -75,7 +73,6 @@ public class SpecificInfoFragment extends Fragment {
 	 * @param _numRoom Parameter 2.
 	 * @return A new instance of fragment SpecificInfoFragment.
 	 */
-	// TODO: Rename and change types and number of parameters
 	public static SpecificInfoFragment newInstance(RoomInfoModelController roomInfoModelController, int _numRoom) {
 		SpecificInfoFragment fragment = new SpecificInfoFragment();
 		Bundle args = new Bundle();
@@ -105,9 +102,9 @@ public class SpecificInfoFragment extends Fragment {
 		_mRecyclerView.setHasFixedSize(true);
 		_mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-		_mAdapter = new SpecificInfoRoomRecyclerViewAdapter(getActivity(), _mRoomInfoModelController, _mOnSpecificInfoFragmentListener);
+		RecyclerView.Adapter adapter = new SpecificInfoRoomRecyclerViewAdapter(getActivity(), _mRoomInfoModelController, _mOnSpecificInfoFragmentListener);
 		Log.d(TAG, "before setting adapter");
-		_mRecyclerView.setAdapter(_mAdapter);
+		_mRecyclerView.setAdapter(adapter);
 
 		_mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 			@Override
@@ -137,42 +134,42 @@ public class SpecificInfoFragment extends Fragment {
 		_grayFrameLayout = (FrameLayout) specificInfoView.findViewById(R.id.framelayout_foreground);
 		_grayFrameLayout.setVisibility(View.GONE);
 		_grayBackground = _grayFrameLayout.getBackground();
-		_grayBackground.setAlpha(100);
+		_grayBackground.setAlpha(0xC0);
 
 		_actionButton = (ImageView) specificInfoView.findViewById(R.id.imageView_btn_action_info_specific);
 		_actionButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if(!_isActionButtonClicked) {
-					ObjectAnimator.ofFloat(v, "rotation", 0.0F, 90.0F).start();
+					ObjectAnimator.ofFloat(v, "rotation", 0.0F, 45.0F).start();
 					_grayFrameLayout.setVisibility(View.VISIBLE);
 					_grayFrameLayout.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							ObjectAnimator.ofFloat(v, "rotation", 90.0F, 0.0F).start();
+							ObjectAnimator.ofFloat(_actionButton, "rotation", 45.0F, 0.0F).start();
 							_grayFrameLayout.setVisibility(View.GONE);
 							_grayFrameLayout.setOnClickListener(null);
-							_animateActionButtons(0.0F, _convertDpToPx(160, v.getContext()), 0.1F, 0.1F);
+							_animateActionButtons(0.0F, _convertDpToPx(80, v.getContext()), 0.1F, 0.1F);
 							_isActionButtonClicked = false;
 						}
 					});
-					_animateActionButtons(1.0F, _convertDpToPx(160, v.getContext()), 1.0F, 1.0F);
+					_animateActionButtons(1.0F, _convertDpToPx(80, v.getContext()), 1.0F, 1.0F);
 					_isActionButtonClicked = true;
 				} else {
-					ObjectAnimator.ofFloat(v, "rotation", 90.0F, 0.0F).start();
+					ObjectAnimator.ofFloat(v, "rotation", 45.0F, 0.0F).start();
 					_grayFrameLayout.setVisibility(View.GONE);
 					_grayFrameLayout.setOnClickListener(null);
-					_animateActionButtons(0.0F, _convertDpToPx(160, v.getContext()), 0.1F, 0.1F);
+					_animateActionButtons(0.0F, _convertDpToPx(80, v.getContext()), 0.1F, 0.1F);
 					_isActionButtonClicked = false;
 				}
 			}
 		});
 
-		_otherRoomsButton = (ImageView) specificInfoView.findViewById(R.id.imageView_btn_other_rooms);
+		_otherRoomsButton = (LinearLayout) specificInfoView.findViewById(R.id.linearLayout_btn_other_rooms);
 		/*_otherRoomsButton.setScaleX(0.1F);
 		_otherRoomsButton.setScaleY(0.1F);*/
 		_otherRoomsButton.setAlpha(0.0F);
-		_otherRoomsButton.setTranslationX(2 * _convertDpToPx(80, getActivity()));
+		_otherRoomsButton.setTranslationY(2 * _convertDpToPx(80, getActivity()));
 		_otherRoomsButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -214,6 +211,9 @@ public class SpecificInfoFragment extends Fragment {
 			_mOnSpecificInfoFragmentListener
 					.onCreateSpecificInfoFragmentView(_mRoomInfoModelController.getRoom_name(), _mRoomInfoModelController.getPen_name());
 
+		if(_mScrollTabHolder == null)
+			_mScrollTabHolder = (ScrollTabHolder) _mActivity;
+
 		return specificInfoView;
 	}
 
@@ -226,18 +226,18 @@ public class SpecificInfoFragment extends Fragment {
 			ObjectAnimator otherRoomsAnimatorAlpha = ObjectAnimator.ofFloat(_otherRoomsButton, "alpha", 0.0F, alpha);
 			otherRoomsAnimatorAlpha.setInterpolator(accelerateDecelerateInterpolator);
 			otherRoomsAnimatorAlpha.setDuration(500);
-			ObjectAnimator otherRoomsAnimatorTranslationX = ObjectAnimator.ofFloat(_otherRoomsButton, "translationX", translation, 0.0F);
+			ObjectAnimator otherRoomsAnimatorTranslationX = ObjectAnimator.ofFloat(_otherRoomsButton, "translationY", translation, 0.0F);
 			otherRoomsAnimatorTranslationX.setInterpolator(bounceInterpolator);
-			otherRoomsAnimatorTranslationX.setDuration(500);
+			otherRoomsAnimatorTranslationX.setDuration(1000);
 			animatorSet.play(otherRoomsAnimatorAlpha).with(otherRoomsAnimatorTranslationX);
 			animatorSet.start();
 		} else {
 			ObjectAnimator otherRoomsAnimatorAlpha = ObjectAnimator.ofFloat(_otherRoomsButton, "alpha", 1.0F, alpha);
 			otherRoomsAnimatorAlpha.setInterpolator(accelerateDecelerateInterpolator);
 			otherRoomsAnimatorAlpha.setDuration(200);
-			ObjectAnimator otherRoomsAnimatorTranslationX = ObjectAnimator.ofFloat(_otherRoomsButton, "translationX", 0.0F, translation);
+			ObjectAnimator otherRoomsAnimatorTranslationX = ObjectAnimator.ofFloat(_otherRoomsButton, "translationY", 0.0F, translation);
 			otherRoomsAnimatorTranslationX.setInterpolator(bounceInterpolator);
-			otherRoomsAnimatorTranslationX.setDuration(600);
+			otherRoomsAnimatorTranslationX.setDuration(300);
 			animatorSet.play(otherRoomsAnimatorAlpha).with(otherRoomsAnimatorTranslationX);
 			animatorSet.start();
 		}
@@ -265,6 +265,7 @@ public class SpecificInfoFragment extends Fragment {
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
+		_mScrollTabHolder = null;
 		_mOnSpecificInfoFragmentListener.onDestroySpecificInfoFragmentView();
 	}
 

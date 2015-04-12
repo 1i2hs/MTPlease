@@ -3,63 +3,540 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayout_actionbar"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/linearLayout_query"
-        android:background="@color/mtplease_color_primary">
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/textView"/>
-
-            <EditText
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/editText"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/textView3"/>
-
-            <EditText
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/editText2"/>
-        </LinearLayout>
-    </LinearLayout>
+    android:layout_height="wrap_content"
+    android:clickable="false"
+    android:focusableInTouchMode="false"
+    android:focusable="false">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout_header_query"
+        android:layout_alignTop="@+id/relativeLayout_actionbar"
+        android:layout_alignParentTop="true"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/additional_query_layout_height"
+            android:id="@+id/relativeLayout_query_additional"
+            android:background="@drawable/background_header_additional"
+            android:paddingLeft="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingRight="16dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                >
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:layout_marginBottom="8dp"
+                    android:weightSum="1.0">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.35"
+                        android:gravity="center_vertical"
+                        android:weightSum="1.0">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/imageView_room"
+                            android:layout_weight="0.3"
+                            android:src="@drawable/ic_room"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/input_number_of_rooms"
+                            android:id="@+id/textView_number_of_rooms"
+                            android:layout_above="@+id/textView_number_of_toilets"
+                            android:textColor="@color/mtplease_color_text_primary"
+                            android:textSize="16sp"
+                            android:layout_weight="0.6"
+                            android:paddingLeft="8dp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.55"
+                        android:weightSum="1.0"
+                        android:gravity="center_vertical">
+
+                        <FrameLayout
+                            android:layout_width="1dp"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/darker_gray"
+                            android:paddingTop="16dp"
+                            android:paddingBottom="16dp"
+                            android:layout_marginRight="8dp"/>
+
+                        <RadioGroup
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_toRightOf="@+id/textView_number_of_rooms"
+                            android:gravity="center_vertical"
+                            android:id="@+id/radioGroup_select_number_of_rooms"
+                            android:layout_weight="1.0">
+
+                            <RadioButton
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:text=" 1 "
+                                android:id="@+id/radioButton_one_room"
+                                android:button="@null"
+                                android:textColor="@color/selector_radiobutton_number_of_rooms_or_toilets"
+                                android:textSize="16sp"
+                                android:layout_marginRight="8dp"
+                                android:background="@drawable/selector_radiobutton_number_of_rooms_or_toilets"
+                                android:checked="false"
+                                android:gravity="center"/>
+
+                            <RadioButton
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:text=" 2 "
+                                android:id="@+id/radioButton_two_room"
+                                android:button="@null"
+                                android:textColor="@color/selector_radiobutton_number_of_rooms_or_toilets"
+                                android:textSize="16sp"
+                                android:layout_marginRight="8dp"
+                                android:background="@drawable/selector_radiobutton_number_of_rooms_or_toilets"
+                                android:checked="false"
+                                android:gravity="center"/>
+
+                            <RadioButton
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:text="3+"
+                                android:id="@+id/radioButton_three_more_room"
+                                android:button="@null"
+                                android:textColor="@color/selector_radiobutton_number_of_rooms_or_toilets"
+                                android:textSize="16sp"
+                                android:layout_marginRight="8dp"
+                                android:background="@drawable/selector_radiobutton_number_of_rooms_or_toilets"
+                                android:gravity="center"/>
+
+                            <RadioButton
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:text="4+"
+                                android:id="@+id/radioButton_four_more_room"
+                                android:button="@null"
+                                android:textColor="@color/selector_radiobutton_number_of_rooms_or_toilets"
+                                android:textSize="16sp"
+                                android:padding="4dp"
+                                android:layout_marginRight="8dp"
+                                android:background="@drawable/selector_radiobutton_number_of_rooms_or_toilets"
+                                android:visibility="gone"/>
+
+                            <RadioButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/any"
+                                android:id="@+id/radioButton_any_room"
+                                android:button="@null"
+                                android:textColor="@color/selector_radiobutton_number_of_rooms_or_toilets"
+                                android:textSize="14sp"
+                                android:checked="true"
+                                android:padding="4dp"
+                                android:background="@drawable/selector_radiobutton_number_of_rooms_or_toilets_2"/>
+                        </RadioGroup>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="1.0"
+                    android:gravity="center_vertical|center_horizontal">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.35"
+                        android:gravity="center_vertical"
+                        android:weightSum="1.0">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/imageView_toilet"
+                            android:layout_weight="0.3"
+                            android:src="@drawable/ic_toilet"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/input_number_of_toilets"
+                            android:id="@+id/textView_number_of_toilets"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentLeft="true"
+                            android:textColor="@color/mtplease_color_text_primary"
+                            android:textSize="12dp"
+                            android:layout_weight="0.6"
+                            android:paddingLeft="8dp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.55"
+                        android:weightSum="1.0"
+                        >
+
+                        <FrameLayout
+                            android:layout_width="1dp"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/darker_gray"
+                            android:paddingTop="16dp"
+                            android:paddingBottom="16dp"
+                            android:layout_marginRight="8dp"/>
+
+                        <RadioGroup
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_alignTop="@+id/textView_number_of_toilets"
+                            android:layout_alignBottom="@+id/textView_number_of_toilets"
+                            android:layout_toRightOf="@+id/textView_number_of_toilets"
+                            android:gravity="center_vertical"
+                            android:id="@+id/radioGroup_select_number_of_toilets"
+                            android:layout_weight="1.0"
+                            >
+
+                            <RadioButton
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:text=" 1 "
+                                android:id="@+id/radioButton_one_toilet"
+                                android:button="@null"
+                                android:textColor="@color/selector_radiobutton_number_of_rooms_or_toilets"
+                                android:textSize="16sp"
+                                android:background="@drawable/selector_radiobutton_number_of_rooms_or_toilets"
+                                android:layout_marginRight="8dp"
+                                android:gravity="center"/>
+
+                            <RadioButton
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:text="2+"
+                                android:id="@+id/radioButton_two_more_toilet"
+                                android:button="@null"
+                                android:textColor="@color/selector_radiobutton_number_of_rooms_or_toilets"
+                                android:textSize="16sp"
+                                android:background="@drawable/selector_radiobutton_number_of_rooms_or_toilets"
+                                android:padding="4dp"
+                                android:layout_marginRight="8dp"
+                                android:gravity="center"/>
+                            <RadioButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/any"
+                                android:id="@+id/radioButton_any_toilet"
+                                android:button="@null"
+                                android:textColor="@color/selector_radiobutton_number_of_rooms_or_toilets"
+                                android:textSize="14sp"
+                                android:checked="true"
+                                android:padding="4dp"
+                                android:background="@drawable/selector_radiobutton_number_of_rooms_or_toilets_2"
+                                />
+                        </RadioGroup>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/query_input_layout_height"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/linearLayout_input_query"
+            android:background="@drawable/background_header"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/when_do_you_go_mt"
+                android:id="@+id/textView_title_query_condition"
+                android:layout_marginTop="64dp"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:weightSum="1.0"
+                android:gravity="center_vertical|center_horizontal"
+                >
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.35"
+                    android:gravity="center_vertical"
+                    android:weightSum="1.0">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/imageView_date"
+                        android:layout_weight="0.3"
+                        android:src="@drawable/ic_calendar"
+                        />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/input_date"
+                        android:id="@+id/textView_date_query"
+                        android:textColor="@color/mtplease_color_text_primary"
+                        android:textSize="16sp"
+                        android:layout_weight="0.6"
+                        android:paddingLeft="8dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.55"
+                    android:gravity="center_vertical"
+                    android:weightSum="1.0">
+
+                    <FrameLayout
+                        android:layout_width="1dp"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/darker_gray"
+                        android:paddingTop="16dp"
+                        android:paddingBottom="16dp"
+                        android:layout_marginRight="8dp">
+                    </FrameLayout>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="@string/whenever"
+                        android:id="@+id/btn_select_depart_date"
+                        android:textSize="16sp"
+                        android:layout_weight="1.0"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/selector_button_select_date_or_nights"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:weightSum="1.0"
+                >
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.35"
+                    android:gravity="center_vertical"
+                    android:weightSum="1.0">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/imageView_nights"
+                        android:layout_weight="0.3"
+                        android:src="@drawable/ic_night"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/input_nights"
+                        android:id="@+id/textView_night_query"
+                        android:textColor="@color/mtplease_color_text_primary"
+                        android:textSize="16sp"
+                        android:layout_weight="0.6"
+                        android:paddingLeft="8dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.55"
+                    android:gravity="center_vertical"
+                    android:weightSum="1.0"
+                    >
+
+                    <FrameLayout
+                        android:layout_width="1dp"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/darker_gray"
+                        android:paddingTop="16dp"
+                        android:paddingBottom="16dp"
+                        android:layout_marginRight="8dp"/>
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:text="@string/input_one_nights"
+                        android:id="@+id/btn_select_nights"
+                        android:textSize="16sp"
+                        android:layout_weight="1.0"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/selector_button_select_date_or_nights"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal"
+                android:weightSum="1.0"
+                >
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.35"
+                    android:gravity="center_vertical"
+                    android:weightSum="1.0">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/imageView_people"
+                        android:layout_weight="0.3"
+                        android:src="@drawable/ic_man"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/input_number_of_people"
+                        android:id="@+id/textView_number_of_people_query"
+                        android:textColor="@color/mtplease_color_text_primary"
+                        android:textSize="16sp"
+                        android:layout_weight="0.6"
+                        android:paddingLeft="8dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.55"
+                    android:weightSum="1.0">
+
+                    <FrameLayout
+                        android:layout_width="1dp"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/darker_gray"
+                        android:paddingTop="16dp"
+                        android:paddingBottom="16dp"
+                        android:layout_marginRight="8dp"/>
+
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/editText_number_of_people_query"
+                        android:textColor="@color/mtplease_color_text_primary"
+                        android:singleLine="true"
+                        android:gravity="center"
+                        android:maxLength="3"
+                        android:inputType="number"
+                        android:hint="@string/howMany"
+                        android:textColorHint="@color/mtplease_color_text_primary"
+                        android:textSize="16sp"
+                        android:layout_weight="1.0"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/query_btns_layout_height"
+            android:id="@+id/relativeLayout_btns_query"
+            android:layout_alignTop="@+id/linearLayout_input_query"
+            android:clickable="false"
+            android:focusableInTouchMode="false"
+            android:focusable="false">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView_btn_query_search"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_action_conditional_query_search"
+                android:layout_marginRight="24dp"
+                android:clickable="true"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView_btn_query_additional"
+                android:layout_alignBottom="@+id/imageView_btn_query_search"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/ic_action_conditional_query_additional"
+                android:layout_marginLeft="24dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/min_actionbar_height"
         android:id="@+id/relativeLayout_actionbar"
-        android:background="@color/mtplease_color_primary">
+        android:background="@drawable/background_actionbar"
+        android:layout_alignParentTop="true">
 
         <ImageView
             android:id="@+id/imageView_icon_drawer"
@@ -68,7 +545,6 @@
             android:clickable="true"
             android:src="@drawable/ic_drawer"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="16dp"
             android:layout_centerVertical="true"/>
 
         <LinearLayout
@@ -83,10 +559,10 @@
                 android:id="@+id/textView_title_actionBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:text="@string/actionbar_title"
                 android:textColor="@android:color/white"
-                android:textSize="24sp"/>
+                android:textSize="24sp"
+                android:gravity="center"/>
 
             <TextView
                 android:id="@+id/textView_subtitle_actionBar"
@@ -98,17 +574,6 @@
         </LinearLayout>
 
     </RelativeLayout>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView2"
-        android:layout_marginTop="88dp"
-        android:src="@drawable/ic_app_title"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="false"
-        android:layout_marginRight="40dp"
-        android:visibility="gone"/>
 
 </RelativeLayout>
 

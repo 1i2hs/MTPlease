@@ -23,4 +23,5 @@
     <dimen name="cell_vertical_padding">8dp</dimen>
 
     <dimen name="dialog_height">400dp</dimen>
+
 </resources>
